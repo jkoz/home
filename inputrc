@@ -1,0 +1,9 @@
+$include /etc/inputrc
+
+set editing-mode vi
+set bell-style none
+set match-hidden-files off  # Don't autocomplete hidden files
+set page-completions off    # Don't paginate long completion lists
+
+"\e[1;5C": forward-word     # Ctrl-right
+"\e[1;5D": backward-word    # Ctrl-left

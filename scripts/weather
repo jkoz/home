@@ -1,0 +1,34 @@
+city="Edmonton"
+country="Canada"
+
+from yweather import Client
+
+
+if __name__ == '__main__':
+    client = Client()
+    try:
+        weather = client.fetch_weather(client.fetch_woeid(city + ", " + country), metric=True)
+        temp = "T " + weather["condition"]["temp"] + "°C "
+        humidity = "H " + weather["atmosphere"]["humidity"] + "%% "
+        wind_speed = "W " + weather["wind"]["speed"] + "km/h"
+        print(temp + humidity + wind_speed)
+    except IOError:
+        print("Weather: -")
+
+
+#ZIP=CAXX0126
+
+#curl --silent "http://xml.weather.yahoo.com/forecastrss?p="${ZIP}"&u=c" |\
+#grep -E '(<title>Conditions|Current Conditions:|C<BR)' |\
+#sed -e 's/Current Conditions://' \
+#-e 's/<br \/>//' -e 's/<b>//' -e 's/<\/b>//' -e 's/<BR \/>//' \
+#-e 's/<description>//' -e 's/<\/description>//' \
+#-e 's/<title>//' -e 's/<\/title>//' \
+#-e 's/Conditions for \(.*\) at .*/\1/' |\
+#sed -e ':a;N;$!ba;s/\n/ /g' |\
+#awk '{ if ($1 != "") print }'
+
+
+#curl --silent "http://xml.weather.yahoo.com/forecastrss?p="${ZIP}"&u=c" | grep 'Forecast:' -A 2 | sed -e 's/<br \/>//' -e 's/<b>//' -e 's/<\/b>//' | sed -e 's/<BR \/>//' | sed -e 's/<BR \/>//'
+#CURRENT=`curl --silent "http://xml.weather.yahoo.com/forecastrss?p="${ZIP}"&u=c" | grep -E '(C<BR)' | sed 's/,.*//g'`
+#ICON=`cat ~/code/weather/icon_key.txt | awk "{ if (\\$1==\"$CURRENT\") print }" FS="\t" | awk '{ print $2 }' FS="\t" `

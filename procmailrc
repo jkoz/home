@@ -1,0 +1,16 @@
+SHELL="/usr/bin/zsh"
+PATH="/usr/sbin:/usr/bin"
+# Mail dir should not end with /
+MAILDIR="$HOME/.fetchmail/tai.t@hotmail.com/inbox"
+DEFAULT=$MAILDIR
+LOGFILE="$HOME/.procmail.log"
+LOG=""
+VERBOSE=yes
+
+#:0:
+#*^From:.*(greetings@abc.com.vn)
+#$HOME/mail/tptai@abc.com.vn/greetings/new
+
+:0
+*
+$MAILDIR/new

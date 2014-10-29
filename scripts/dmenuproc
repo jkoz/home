@@ -1,0 +1,5 @@
+#!/bin/bash
+
+. $HOME/bin/dmenurc
+
+ps -ef | $DMENU -p "Processes: " -i -l 10  | awk '{print $2}' | xargs kill -9 &>/dev/null

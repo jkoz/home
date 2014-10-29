@@ -1,0 +1,29 @@
+!/bin/sh
+# quake_rxvt: emulates quake terminal functionality
+# designed for use with openbox and wmctrl
+# make sure wmctrl is installed
+
+quake_rxvt_wmclass=quake_urxvt
+
+# make sure wmctrl exists
+#wmctrlpath="$( which wmctrl &>/dev/null )"
+#if ! [ -x "$wmctrlpath" ] ; then
+    #echo Error: required dependency wmctrl not found. >&2
+    #exit 1
+#fi
+
+active_window_id=\
+    "$(xprop -root | sed -n -e '/^_NET_ACTIVE/s/^[[:print:]]\{40\}//p')"
+
+# test: true if active window has WM_CLASS $quake_rxvt_wmclass
+if xprop -id "$active_window_id" 2>/dev/null | \
+    grep -q '^WM_CLASS(STRING)[[:print:]]*'"$quake_rxvt_wmclass"
+    then
+        # hide active quake rxvt
+        wmctrl -i -r "$active_window_id" -b add,hidden
+    elif ! wmctrl -R $quake_rxvt_wmclass -x ; then
+        # use the wmctrl to both focus and raise quake terminal as well as
+        # test if it is already running; wmctrl returns nonzero/false if no matching
+        # window is found, so we have to start it
+        urxvt -name $quake_rxvt_wmclass &
+    fi

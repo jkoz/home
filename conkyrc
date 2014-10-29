@@ -1,0 +1,42 @@
+out_to_console yes
+background no
+out_to_x no
+update_interval 1
+total_run_times 0
+use_spacer none
+
+TEXT
+# weather
+ #^fg(\#be9b7b)^i(/usr/share/icons/stlarch_icons/pacman1.xbm) \
+#${execi 10 ~/bin/weather}\
+#^fg(\#eeeeee) | \
+\
+# CPU
+^fg(\#1b85b8)^i(/usr/share/icons/stlarch_icons/cpu9.xbm) ${cpu}%\
+^fg(\#eeeeee) | \
+\
+# MEM
+^fg(\#ffa700)^i(/usr/share/icons/stlarch_icons/mem4.xbm) ${memperc}%\
+^fg(\#eeeeee) | \
+\
+# network
+${if_existing /proc/net/route enp3s0}\
+^fg(\#d62d20)^i(/usr/share/icons/stlarch_icons/net_wired.xbm) ${addr enp3s0}\
+${endif}\
+${if_existing /proc/net/route wlp2s0}\
+^fg(\#d62d20)^i(/usr/share/icons/stlarch_icons/wireless1.xbm) ${addr wlp2s0}\
+${endif}\
+^fg(\#eeeeee) | \
+\
+# mpd
+#^fg(\#ebac54) ^i(/home/my_user/.xmonad/dzen2/mpd.xbm)\
+#^fg(\#00ffff)${exec rhythmbox-client --print-playing-format "%aa-%at-%tt" | cut -c-70} ^fg(\#ebac54)\
+#^fg(\#eeeeee) | \
+\
+# volume
+^fg(\#00b159)^i(/usr/share/icons/stlarch_icons/vol1.xbm) \
+${exec amixer get Headphone | egrep -o "[0-9]+%" | head -1 | egrep -o "[0-9]*"}%\
+^fg(\#eeeeee) | \
+\
+# date
+^fg(\#aaaaaa)^i(/usr/share/icons/stlarch_icons/clock1.xbm) ${time %d %b %Y %I:%M:%S %p %Z}

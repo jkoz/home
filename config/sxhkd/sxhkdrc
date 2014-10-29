@@ -1,0 +1,101 @@
+# call scratchpad urxvt, see xinitrc for definition
+mod4 + Return
+    urxvtc
+
+mod4 + d
+    ldoce5viewer
+
+mod4 + i
+    xvkbd -text '\[F10]'
+
+mod4 + Up
+    xbacklight -inc 20
+
+mod4 + Down
+    xbacklight -dec 20
+
+mod4 + Right
+    amixer -c 0 set Master 1+
+
+mod4 + Left
+    amixer -c 0 set Master 1-
+
+mod4 + p
+    sh -c '~/bin/dmenudesktop'
+
+mod4 + u
+    sh -c '~/bin/dmenuproc'
+
+mod4 + bracketright
+    xlock -mod blank
+
+mod4 + r
+    systemctl reboot
+
+mod4 + s
+    systemctl poweroff
+
+mod4 + b
+    chromium
+
+Print
+    scrot -e 'mv $f /tmp/ && gimp /tmp/$f'
+
+mod4 + Print
+    scrot -s -e 'mv $f /tmp/ && gimp /tmp/$f'
+
+mod4 + space
+    dmenu_run
+
+############################################
+# bspwm
+
+# exit wm
+mod4 + q
+    bspc quit
+
+# reload config file
+mod4 + Shift + c
+    pkill -USR1 -x sxhkd
+
+# bspwm control
+# change different layout, Tiling (T) and (M)
+mod4 + m
+    bspc desktop -l next
+
+# change pre, next window
+mod4 + {comma,period}
+    bspc desktop -C {backward,forward}
+
+#mod4 + m
+    #bspc window -s biggest
+
+# close window
+mod4 + c
+    bspc window -c
+
+# change work space
+mod4 + {1,2,3,4,5}
+    bspc desktop -f "^{1,2,3,4,5}"
+
+mod4 + shift + {a,o,e,u,i}
+    bspc window -d "^{1,2,3,4,5}"
+
+mod4 + {h,j,k,l}
+    bspc window -f {left,down,up,right}
+
+mod4 + shift + {h,j,k,l}
+    bspc window -s {left,down,up,right}
+
+~button1
+    bspc pointer -g focus
+
+mod4 + button{1-3}
+    bspc pointer -g {move,resize_side,resize_corner}
+
+mod4 + !button{1-3}
+    bspc pointer -t %i %i
+
+mod4 + @button{1-3}
+    bspc pointer -u
+

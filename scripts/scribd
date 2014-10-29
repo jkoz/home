@@ -1,0 +1,2 @@
+url=$1 && ak=`wget -q -O- $url | grep  access_key  | sed -e 's/\(.*\)key-\(.*\)\"/\2/' | cut -d'"' -f1 | xargs echo "key-" | sed 's/ //g'` && docid=`echo $url | cut -d'/' -f5` && chromium-browser "http://d1.scribdassets.com/ScribdViewer.swf?document_id=${docid}&access_key=${ak}"
+

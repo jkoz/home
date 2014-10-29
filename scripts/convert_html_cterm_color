@@ -1,0 +1,15 @@
+COLOR_SOURCE_VALUES = 256
+COLOR_TARGET_VALUES = 5
+COLOR_DIVIDE = COLOR_SOURCE_VALUES / COLOR_TARGET_VALUES
+TERM_COLOR_BASE = 16
+
+# '#ff0000' => 196
+def self.html_to_terminal_color(html_color)
+    return unless html_color
+    r = (html_color[1..2].to_i(16) / COLOR_DIVIDE) * 36
+    g = (html_color[3..4].to_i(16) / COLOR_DIVIDE) * 6
+    b = (html_color[5..6].to_i(16) / COLOR_DIVIDE) * 1
+    TERM_COLOR_BASE + r + g + b
+end
+
+puts html_to_terminal_color('b9f0b9')

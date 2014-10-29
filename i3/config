@@ -1,0 +1,157 @@
+set $mod Mod1
+set $win Mod4
+
+set layout tabbed
+
+#font
+font pango:Inconsolata 11
+#font pango:Consolas 11
+#floating_maximum_size -1 x -1
+
+##########################################################
+# auto start application
+##########################################################
+
+# multiple screen
+# to use only HDMI1, disable workspace LVDS1 and turn off LVDS1
+#workspace 1 output HDMI1
+#workspace 2 output LVDS1
+
+
+##########################################################
+# workspace setup
+##########################################################
+
+# show border & title
+new_window pixel 1px
+
+# color
+# class                 border  backgr  text    indicator
+client.focused          #4c7899 #285577 #ffffff #2e9ef4
+client.focused_inactive #333333 #5f676a #ffffff #484e50
+client.unfocused        #333333 #222222 #888888 #292d2e
+client.urgent           #2f343a #900000 #ffffff #900000
+
+
+##########################################################
+# Binding
+##########################################################
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+# kill focused window
+bindsym $mod+Shift+c kill
+
+# change focus
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# move focused window
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# split
+bindsym $mod+b split h
+bindsym $mod+v split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+bindsym $mod+a focus parent
+
+# focus the child container
+# bindsym $mod+c focus child
+
+# switch to workspace
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+
+# reload the configuration file
+#bindsym $mod+Shift+c reload
+
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+# bindsym $mod+Shift+r restart
+
+# exit i3 (logs you out of your X session)
+bindsym $mod+Shift+q exit
+
+bindsym $mod+r mode "resize"
+
+# switch back and forth
+bindsym $mod+Tab workspace back_and_forth
+
+# switch to next/prev workspace (alt-tab)
+bindsym $mod+n workspace next
+#bindsym $mod+p workspace prev
+
+# scratchpad
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+
+
+################################################################
+bindsym $mod+o [instance="scratchpad-urxvt"] scratchpad show
+bindsym $mod+d [instance="ldoce5viewer"] scratchpad show
+
+# window
+for_window [instance="scratchpad-urxvt"] floating enable border none
+for_window [instance="scratchpad-urxvt"] move position 0px 22px
+for_window [instance="scratchpad-urxvt"] move scratchpad
+#exec --no-startup-id urxvt -name "scratchpad-urxvt" -geometry 168x25
+
+#for_window [instance="ldoce5viewer"] floating enable border none
+#for_window [instance="ldoce5viewer"] move scratchpad
+#for_window [instance="ldoce5viewer"] move position 0px 22px
+#exec --no-startup-id ldoce5viewer
+
+
+##############################################################
+# resize window (you can also use the mouse for that)
+mode "resize" {
+    bindsym h resize grow width 2 px or 2 ppt
+    bindsym l resize shrink width 2 px or 2 ppt
+    bindsym j resize grow height 2 px or 2 ppt
+    bindsym k resize shrink height 2 px or 2 ppt
+
+    # same bindings, but for the arrow keys
+    bindsym Left resize shrink width 2 px or 2 ppt
+    bindsym Down resize grow height 2 px or 2 ppt
+    bindsym Up resize shrink height 2 px or 2 ppt
+    bindsym Right resize grow width 2 px or 2 ppt
+
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+
+##############################################################
+# Start i3bar to display a workspace bar (plus the system information i3status
+# finds out, if available)
+bar {
+    position top
+    status_command ~/bin/status --weather --cpu --memory --network --clock --volume --battery i3bar
+}

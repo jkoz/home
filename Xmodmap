@@ -1,0 +1,17 @@
+! Swap Caps_Lock and Control_L
+remove Lock = Caps_Lock
+remove Control = Control_L
+keysym Control_L = Caps_Lock
+keysym Caps_Lock = Control_L
+add Lock = Caps_Lock
+add Control = Control_L
+
+keycode 150 = XF86PowerOff
+keycode 234 = XF86Pictures
+keycode 179 = XF86Music
+keycode 250 = XF86ZoomIn
+keycode 251 = XF86ZoomOut
+keycode 252 = XF86Messenger
+keycode 253 = XF86Word
+keycode 254 = XF86Excel
+keycode 255 = XF86Calendar

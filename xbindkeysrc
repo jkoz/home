@@ -1,0 +1,43 @@
+# call scratchpad urxvt, see xinitrc for definition
+"urxvtc"
+    m:0x9 + c:36
+        Shift+Alt + Return
+"xvkbd -text '\[F10]'"
+    m:0x9 + c:31
+        Shift+Alt + i
+"xbacklight -inc 20"
+    m:0x9 + c:111
+        Shift+Alt + Up
+"xbacklight -dec 20"
+    m:0x9 + c:116
+        Shift+Alt + Down
+"amixer -c 0 set Master 1+"
+    m:0x9 + c:114
+        Shift+Alt + Right
+"amixer -c 0 set Master 1-"
+    m:0x9 + c:113
+        Shift+Alt + Left
+"sh -c '~/bin/dmenudesktop'"
+    m:0x8 + c:33
+        Alt + p
+"sh -c '~/bin/dmenuproc'"
+    m:0x8 + c:30
+        Alt + u
+"xlock"
+    m:0x9 + c:35
+    Shift+Alt + bracketright
+"systemctl reboot"
+    m:0x9 + c:27
+        Shift+Alt + r
+"systemctl poweroff"
+    m:0x9 + c:39
+        Shift+Alt + s
+"chromium"
+    m:0x9 + c:56
+        Shift+Alt + c
+"scrot -e 'mv $f /tmp/ && gimp /tmp/$f'"
+    m:0x0 + c:107
+        Print
+"scrot -s -e 'mv $f /tmp/ && gimp /tmp/$f'"
+    m:0x1 + c:107
+        Shift + Print

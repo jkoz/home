@@ -1,0 +1,478 @@
+# 0. Swap caps lock and ctrl
+sudo loadkeys /usr/share/kbd/keymaps/i386/qwerty/emacs2.map.gz
+kbdrate -d 30  -r 400
+
+# 1. Partitioning
+
+lsblk
+fdisk -l
+
+mkfs.ext3 /dev/sda1
+mkfs.ext4 /dev/sda5
+mkfs.ext4 /dev/sda6
+mkfs.ext4 /dev/sda8
+
+/dev/sda5        46G   12G   32G  27% /
+/dev/sda1       227M   36M  179M  17% /boot
+/dev/sda6        30G  4.0G   24G  15% /var
+/dev/sda8       610G  123G  457G  22% /home
+
+# 2. Mounting
+
+mount /dev/sda5 /mnt
+mkdir /mnt/boot /mnt/var /mnt/home
+
+mount /dev/sda1 /mnt/boot
+mount /dev/sda6 /mnt/var
+mount /dev/sda8 /mnt/home
+
+# 3. install system base
+pacstrap /mnt base vim tmux
+
+# 4. generate fstab
+genfstab -p /mnt >> /mnt/etc/fstab
+
+# 5. change root new env
+arch-chroot /mnt
+
+# 6. create hostname
+echo "jkoz_arch_linux" > /etc/hostname
+
+# 7. locale setting
+ln -s /usr/share/zoneinfo/Canada/Mountain /etc/localtime
+
+# 8. enable us locale
+
+sed -i 's!#en_US.UTF-8 UTF-8!en_US.UTF-8 UTF-8!' /etc/locale.gen
+sed -i 's!#en_US ISO-8859-1!en_US ISO-8859-1!' /etc/locale.gen
+
+locale-gen
+
+# important in order to support unicode charaters in urxvt; give it a test echo "\udf"
+localectl set-locale LANG=en_US.UTF-8
+
+# 9. increase kdb rate and persistent keymap (swap caplocks and ctrl)
+
+echo "KEYMAP=\"emacs2\"" > /etc/vconsole.conf
+kbdrate -d 30  -r 400
+
+# 10. install grub
+pacman -S grub
+
+mkinitcpio -p linux
+grub-install /dev/sda
+grub-mkconfig -o /boot/grub/grub.cfg
+
+# 11. reboot and set up root passwd
+passwd
+
+# 12. enable service network
+systemctl list-unit-files
+systemctl enable dhcpcd
+
+# 13. add new user
+useradd -m -d/home/tait -s /usr/bin/zsh tait
+useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power -s /usr/bin/zsh tait
+
+# 14. enable sudo for wheel groups
+su -
+sudoedit /etc/sudoers
+
+uncomment %wheel ALL=(ALL) ALL
+
+# 15. install my favorite apps
+
+# required
+pacman -S ctags bc
+
+# fonts
+pacman -S pcf2bdf xorg-xfontsel xorg-xfontsel xorg-xfd xorg-xlsfonts
+pacman -S terminus-font 
+
+yaourt -S stlarch_font gbdfed
+
+
+# ttf
+pacman -S ttf-mac-fonts
+
+pacman -S dialog wpa_supplicant elinks zsh sudo fbterm ttf-inconsolata git subversion \
+                 cvs xclip axel zip unzip unrar dmenu xorg xorg-server xorg-xinit i3 mplayer \
+                 ffmpeg firefox rtorrent flashplugin xlockmore rxvt-unicode alsa-utils \
+                 alsa-oss mupdf samba openssh feh mutt ranger cdrkit net-tools cabextract cmake \
+                 ntfs-3g simple-mtpfs freetype2 fetchmail libxft x11vnc wmctrl xautolock procmail
+
+# yaourt
+echo "[archlinuxfr]" >> /etc/pacman.conf
+echo "SigLevel = Never" >> /etc/pacman.conf
+echo "Server = http://repo.archlinux.fr/$arch" >> /etc/pacman.conf
+
+pacman -S yaourt --needed base-devel
+
+# browser
+pacman -S chromium
+yaourt -S dropbox dropbox-cli grive chromium-pepper-flash
+yaourt -S shrew-vpn-client
+
+# utils
+pacman -S xdg-user-dirs
+
+yaourt -S silver-searcher-git
+
+# pip
+pacman -S python-pip
+pip install yweather
+
+# 16 generate Downloads, Documents,...
+xdg-user-dirs-update
+
+# 17 git experimental apps
+git clone https://github.com/baskerville/xtitle
+git clone https://github.com/LemonBoy/bar
+git clone https://github.com/baskerville/bspwm
+
+
+# DONE!!!!
+
+# 17 install extra apps
+pacman -S a52dec aalib abcde abs acl acpi acpid alsa-lib alsa-oss alsa-utils anki apr apr-util archey archlinux-keyring artwiz-fonts asciidoc aspell atk atkmm \
+attr audiofile autoconf automake avahi axel babl bash bc bdf-unifont bdf2psf binutils bison bitlbee boost boost-libs bspwm-git bzip2 ca-certificates \
+ca-certificates-cacert ca-certificates-java ca-certificates-mozilla ca-certificates-utils cabextract cairo cairomm cd-discid cdparanoia cdrkit chromium\
+chromium-pepper-flash cifs-utils clang clockywock cloog clucene cmake colord compositeproto compton-git confuse conky coreutils cracklib cryptsetup ctags \
+cups cups-filters cups-pdf curl cvs damageproto db dbus dbus-glib dconf desktop-file-utils device-mapper dhcpcd dialog diffutils dirmngr dmxproto dnssec-anchors \
+docbook-xml docbook-xsl dosfstools dotconf dropbox dropbox-cli dzen2 e2fsprogs elfutils elinks enca enchant espeak evrouter ewmhstatus-git expat faac \
+faad2 fakeroot fbterm feh fetchmail ffmpeg fftw file filesystem findutils firefox fish fixesproto flac flashplugin flex font-misc-ethiopic fontconfig \
+fontforge fontmatrix-git fontsproto freetype2 fribidi fuse gamin gawk gbdfed gc gcc gcc-libs gconf gdb gdbm gdk-pixbuf2 gegl geoclue2 gettext ghostscript \
+giblib giflib gimp git glib-networking glib2 glibc glibmm glu gmp gmrun gnome-mime-data gnome-vfs gnupg gnutls gobject-introspection goldendict gperf \
+gpgme gpicview gpm graphite grep grive-git groff grub gsettings-desktop-schemas gsfonts gsl gsm gst-plugins-base gst-plugins-base-libs gstreamer \
+gstreamer0.10 gstreamer0.10-base gstreamer0.10-base-plugins gstreamer0.10-good gstreamer0.10-good-plugins gstreamer0.10-python gstreamer0.10-ugly \
+gstreamer0.10-ugly-plugins gtk-update-icon-cache gtk2 gtkmm gtkspell guile gvfs gvim gzip harfbuzz harfbuzz-icu hicolor-icon-theme hspell htop hunspell \
+hwids hyphen i3-git i3status iana-etc icu ilmbase imagemagick imlib2 inetutils iniparser inputproto intltool iproute2 iptables iputils irssi isl jack \
+jasper jbig2dec jfsutils js17 js185 json-c json-glib kbd kbproto keyutils kmod krb5 lame lcms lcms2 ldb ldns ldoce5viewer-git less lesstif lib32-alsa-lib \
+lib32-atk lib32-attr lib32-bzip2 lib32-cairo lib32-curl lib32-e2fsprogs lib32-elfutils lib32-expat lib32-flac lib32-fontconfig lib32-freetype2 lib32-gcc-libs \
+lib32-gdk-pixbuf2 lib32-glib2 lib32-glibc lib32-gtk2 lib32-harfbuzz lib32-icu lib32-json-c lib32-keyutils lib32-krb5 lib32-lcms2 lib32-libasyncns \
+lib32-libcap lib32-libcups lib32-libdbus lib32-libdrm lib32-libffi lib32-libgcrypt lib32-libgpg-error lib32-libice lib32-libidn lib32-libjpeg-turbo \
+lib32-libldap lib32-libmng lib32-libogg lib32-libpciaccess lib32-libpng lib32-libpulse lib32-libsm lib32-libsndfile lib32-libssh2 lib32-libtiff \
+lib32-libtxc_dxtn lib32-libvdpau lib32-libvorbis lib32-libx11 lib32-libxau lib32-libxcb lib32-libxcomposite lib32-libxcursor lib32-libxdamage \
+lib32-libxdmcp lib32-libxext lib32-libxfixes lib32-libxft lib32-libxi lib32-libxinerama lib32-libxml2 lib32-libxrandr lib32-libxrender lib32-libxshmfence \
+lib32-libxss lib32-libxt lib32-libxtst lib32-libxv lib32-libxxf86vm lib32-llvm-libs lib32-mesa lib32-mesa-dri lib32-mesa-libgl lib32-ncurses lib32-openssl \
+lib32-pango lib32-pcre lib32-pixman lib32-qt4 lib32-readline lib32-sqlite lib32-systemd lib32-util-linux lib32-v4l-utils lib32-wayland lib32-xcb-util \
+lib32-xz lib32-zlib libaio libao libarchive libass libassuan libasyncns libatasmart libatomic_ops libavc1394 libbluray libbonobo libbsd libcaca libcanberra \
+libcap libcap-ng libcddb libcdio libcdio-paranoia libcl libconfig libcroco libcups libdaemon libdatrie libdbus libdca libdmx libdrm libdv libdvbpsi \
+libdvdnav libdvdread libebml libedit libepoxy libev libevdev libevent libexif libffi libfm libfm-extra libfontenc libftdi-compat libgcrypt libgdiplus \
+libglade libgnome libgnome-data libgpg-error libgusb libice libid3tag libidl2 libidn libiec61883 libirman libjpeg-turbo libkate libksba libldap liblqr \
+libltdl libmaa libmad libmariadbclient libmatroska libmm-glib libmms libmng libmodplug libmp4v2 libmpc libmpcdec libmpdclient libmpeg2 libmtp libnl \
+libnm-glib libogg libomxil-bellagio libpaper libpciaccess libpipeline libpng libproxy libpulse libqzeitgeist libraw1394 libreoffice-still-common \
+libreoffice-still-en-US libreoffice-still-writer librsvg libsamplerate libsasl libseccomp libsecret libshout libsidplay libsigc++ libsm libsndfile \
+libsodium libsoup libspiro libssh2 libsystemd libtar libtasn1 libthai libtheora libtiff libtiger libtirpc libtool libtorrent libtxc_dxtn libunicodenames \
+libunistring libupnp libusb libusb-compat libutil-linux libva libvdpau libvisual libvorbis libvpx libwbclient libwebp libwmf libwnck libx11 libx264 \
+libxau libxaw libxcb libxcomposite libxcursor libxdamage libxdmcp libxext libxfixes libxfont libxft libxi libxinerama libxkbcommon libxkbcommon-x11 \
+libxkbfile libxkbui libxml2 libxmu libxp libxpm libxrandr libxrender libxres libxshmfence libxslt libxss libxt libxtst libxv libxvmc libxxf86dga \
+libxxf86vm libyaml libzip licenses linux linux-api-headers linux-firmware lirc-utils livestreamer llvm llvm-libs lm_sensors logrotate lua lua51 lvm2 \
+lxmenu-data lynx lzo m4 make man-db man-pages mcpp mdadm menu-cache mesa mesa-dri mesa-libgl mime-types mkinitcpio mkinitcpio-busybox mono \
+mozilla-common mpc mpd mpfr mpg123 mplayer mtdev mtools mupdf mutt nano ncmpcpp ncurses neon net-snmp net-tools netctl nettle nitrogen nodejs nspr nss \
+ntfs-3g oh-my-zsh-git opencore-amr openexr openjpeg openjpeg2 openresolv openssh openssl opera opus orbit2 orc p11-kit p7zip package-query pacman \
+pacman-mirrorlist pam pambase pamixer pango pangomm patch pcf2bdf pciutils pcmanfm pcmciautils pcre perl perl-archive-extract perl-cpanplus \
+perl-cpanplus-dist-arch perl-error perl-log-message perl-log-message-simple perl-module-pluggable perl-object-accessor perl-term-ui perl-xml-parser \
+phonon-qt4 phonon-qt4-gstreamer phonon-qt4-vlc pinentry pixman pkg-config polkit poppler poppler-glib popt portaudio printproto procmail procps-ng \
+psmisc pth pygobject2-devel pygtk pyqt4-common python python-dbus python-dbus-common python-i3-git python-lxml python-pip python-pyqt4 python-requests \
+python-setuptools python-sip python-whoosh python-xdg python-yweather python2 python2-beaker python2-beautifulsoup3 python2-cairo python2-dbus \
+python2-docutils python2-eyed3 python2-gobject2 python2-httplib2 python2-jinja python2-mako python2-markupsafe python2-pygments python2-pyqt4 \
+python2-setuptools python2-sip python2-sphinx python2-sqlalchemy qpdf qt4 qtwebkit randrproto ranger raptor rasqal readline recode recordproto \
+redland reiserfsprogs renderproto rsync rtmpdump rtorrent ruby run-parts rxvt-unicode rxvt-unicode-terminfo s-nail samba schroedinger scrnsaverproto \
+scrot sdl sdl_image sed serf shadow shared-mime-info silver-searcher-git simple-mtpfs sip skype smbclient snappy sound-theme-freedesktop speech-dispatcher \
+speex sqlite stardict stardict-tools startup-notification stlarch_font stlarch_icons sublime-text subversion sudo sxhkd-git sysfsutils syslinux systemd \
+systemd-sysvcompat taglib talloc tar tdb terminus-font terminus-font-ttf terminusmod tevent texinfo thin-provisioning-tools tmux transset-df tre \
+ttf-bitstream-vera ttf-code2000 ttf-code2001 ttf-hannom ttf-inconsolata ttf-ms-fonts ttf-unifont-csur ttf-vista-fonts tty-clock tzdata udisks2 \
+unetbootin unrar unzip usbutils util-linux v4l-utils v8 vi videoproto vim-ctrlp vim-runtime vim-youcompleteme-git virtualbox-host-modules vlc \
+vorbis-tools vundle-git w3m wavpack wayland webkitgtk2 wget which wireless_tools wmctrl wpa_supplicant x11vnc x264 x265 xautolock xaw3d xbindkeys \
+xcb-proto xcb-util xcb-util-cursor-git xcb-util-image xcb-util-keysyms xcb-util-renderutil xcb-util-wm xclip xdg-user-dirs xdg-utils xextproto \
+xf86-input-evdev xf86-input-joystick xf86-input-keyboard xf86-input-mouse xf86-input-synaptics xf86-input-vmmouse xf86-input-void xf86-video-ark \
+xf86-video-ast xf86-video-ati xf86-video-cirrus xf86-video-dummy xf86-video-fbdev xf86-video-glint xf86-video-i128 xf86-video-intel xf86-video-mach64 \
+xf86-video-mga xf86-video-modesetting xf86-video-neomagic xf86-video-nouveau xf86-video-nv xf86-video-openchrome xf86-video-r128 xf86-video-savage \
+xf86-video-siliconmotion xf86-video-sis xf86-video-tdfx xf86-video-trident xf86-video-v4l xf86-video-vesa xf86-video-vmware xf86-video-voodoo \
+xf86dgaproto xf86vidmodeproto xfsprogs xineramaproto xkeyboard-config xlockmore xmlrpc-c xorg-bdftopcf xorg-docs xorg-font-util xorg-font-utils \
+xorg-fonts-100dpi xorg-fonts-75dpi xorg-fonts-alias xorg-fonts-encodings xorg-fonts-misc xorg-iceauth xorg-luit xorg-mkfontdir xorg-mkfontscale \
+xorg-server xorg-server-common xorg-sessreg xorg-setxkbmap xorg-smproxy xorg-util-macros xorg-x11perf xorg-xauth xorg-xbacklight xorg-xcmsdb \
+xorg-xcursorgen xorg-xdpyinfo xorg-xdriinfo xorg-xev xorg-xfd xorg-xfontsel xorg-xgamma xorg-xhost xorg-xinit xorg-xinput xorg-xkbcomp xorg-xkbevd \
+xorg-xkbutils xorg-xkill xorg-xlsatoms xorg-xlsclients xorg-xlsfonts xorg-xmodmap xorg-xpr xorg-xprop xorg-xrandr xorg-xrdb xorg-xrefresh xorg-xset \
+xorg-xsetroot xorg-xvinfo xorg-xwd xorg-xwininfo xorg-xwud xproto xsel xtitle-git xvidcore xvkbd xz yajl yaourt youtube-dl zeromq zip zita-alsa-pcmi \
+zita-resampler zlib zsh zvbi
+
+#################
+ 2178  sudo pacman -S lm_sensors
+ 2179  sudo pacman -Ss weather
+ 2198  pacman -S weather
+ 2228  sudo pacman -S irssi
+ 2229  sudo pacman -S bitlbee
+ 2285  sudo pacman -S gmrun
+ 2311  sudo pacman -S acpid
+ 2343  sudo pacman -S weather
+ 2387  sudo pacman -S gimp
+ 2389  sudo pacman -S nitrogen
+ 2406  sudo pacman -S xcompmgr transet-df devilspie
+ 2407  sudo pacman -S xcompmgr transset-df devilspie
+ 2412  sudo pacman -S gvim
+ 2442  sudo pacman -R xcompmgr transset-df devilspie
+ 2497  sudo pacman -S ncmpcpp
+ 2502  sudo pacman -S ncmpcpp mpd mpc
+ 2526  sudo pacman -R i3
+ 2527  sudo pacman -R i3-wm
+ 2528  sudo pacman -R python-i3-git i3
+ 2541  sudo pacman -S elink2
+ 2542  sudo pacman -S elinks2
+ 2543  pacman -S base-devel abs dmenu
+ 2544  sudo pacman -S base-devel abs dmenu
+ 2550  sudo pacman -S dwm
+ 2579  sudo pacman -R java
+ 2580  sudo pacman -R jre7-openjdk-7
+ 2581  sudo pacman -R jdk7-openjdk
+ 2582  sudo pacman -R eclipse
+ 2583  sudo pacman -R eclipse jre7-openjdk
+ 2584  sudo pacman -R jdk7-openjdk jre7-openjdk
+ 2585  sudo pacman -R jdk7-openjdk jre7-openjdk apache-ant  cabaretstage
+ 2586  sudo pacman -Ss openjdk
+ 2587  sudo pacman -R java-common
+ 2588  sudo pacman -R java-common jre7-openjdk-headless
+ 2589  sudo pacman -S pcmanfm
+ 2641  pacman -R dwm
+ 2652  sudo pacman -R vim-youcompleteme-git
+ 2658  sudo pacman -S st
+ 2684  sudo pacman -S dmenu
+ 2726  sudo pacman -S freetype
+ 2730  sudo pacman -R dwm
+ 2731  sudo pacman -R dwm-6.0
+ 2741  sudo pacman -S libxft
+ 2742  sudo pacman -S freetype2
+ 2867  sudo pacman -S transset-df
+ 2881  sudo pacman -S xautolock
+ 2902  sudo pacman -S x11vnc
+ 2978  sudo pacman -S 00~wmctrl01~
+ 2979  sudo pacman -S wmctrl
+ 3036  sudo pacman -Suy
+ 3074  sudo pacman -S lynx
+ 3076  sudo pacman -S w3m
+ 3196  sudo pacman -S fetchmail
+ 3197  history| grep pacman
+ 3201  sudo pacman -S procmail
+ 3245  sudo pacman -R weather
+ 3410  sudo pacman -R dmenu
+ 3419  sudo pacman -Ss dzen
+ 3420  sudo pacman -S dzen2
+ 3421  sudo pacman -S xscreenserver
+ 3422  sudo pacman -Ss screen
+ 3423  sudo pacman -Ss screen | grep server
+ 3467  sudo pacman -S getloadavg
+ 3529  sudo pacman -S gdb
+ 3532  sudo pacman -S vdso
+ 3533  sudo pacman -Ss vdso
+ 3567  sudo pacman -S ttf-hannom
+ 3568  sudo pacman -S 
+ 3569  sudo pacman -S ttf-mac
+ 3591  sudo pacman -S xbindky
+ 3592  sudo pacman -S xbindkey
+ 3593  sudo pacman -S xbindkeys
+ 3596  sudo pacman -S pamixer
+ 3685  sudo pacman -S xbkdb
+ 3686  sudo pacman -S xbkbd
+ 3687  sudo pacman -S xvkdb
+ 3688  sudo pacman -S xvkbd
+ 3743  sudo pacman -S acpi
+ 3763  sudo pacman -Ss thingmenu
+ 3798  sudo pacman -S terminus
+ 3926  sudo pacman -S rss
+ 3927  sudo pacman -Ss rss
+ 4005  sudo pacman -S conky
+ 4150  sudo pacman -S scrot
+ 4201  sudo pacman -S python-i3-git
+ 4202  sudo pacman -S i3-wm
+ 4208  sudo pacman -R python-i3-git
+ 4209  sudo pacman -R i3-git
+ 4213  sudo pacman -Ss cpan
+ 4216  sudo pacman -S perl-cpanplus-dist-arch
+ 4275  pacman -S i3status
+ 4276  sudo pacman -S i3status
+ 4569  sudo pacman -S fish
+ 4570  sudo pacman -S pspwm sxhkd
+ 4595  sudo pacman -S libxcb xcb-util xcb-util-keysyms xcb-util-wm
+
+
+ 4882  pacman -S xorg-xfs
+ 4883  sudo pacman -S xorg-xfs
+ 4884  sudo pacman -Ss xorg | grep xfs
+ 4885  sudo pacman -Ss xorg |
+ 4886  sudo pacman -Ss xorg
+ 5066  pacman -S xdg-user-dirs
+ 5067  sudo pacman -S xdg-user-dirs
+ 5084  sudo pacman -S v8
+ 5085  sudo pacman -Ss rhino
+ 5086  sudo pacman -S rhino
+ 5087  sudo pacman -S nodejs
+ 5142  sudo pacman -Ss x
+ 5143  sudo pacman -R x
+ 5146  sudo pacman -Ss xorg
+ 5147  sudo pacman -Ss "xorg-"
+ 5148  sudo pacman -Ss "xorg-s"
+ 5149  sudo pacman -R "xorg-server"
+ 5151  sudo pacman -S"xorg-server"
+ 5152  sudo pacman -S "xorg-server"
+ 5154  sudo pacman -Sw xorg-server-
+ 5155  sudo pacman -Sw xorg-server-1.15
+ 5156  sudo pacman -Sw "xorg-server<=1.15"
+ 5157  sudo pacman -Sw "xorg-server>=1"
+ 5158  sudo pacman -Sw "xorg-server>=1.15"
+ 5164  sudo pacman -Ss "xorg-server"
+  107  yaourt -S silver-searcher-get
+  108  yaourt -S silver-searcher-git
+  327  sudo yaourt -Ss pdf
+  328  yaourt -Ss pdf
+  329  yaourt -Ss acro
+  330  yaourt -Ss foxit
+  336  f\\\\n: 1405997005:0;yaourt -S foxitreader
+  338  yaourt -S  acroread
+  339  yaourt -R foxitreader
+  346  yaourt -Ss cabaret
+  347  sudo yaourt -Ss cabaret
+  348  yaourt -S cabaret
+  349  yaourt -S cabaretstage
+  352  yaourt -S acroreader
+  353  yaourt -R acroreader
+  354  yaourt -Ss acroreader
+  355  yaourt -Ss acroread
+  356  yaourt -R acroread
+  498  yaourt -S stardict-tools
+  520  sudo pacman -S Suy && yaourt -Suy
+  522  yaourt -S dictconv
+  528  sudo yaourt -Ss golden
+  538  sudo yaourt -Ss stardict
+  539  sudo yaourt -Ss xdxf
+  546  yaourt makedict
+  547  yaourt -S makedict
+  830  sudo yaourt -Suy
+ 1171  yaourt -Suy
+ 1172  sudo pacman -Suy && yaourt -Suy
+ 1760  sudo yaourt -S vim-youcompleteme-git
+ 1787  sudo yaourt -S grive-git
+ 1788  yaourt -S grive-git
+ 1790  yaourt -S ttf-win7-fonts
+ 1791  yaourt -S ttf-ms-win8
+ 1793  sudo yaourt -S ttf-ms-fonts
+ 1794  yaourt -S ttf-ms-fonts
+ 1798  yaourt -S tty-clock
+ 1799  yaourt -S clockywork
+ 1800  yaourt -S clockywock
+ 1810  sudo yaourt -S ldoce5viewer-git
+ 1816  yaourt -R ldoce5viewer-git
+ 1819  cd /tmp/yaourt-tmp-tait/aur-ldoce5viewer-git
+ 1830  yaourt -S dmenu-mousey-git
+ 1836  yaourt -R dmenu-mousey-git
+ 1837  cd /tmp/yaourt-tmp-tait/aur-dmenu-xft-transparency
+ 1838  cd /tmp/yaourt-tmp-tait/PKGDEST.WW2
+ 1874  sudo yaourt -S j4-dmenu-desktop
+ 1875  yaourt -S j4-dmenu-desktop
+ 1877  yaourt -S ldoce5viewer
+ 1888  rm -rf /tmp/yaourt-tmp-tait/aur-ldoce5viewer*
+ 1889  yaourt -S ldoce5viewer-git
+ 1908  cd yaourt-tmp-tait
+ 1912  sudo yaourtt -S python-mplayer
+ 1913  yaourt -S python-mplayer
+ 1914  yaourt -S python-mplayer.py
+ 1916  sudo yaourt -S gst-python-git
+ 1917  yaourt -S gst-python-git
+ 1919  sudo yaourt -S pip3
+ 1920  yaourt -S pip3
+ 2041  sudo yaourt -R gst-python-git
+ 2042  yaourt -R gst-python-git
+ 2043  yaourt -R python-mplayer.py
+ 2070  sudo yaourt -Ss vlc
+ 2071  yaourt -Ss vlc
+ 2100  sudo yaourt -S simple-mtpfs
+ 2101  yaourt -S simple-mtpfs
+ 2105  sudo yaourt -S jmtpfs
+ 2106  yaourt -S jmtpfs
+ 2127  yaourt -R jmtpfs
+ 2142  yaourt -Ss tmux
+ 2147  yaourt -S urxvt-clipboard
+ 2153  yaourt -R urxvt-clipboard
+ 2180  sudo yaourt -Ss weather
+ 2181  yaourt -Ss weather
+ 2182  yaourt -Ss weather-util
+ 2183  yaourt -S weather-util
+ 2197  yaourt -R weather-util
+ 2207  yaourt -Ss accuweather
+ 2227  yaourt -Ss rss
+ 2231  yaourt -Ss python-yweather
+ 2232  yaourt -S python-yweather
+ 2313  yaourt -S evrouter
+ 2344  sudo yaourt -S weather
+ 2345  yaourt -S weather
+ 2425  sudo yaourt -S compton-git
+ 2426  yaourt -S compton-git
+ 2529  sudo yaourt -R python-i3-git i3-git
+ 2530  yaourt -R python-i3-git i3-git
+ 2531  yaourt -S python-i3-git i3-git
+ 2536  ls /tmp/yaourt-tmp-tait/aur-dwm-git/dwm.desktop
+ 2537  vim /tmp/yaourt-tmp-tait/aur-dwm-git/dwm.desktop
+ 2538  cd /tmp/yaourt-tmp-tait/aur-dwm-git
+ 2545  yaourt -S dmenu-xft-transparency
+ 2608  ls /tmp/yaourt-tmp-tait/
+ 2636  yaourt -S dwm-git
+ 2640  yaourt -R dwm-git
+ 2643  man yaourt
+ 2644  yaourt -G dwm-git
+ 2682  sudo yaourt -R dmenu-xft-transparency
+ 2683  yaourt -R dmenu-xft-transparency
+ 3077  yaourt -Ss elinks
+ 3199  history| grep yaourt
+ 3412  yaourt -R dmenu-xft-transparency j4-dmenu-desktop
+ 3472  yaourt -R vim-youcompleteme-git
+ 3473  yaourt -D vim-youcompleteme-git
+ 3474  yaourt -S vim-youcompleteme-git
+ 3575  yaourt -S ttf-code2000
+ 3576  yaourt -Ss code20
+ 3577  yaourt -Ss code2001
+ 3578  yaourt -S ttf-code2001
+ 3580  yaourt -S ttf-unifont-csur
+ 3584  yaourt fontmatrix
+ 3585  yaourt -S fontmatrix
+ 3586  yaourt -S fontmatrix-git
+ 3764  yaourt -Ss thingmenu
+ 3765  yaourt -S thingmenu
+ 3805  yaourt -S terminusmod
+ 3807  yaourt -S terminus-font-ttf
+ 3833  sudo yaourt -S stlarch_font
+ 3834  yaourt -S stlarch_font
+ 3843  yaourt -Ss bar
+ 3864  yaourt -Ss dzen
+ 3865  yaourt -S stlarch_icons
+ 3880  yaourt -S conky-cli
+ 4004  yaourt -R conky-cli
+ 4041  yaourt -S ewmhstatus-git
+ 4203  sudo yaourt -S i3-git
+ 4214  sudo yaourt -Ss cpan
+ 4215  yaourt -Ss cpan
+ 4274  yaourt -S i3-git
+ 4283  yaourt -S python-i3-git
+ 4571  sudo yaourt -S pspwm-git sxhkd-git
+ 4734  yaourt -S xtitle-git
+ 4745  yaourt -Ss font
+ 4756  yaourt -S pcf2bdf
+ 4759  yaourt -S xorg-font-tools
+ 4760  yaourt -Ss xorg | grep font
+ 4761  yaourt -Ss xorg | grep font | grep tool
+ 4765  yaourt -Ss terminus
+ 4782  yaourt -S bdf
+ 4783  yaourt -Ss bdf
+ 4848  yaourt -Ss xfont
+ 4849  yaourt -Ss xfs
+ 4887  sudo yaourt -Ss fst
+ 4888  yaourt -Ss fst
+ 4889  yaourt -Ss fst | grep bdf
+ 4890  yaourt -Ss fstobdf\\n
+ 4891  yaourt -Ss fstobdf\n: 1414266176:0;yaourt -Ss fstobdf
+ 4892  yaourt -S bdf2psf
+ 4928  yaourt -Ss pcf
+ 5014  yaourt -S bar-aint-recursive
+ 5040  yaourt -R bar-aint-recursive
+ 5064  yaourt -S archey
+ 5076  yaourt -Ss v8
+ 5266  history | grep "pacman\|yaourt"

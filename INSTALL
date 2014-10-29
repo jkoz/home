@@ -1,0 +1,78 @@
+#!/bin/bash
+echo "INSTALL linux environment"
+install -d ~/.config
+
+# bind keys
+install -d ~/.config/sxhkd
+install -m755 config/sxhkd/* ~/.config/sxhkd
+
+# editor
+install -d ~/.vim ~/.vim/bundle
+install -Dm644 vimrc ~/.vimrc
+
+# terminal
+install -Dm644 tmux.conf ~/.tmux.conf
+#install -Dm644 screenrc ~/.screenrc
+
+# shell
+install -Dm644 zshrc ~/.zshrc
+#install -Dm644 bash_profile ~/.bash_profile
+#install -Dm644 bashrc ~/.bashrc
+#install -Dm644 bashrc.d/* ~/.bashrc.d
+
+# mail
+install -Dm644 muttrc ~/.muttrc
+#install -Dm644 muttrc.d/* ~/.muttrc.d
+install -Dm644 procmailrc ~/.procmailrc
+
+# x session
+install -Dm644 xinitrc ~/.xinitrc
+install -Dm644 Xresources ~/.Xresources
+#install -Dm644 Xmodmap ~/.Xmodmap # xmodmap is old, using sxkbd instead
+
+# irc, im
+install -d ~/.irssi ~/.irssi/scripts
+install -Dm644 irssi/config ~/.irssi
+install -Dm644 irssi/startup ~/.irssi
+install -Dm644 irssi/xchat.theme ~/.irssi
+install -Dm644 irssi/xchatnickcolor.pl ~/.irssi
+install -Dm644 irssi/scripts/* ~/.irssi/scripts
+
+# file manager
+install -d ~/.config/ranger
+install -Dm644 config/ranger/* ~/.config/ranger
+
+# panel
+install -Dm644 config/tint2/* ~/.config/tint2
+
+# composite
+install -Dm644 config/compton.conf ~/.config/compton.conf
+
+# conky
+install -Dm644 conkyrc ~/.conkyrc
+
+# mplayer
+install -d ~/.mplayer
+install -Dm644 mplayer/config ~/.mplayer/config
+
+# scripts
+install -d ~/bin
+install -Dm755 scripts/* ~/bin
+
+# fonts
+install -d ~/.fonts
+install -Dm644 fonts/* ~/.fonts && mkfontscale; mkfontdir
+
+# window mangers
+# i3
+#install -Dm644 i3/config ~/.i3/config
+#install -Dm755 i3/winmenu.py ~/.i3/winmenu.py
+#install -Dm644 i3/conkyrc ~/.i3/conkyrc
+#install -Dm755 i3/conky ~/.i3/conky
+# dwm
+#install -Dm755 dwm/autostart.sh ~/.dwm/autostart.sh
+# openbox
+#install -Dm644 config/openbox/* ~/.config/openbox
+# bspwm
+install -d ~/.config/bspwm
+install -Dm755 config/bspwm/* -t ~/.config/bspwm

@@ -1,0 +1,10 @@
+run nicklist.pl
+run hilightwin.pl
+run notify.pl
+run adv_windowlist.pl
+run history_search.pl
+bind ^R /history_search
+connect localhost
+exec tmux splitw -t $USER:2 -h -p 17
+exec tmux send-keys -t $USER:2 "cat ~/.irssi/nicklistfifo" C-m
+exec tmux select-pane -t $USER:2.0

@@ -1,0 +1,109 @@
+#!/bin/bash
+#-------------------------------------------------------------------------------
+# Reference: http://en.gentoo-wiki.com/wiki/Backup_Using_Rsync
+#-------------------------------------------------------------------------------
+
+unset PATH # avoid accidental use of $PATH
+
+# ------------- system commands used by this script --------------------
+ID=/usr/bin/id;
+ECHO=/bin/echo;
+
+MOUNT=/bin/mount;
+UMOUNT=/bin/umount;
+RM=/bin/rm;
+MV=/bin/mv;
+CP=/bin/cp;
+TOUCH=/bin/touch;
+RSYNC=/usr/bin/rsync;
+DD=/bin/dd
+DATE=/bin/date
+MKDIR=/bin/mkdir
+
+
+# ------------- file locations -----------------------------------------
+TO_BACKUP=/
+BOOT_PARTITION=/dev/sda1
+BOOT=/boot
+SNAPSHOT_PARTITION=/dev/sdc1
+SNAPSHOT_MOUNT_POINT=/mnt/usb
+SNAPSHOT=$SNAPSHOT_MOUNT_POINT/snapshots/`$DATE +%d-%m-%Y`
+
+$ECHO -e '
+/usr/portage/distfiles/
+/mnt/iso/*
+/mnt/usb/*
+/mnt/win/*
+/mnt/*
+/proc/*
+/dev/*
+/sys/*
+/tmp/*
+/var/log/*
+/root/*
+/home/jkoz/' > /tmp/rsyn-backup-exclude
+EXCLUDES=/tmp/rsyn-backup-exclude
+
+$ECHO -e '
+/dev/null
+/dev/console' > /tmp/rsyn-backup-include
+INCLUDES=/tmp/rsyn-backup-include
+
+
+# ------------- MAIN --------------------------------------
+# make sure we're running as root
+if [ `$ID -u` != 0 ]; then { $ECHO "Sorry, must be root.  Exiting..."; exit; } fi
+
+
+# mount boot for backup
+$MOUNT $BOOT_PARTITION $BOOT;
+if (( $? )); then
+{
+    $ECHO "snapshot: could not remount $BOOT_PARTITION"
+    exit
+}
+fi
+
+# do backup
+$MKDIR -p $SNAPSHOT
+$RSYNC --archive --one-file-system --hard-links \
+          --human-readable --inplace --numeric-ids \
+          --delete --delete-excluded --progress \
+          --exclude-from="$EXCLUDES" \
+          --include-from="$INCLUDES" \
+          $TO_BACKUP $SNAPSHOT
+
+
+# backup the boot sector
+$DD if=/dev/sda of=$SNAPSHOT/MBR bs=512 count=1
+
+
+# unmount /boot
+$UMOUNT $BOOT_PARTITION
+if (( $? )); then
+{
+    $ECHO "snapshot: could not umount $BOOT"
+    exit
+} fi
+
+#-------------------------------------------------------------------------------
+# boot secure cd & restore
+#1.
+#rsync -ax /backup/folder/ /system/drive/
+
+#2.
+# cd /dev
+# mknod -m 660 console c 5 1
+# mknod -m 660 null c 1 3
+
+#3.
+# create /usr/portage
+# emerge --sync
+
+#4.
+#dd if=/backup/bsector_backup of=/dev/sda bs=446 count=1
+
+#5
+#grub
+#grub> root (hd0,0)
+#grub> setup (hd0)
