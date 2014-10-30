@@ -61,7 +61,7 @@ install -Dm755 scripts/* ~/bin
 
 # fonts
 install -d ~/.fonts
-install -Dm644 fonts/* ~/.fonts && mkfontscale; mkfontdir
+install -Dm644 fonts/* ~/.fonts && mkfontscale ~/.fonts; mkfontdir ~/.fonts
 
 # window mangers
 # i3

@@ -25,6 +25,10 @@ feh --bg-scale ~/Dropbox/arch/tait/media/images/wallpapers/debian-7271-1680x1050
 # xautolock
 xautolock -locker  "xlock -mode blank" -corners 0+00  -cornerdelay 1 &
 
+# TV configure if any
+# Samsung TV : Menu / Picture / Picture Options / Size / Screen Fit (instead of 16:9)
+# Sharp Aquos : Menu > System Options > View Option > View Mode > Dot by Dot
+
 # monitors
 xrandr --output HDMI1 --auto --primary --left-of LVDS1
 xrandr --output LVDS1 --off
@@ -53,8 +57,5 @@ x11vnc -shared -rfbport 5900 -forever -usepw -display :0.0 -bg
 # dropbox
 dropboxd &
 
-# window managers
-#exec openbox-session
-#exec i3
-#exec dwm &
+# wm
 exec bspwm
