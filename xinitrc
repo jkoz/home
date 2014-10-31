@@ -5,14 +5,14 @@ xrdb ~/.Xresources
 xset r rate 300 50
 
 # no beep
-xset b off &
+xset b off
 
 # fonts
-xset +fp ~/.fonts &
-xset +fp /usr/share/fonts/local &
+xset +fp ~/.fonts
+xset +fp /usr/share/fonts/local
 
 # swap caplocks and left ctrl
-setxkbmap -option ctrl:swapcaps &
+setxkbmap -option ctrl:swapcaps
 
 sxhkd &
 

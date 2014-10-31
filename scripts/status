@@ -1,8 +1,11 @@
 #!/bin/zsh
 #
+script_name=$(basename $0)
+script_dir=$(dirname $0)
 
 sep=" %{Fcyan}| "
 default="#90707070"
+wm_socket="bspwm:[0-9+]-socket"
 
 music () {
     glyph_music="\u266b"  #musicalnotedbl
@@ -129,7 +132,7 @@ network() {
 
     ip_addr=$(ping -c 1 8.8.8.8 >/dev/null 2>&1 && echo "$addr" || echo "Disconnected")
 
-    echo "%{F${network_color}}${int_text} %{F${default}}${int}${ip_addr}"
+    echo "%{F${network_color}}${int_text} %{F${default}}${int} ${ip_addr}"
 }
 
 weather() {
@@ -174,7 +177,7 @@ loop () {
                 title_info="${line#?}"
                 [ ! -z ${title_info} ] && title_info=" - ${title_info}"
                 ;;
-            D*) # date
+            D*)
                 clock_info="${line#?}${sep}"
                 ;;
             C*)
@@ -250,6 +253,8 @@ loop () {
         esac
 
         echo "%{l}${wm_infos}${title_info}%{r}${weather_info}${network_info}${cpu_info}${mem_info}${clock_info}${volume_info}${battery_info}" | sed "s/${sep}$/ /"
+
+        [ -z $(ls /tmp | egrep "${wm_socket}") ] && kill 0
     done
 }
 
@@ -269,19 +274,25 @@ register () {
     while true; do echo "B$(battery)"; sleep 1; done > $PANEL_FIFO &
     while true; do echo "C$(cpu)"; sleep 1; done > $PANEL_FIFO &
     while true; do echo "M$(memory)"; sleep 1; done > $PANEL_FIFO &
-    while true; do echo "N$(network)"; sleep 2; done > $PANEL_FIFO &
-    while true; do echo "V$(volume)"; sleep 2; done > $PANEL_FIFO &
+    while true; do echo "N$(network)"; sleep 5; done > $PANEL_FIFO &
+    while true; do echo "V$(volume)"; sleep 1; done > $PANEL_FIFO &
     while true; do echo "R$(weather)"; sleep 5; done > $PANEL_FIFO &
 }
 
 main () {
-   font="-xos4-Terminus-Medium-R-Normal--14-140-72-72-C-80-ISO10646-1"
-   colo_background="#99050505"
+    if [ $(pgrep -cx ${script_name}) -gt 1 ] ; then
+        printf "%s\n" "The ${script_name} is already running." >&2
+        exit 1
+    fi
 
-   register "/tmp/panel-fifo"
+    font="-xos4-Terminus-Medium-R-Normal--14-140-72-72-C-80-ISO10646-1"
+    colo_background="#99050505"
 
-   cat "/tmp/panel-fifo" | loop | bar -f ${font} -B ${colo_background}
-   #cat "/tmp/panel-fifo" | loop
+    register "/tmp/panel-fifo"
+
+    cat "/tmp/panel-fifo" | loop | bar -f ${font} -B ${colo_background} &
+    #cat "/tmp/panel-fifo" | loop
+    wait
 }
 
 
