@@ -1,75 +1,8 @@
 #!/bin/zsh
 #
 
-# global
-last=`date +%s`
-out=i3bar
-SYS_INFO_PREFIX=""
-
-sep="%{Fcyan}|"
+sep=" %{Fcyan}| "
 default="#90707070"
-
-
-init () {
-    case $out in
-        bar)
-            PATTERN="%%{F%b} %b"
-            ;;
-        i3bar)
-            PATTERN="{\"full_text\": \" %b \", \"color\":\"%b\"},"
-            echo -ne "{\"version\":1}\n[[]\n"
-            ;;
-        dzen2)
-            CLOCK_COLOR="^fg(#aaaaaa)" # ^i(/usr/share/icons/stlarch_icons/clock1.xbm)"
-            NETWORK_COLOR="^fg(#d62d20)^i(/usr/share/icons/stlarch_icons/wireless1.xbm)"  #TODO: dynamic icon
-            VOLUME_COLOR="^fg(#00b159)^i(/usr/share/icons/stlarch_icons/vol10.xbm)"
-            CPU_COLOR="^fg(#1b85b8)^i(/usr/share/icons/stlarch_icons/cpu1.xbm)"
-            MEM_COLOR="^fg(#ffa700)^i(/usr/share/icons/stlarch_icons/mem1.xbm)"
-            WEATHER_COLOR="^fg(#be9b7b)^i(/usr/share/icons/stlarch_icons/arch1.xbm)"
-            BAT_COLOR="^fg(#be9b7b)^i(/usr/share/icons/stlarch_icons/batt10.xbm)" #TODO dynamic
-
-            # xbm or text
-            CPU_TEXT="" #"$XBM_PATH/vol1.xbm"
-            MEM_TEXT="" #"$XBM_PATH/vol1.xbm"
-            VOLUME_TEXT="" #"$XBM_PATH/vol1.xbm"
-            CLOCK_TEXT="" #"$XBM_PATH/clock1.xbm"
-            NETWORK_TEXT=""
-            WEATHER_TEXT=""
-            BAT_TEXT=""
-
-
-            PATTERN="%b %b" ;;
-        ?)      echo "\f$2" ;;
-    esac
-}
-
-format() {
-    text=$1; val=$2; fgcolor=$3
-    case $out in
-        bar)   printf "${PATTERN}" "${fgcolor}" "${text}${val} ${sep}" ;;
-        i3bar) printf "${PATTERN}" "${text}${val}" "${fgcolor}" ;;
-        dzen2) printf " ${PATTERN}" "${fgcolor}" "${text}${val} |" ;;
-        ?)      echo "\f$2" ;;
-    esac
-}
-
-before () {
-    case $out in
-        bar)    echo "${SYS_INFO_PREFIX}";;
-        i3bar)  echo ",[\\\n";; # expect before ,[\n used in printf later
-        dzen2)  echo "${SYS_INFO_PREFIX}" ;;
-        ?)      echo "\f$2" ;;
-    esac
-}
-
-after () {
-    case $out in
-        bar)  echo "\\\n";;
-        i3bar)  echo "\\\n]";; # expect after \n]\n used in printf later
-        dzen2)  echo "\\\n";;
-        ?)      echo "\f$2" ;;
-    esac
-}
 
 music () {
     glyph_music="\u266b"  #musicalnotedbl
@@ -79,13 +12,14 @@ mail () {
     glyph_mail="\u136"
 }
 
-clock() {
+clock () {
     glyph_clock="\uF109"
-    CLOCK_TEXT="${glyph_clock} "
-    CLOCK_COLOR="#99808080"
+    clock_text=${glyph_clock}
+    clock_color="#99802080"
 
-    ret=$(date '+%d %b %Y %I:%M:%S %p %Z')
-    format "${CLOCK_TEXT}" "${ret}" "${CLOCK_COLOR}"
+    ret=$(date '+%a %d %b %Y %I:%M:%S %p %Z')
+
+    echo "%{F${clock_color}}${clock_text} %{F${default}}${ret}"
 }
 
 battery() {
@@ -98,44 +32,33 @@ battery() {
     glyph_battery_80_90="\uf103"
     glyph_battery_90_100="\uf102"
     glyph_battery_100="\uf101"
-    BAT_COLOR="#99106000"
+    bat_color="#99106000"
 
-    BATC=/sys/class/power_supply/BAT1/capacity
-    BATS=/sys/class/power_supply/BAT1/status
-    ret=$(sed -n p $BATC)
+    bat_status="/sys/class/power_supply/BAT1/status"
+    ret=$(sed -n p "/sys/class/power_supply/BAT1/capacity")
 
-    if test "`cat $BATS`" = "Charging"; then
-        BAT_TEXT="${glyph_battery_charging} "
-        ret="${ret}%%"
-    elif test "`cat $BATS`" = "Full"; then
-        BAT_TEXT="${glyph_battery_full} "
-        ret="${ret}%%"
+    if test "$(cat $bat_status)" = "Charging"; then
+        bat_text="${glyph_battery_charging}"
+    elif test "$(cat $bat_status)" = "Full"; then
+        bat_text="${glyph_battery_full}"
     else
         if test $ret -eq 100; then
-            BAT_TEXT="${glyph_battery_100} "
-            ret="${ret}%%"
+            bat_text="${glyph_battery_100}"
         elif test $ret -le 100 -a $ret -gt 90; then
-            BAT_TEXT="${glyph_battery_90_100} "
-            ret="${ret}%%"
+            bat_text="${glyph_battery_90_100}"
         elif test $ret -le 90 -a $ret -gt 80; then
-            BAT_TEXT="${glyph_battery_80_90} "
-            ret="${ret}%%"
+            bat_text="${glyph_battery_80_90}"
         elif test $ret -le 80 -a $ret -gt 60; then
-            BAT_TEXT="${glyph_battery_80_60} "
-            ret="${ret}%%"
+            bat_text="${glyph_battery_80_60}"
         elif test $ret -le 60 -a $ret -gt 40; then
-            BAT_TEXT="${glyph_battery_60_40} "
-            ret="${ret}%%"
+            bat_text="${glyph_battery_60_40}"
         elif test $ret -le 40 -a $ret -gt 20; then
-            BAT_TEXT="${glyph_battery_40_20} "
-            ret="${ret}%%"
+            bat_text="${glyph_battery_40_20}"
         elif test $ret -le 20; then
-            ret="${ret}%%"
-            BAT_TEXT="${glyph_battery_20_0} "
+            bat_text="${glyph_battery_20_0}"
         fi
     fi
-
-    format "${BAT_TEXT}" "${ret}" "${BAT_COLOR}"
+    echo "%{F${bat_color}}${bat_text} %{F${default}}${ret}%"
 }
 
 volume() {
@@ -144,53 +67,43 @@ volume() {
     glyph_volume_100_80="\uf114"
     glyph_volume_80_50="\uf115"
     glyph_volume_50_0="\uf116"
-    VOLUME_COLOR="#99804035"
+    volume_color="#99804035"
 
     ret=$(amixer get Master | egrep -o "[0-9]+%" | head -1 | egrep -o "[0-9]*");
     if test $ret -le 100 -a $ret -gt 80; then
-        VOLUME_TEXT="${glyph_volume_100_80} "
+        volume_text="${glyph_volume_100_80}"
     elif test $ret -le 80 -a $ret -gt 50; then
-        VOLUME_TEXT="${glyph_volume_80_50} "
+        volume_text="${glyph_volume_80_50}"
     elif test $ret -le 50 -a $ret -gt 0; then
-        VOLUME_TEXT="${glyph_volume_50_0} "
+        volume_text="${glyph_volume_50_0}"
     elif test $ret -eq 0; then
-        VOLUME_TEXT="${glyph_volume_mute} "
+        volume_text="${glyph_volume_mute}"
     fi
-    format "${VOLUME_TEXT}" "${ret}%%" "${VOLUME_COLOR}"
+    echo "%{F${volume_color}}${volume_text} %{F${default}}${ret}%"
 }
 
 cpu () {
-    glyph_cpu="\uf002" #uniF002
-    CPU_TEXT="${glyph_cpu} "
-    CPU_COLOR="#90805050"
+    glyph_cpu="\uf002"
+    cpu_text="${glyph_cpu}"
+    cpu_color="#90805050"
 
-    LINE=`ps -eo pcpu |grep -vE '^\s*(0.0|%CPU)' |sed -n '1h;$!H;$g;s/\n/ +/gp'`
-    ret=`bc <<< $LINE`
-
-    format "${CPU_TEXT}" "${ret}%%" "${CPU_COLOR}"
+    ret=$(ps -eo pcpu |grep -vE '^\s*(0.0|%CPU)' | sed -n '1h;$!H;$g;s/\n/ +/gp' | bc)
+    echo "%{F${cpu_color}}${cpu_text} %{F${default}}${ret}"
 }
 
 memory() {
     glyph_mem="\uf003"
-    MEM_TEXT="${glyph_mem} "
-    MEM_COLOR="#90509050"
+    mem_text="${glyph_mem}"
+    mem_color="#90509050"
 
     echo `grep -E 'Mem(Total|Free)' /proc/meminfo |awk '{print $2}'` | read t f
     ret=$(bc <<< "scale=2; 100 - $f / $t * 100" | cut -d. -f1)
-
-    format "${MEM_TEXT}" "${ret}%%" "${MEM_COLOR}"
+    echo "%{F${mem_color}}${mem_text} %{F${default}}${ret}"
 }
 
 network() {
+    network_color="#90503055"
     glyph_wire="\uf108"
-    glyph_wifi_30_0="\uf113"
-    glyph_wifi_50_30="\uf112"
-    glyph_wifi_50_80="\uF111"
-    glyph_wifi_80_100="\uf110"
-
-    NETWORK_COLOR="#90503055"
-    #NETWORK_TEXT=""
-
 
     echo `ip link | sed -n 's/^[0-9]: \(.*\):.*$/\1/p'` | read lo int1 int2
 
@@ -206,31 +119,26 @@ network() {
     # check if it's up
     addr=$(ifconfig $eth0| grep "inet " | awk '{print $2}')
     if test -n "$addr"; then
-        int=$eth0
-        NETWORK_TEXT="${glyph_wire} "
+        int="$eth0"
+        int_text=${glyph_wire}
     else
-        int=$wifi
         addr=$(ifconfig $eth0| grep "inet " | awk '{print $2}')
-        NETWORK_TEXT="${glyph_wifi_80_100} "    # TODO, check wifi percentage
+        int="$wifi"
+        int_text=${glyph_wifi_80_100}
     fi
 
-    #int=eth0
-    ret=$(ping -c 1 8.8.8.8 >/dev/null 2>&1 &&
-        echo "$int $addr" || echo "$int disconnected")
+    ip_addr=$(ping -c 1 8.8.8.8 >/dev/null 2>&1 && echo "$addr" || echo "Disconnected")
 
-    format "${NETWORK_TEXT}" "${ret}" "${NETWORK_COLOR}"
+    echo "%{F${network_color}}${int_text} %{F${default}}${int}${ip_addr}"
 }
 
 weather() {
     glyph_weather="\u00d2"
-    WEATHER_TEXT="${glyph_weather} "
-    WEATHER_COLOR="#be9b7b00"
+    #weather_text="${glyph_weather}"
+    weather_text="W"
+    weather_color="#be9b7b00"
 
-    interval=30
-
-    i=$(($((`date +%s` - ${last})) % $interval))
-    if (test $i -eq 0); then
-        lastweather=`python <<EOF
+    ret=`python <<EOF
 from yweather import Client
 city, country = "Edmonton", "Canada"
 
@@ -238,82 +146,56 @@ if __name__ == '__main__':
     client = Client()
     try:
         weather = client.fetch_weather(client.fetch_woeid(city + ", " + country), metric=True)
-        temp = "T " + weather["condition"]["temp"] + "°C "
-        humidity = "H " + weather["atmosphere"]["humidity"] + "%% "
-        wind_speed = "W " + weather["wind"]["speed"] + "km/h"
-        print(temp + humidity + wind_speed)
+        temp = weather["condition"]["temp"] + "°C "
+        #humidity = "H " + weather["atmosphere"]["humidity"] + "%% "
+        #wind_speed = "W " + weather["wind"]["speed"] + "km/h"
+        #print(temp + humidity + wind_speed)
+        print(temp)
     except IOError:
         print("Weather: -")
 EOF`
-        echo $lastweather > /tmp/lastweather
-        format "${WEATHER_TEXT}" "$lastweather" "${WEATHER_COLOR}"
-    else
-        lastweather=$(cat /tmp/lastweather)
-        format "${WEATHER_TEXT}" "$lastweather" "${WEATHER_COLOR}"
-    fi
-
-}
-
-function fillbar () {
-    buffer=
-    eval set -- "$@";
-    #echo "AFTER SET -- \$ARGS: $@";
-    while true; do
-        case "$1" in
-            -u|--cpu) shift; [[ -n "$(cpu)" ]] && buffer="${buffer}$(cpu)";;
-            -b|--battery) shift; [[ -n "$(battery)" ]] && buffer="${buffer}$(battery)";;
-            -c|--clock) shift; [[ -n "$(clock)" ]] && buffer="${buffer}$(clock)";;
-            -n|--network) shift; [[ -n "$(network)" ]] && buffer="${buffer}$(network)";;
-            -r|--memory) shift; [[ -n "$(memory)" ]] && buffer="${buffer}$(memory)";;
-            -v|--volume) shift; [[ -n "$(volume)" ]] && buffer="${buffer}$(volume)";;
-            -w|--weather) shift; [[ -n "$(weather)" ]] && buffer="${buffer}$(weather)";;
-            --) shift; break; ;;
-        esac
-    done
-
-    buffer=$(echo $buffer | sed -e "s/.$//g")
-    #echo $buffer
-    echo -n $(before)${buffer}$(after)
-    #printf $(before)${buffer}$(after)
-}
-
-sysinfo () {
-    #echo "BEFORE GETOPT: $@";
-    short_arg="bcnrvwu"
-    full_arg="battery,clock,network,memory,volume,weather,cpu"
-    out=$(echo $@| awk '{print $NF}')
-    #echo ${out}
-
-    arg=$(getopt -o ${short_arg} -l ${full_arg}, -n "main" -- "$@")
-    #echo "AFTER  GETOPT: $@";
-
-    init
-
-    #normal
-    while :; do
-        fillbar ${arg}
-        sleep 1
-    done
+    echo "%{F${weather_color}}${weather_text} %{F${default}}$ret"
 }
 
 loop () {
     focus_workspace="yellow"
+    clock_info=""
+    battery_info=""
+    cpu_info=""
+    mem_info=""
+    network_info=""
+    volume_info=""
+    weather_info=""
 
     num_mon=$(bspc query -M | wc -l)
     while read -r line; do
         case $line in
-            T*) # dzen2
-                title_info="$(echo $line | sed 's/^T//')"
+            T*)
+                title_info="${line#?}"
                 [ ! -z ${title_info} ] && title_info=" - ${title_info}"
                 ;;
-            S*) # dzen2
-                sys_info=" $(echo $line | sed 's/^S//') "
+            D*) # date
+                clock_info="${line#?}${sep}"
+                ;;
+            C*)
+                cpu_info="${line#?}${sep}"
+                ;;
+            M*)
+                mem_info="${line#?}${sep}"
+                ;;
+            B*)
+                battery_info="${line#?}${sep}"
+                ;;
+            N*)
+                network_info="${line#?}${sep}"
+                ;;
+            V*)
+                volume_info="${line#?}${sep}"
                 ;;
             W*)
                 wm_infos=""
                 line=$(echo $line | sed 's/:/ /g')
                 eval set -- "$line";
-                #echo $line
                 while [ $# -gt 0 ] ; do
                     item=$1
                     name=${item#?}
@@ -359,78 +241,48 @@ loop () {
                             wm_infos="%{F${default}}[${name}]%{F${default}}${wm_infos}"
                             ;;
                     esac
-                shift
-            done
-            ;;
+                    shift
+                done
+                ;;
+            R*)
+                weather_info="${line#?}${sep}"
+                ;;
         esac
 
-        # TODO currently format for bar only
-        [ ! -z $sys_info ] && echo "%{l}${wm_infos}${title_info}%{r}${sys_info}"
+        echo "%{l}${wm_infos}${title_info}%{r}${weather_info}${network_info}${cpu_info}${mem_info}${clock_info}${volume_info}${battery_info}" | sed "s/${sep}$/ /"
     done
 }
 
-bspwm_bar () {
-    PANEL_FIFO="/tmp/panel-fifo"
+register () {
+    PANEL_FIFO=$1
     rm -rf  $PANEL_FIFO
     mkfifo $PANEL_FIFO
 
-    # pipe all stuff to panel-fifo
-    pkill -x bspc
-
     # wm info, check if bspwm has launched, before subc
     while [ ! -e /tmp/bspwm*socket ]; do sleep 1; done
-    bspc control --subscribe > "$PANEL_FIFO" &
-    # get sys info
-    SYS_INFO_PREFIX="S " && sysinfo $@ > "$PANEL_FIFO" &
-    # get title
+    pkill -x bspc; bspc control --subscribe > "$PANEL_FIFO" &
+    # wm title
     xtitle -sf 'T%s' > "$PANEL_FIFO" &
 
-    # kill previous process
-
-    cat $PANEL_FIFO | loop
-
+    # script
+    while true; do echo "D$(clock)"; sleep 1; done > $PANEL_FIFO &
+    while true; do echo "B$(battery)"; sleep 1; done > $PANEL_FIFO &
+    while true; do echo "C$(cpu)"; sleep 1; done > $PANEL_FIFO &
+    while true; do echo "M$(memory)"; sleep 1; done > $PANEL_FIFO &
+    while true; do echo "N$(network)"; sleep 2; done > $PANEL_FIFO &
+    while true; do echo "V$(volume)"; sleep 2; done > $PANEL_FIFO &
+    while true; do echo "R$(weather)"; sleep 5; done > $PANEL_FIFO &
 }
 
-main() {
-    bspwm_bar $@
-
-    #sysinfo $@
-}
-
-n_main () {
-   # get color from Xresource
-   font="-xos4-terminusextra-medium-r-normal--14-140-72-72-c-80-iso10646-1"
+main () {
+   font="-xos4-Terminus-Medium-R-Normal--14-140-72-72-C-80-ISO10646-1"
    colo_background="#99050505"
 
-   # basic info
-   main --cpu --memory --network --clock --volume --battery bar | bar -f ${font} -B ${colo_background}
+   register "/tmp/panel-fifo"
 
-   # advance info
-   #main --weather --cpu --memory --network --clock --volume --battery bar | bar -f "-misc-terminus2-medium-r-normal-*-12-120-72-72-*-*-iso8859-1"
+   cat "/tmp/panel-fifo" | loop | bar -f ${font} -B ${colo_background}
+   #cat "/tmp/panel-fifo" | loop
 }
 
 
-## MAIN ###
-#main $@
-n_main
-#sysinfo $@
-
-
-
-#bspwm
-#~/bin/status --weather --cpu --memory --network --clock --volume --battery bar | bar -f "-misc-terminusmodicons-medium-r-normal--0-0-72-72-c-0-iso8859-1"
-
-
-# i3
-#status_command ~/bin/status --weather --cpu --memory --network --clock --volume --battery i3bar
-
-# dzen2
-#~/bin/status --weather --cpu --memory --network --clock --volume --battery dzen2 | dzen2 -fn Inconsolata:11
-
-# bar
-#~/bin/status --weather --cpu --memory --network --clock --volume --battery dzen2 | bar
-
-#main --out i3bar --weather --cpu --memory --network --clock --volume --battery
-#main --out i3bar --cpu --memory
-#main --out dzen2 --cpu
-#main --out dzen2 --weather --cpu --memory --network --clock --volume --battery
+main $@
