@@ -10,6 +10,10 @@ install -m755 config/sxhkd/* ~/.config/sxhkd
 install -d ~/.vim ~/.vim/bundle
 install -Dm644 vimrc ~/.vimrc
 
+# fetchmail
+install -d ~/.fetchmail/tai.t@hotmail.com
+install -Dm644 fetchmailrc ~/.fetchmailrc
+
 # terminal
 install -Dm644 tmux.conf ~/.tmux.conf
 #install -Dm644 screenrc ~/.screenrc
@@ -33,6 +37,12 @@ install -Dm644 procmailrc ~/.procmailrc
 # desktop notification
 install -d ~/.config/dunst
 install -Dm644 config/dunst/dunstrc ~/.config/dunst/dunstrc
+
+# systemd
+install -d ~/.config/systemd  ~/.config/systemd/user
+install -Dm644 config/systemd/user/fetchmail.service ~/.config/systemd/user
+install -Dm644 config/systemd/user/mpd.service ~/.config/systemd/user
+install -Dm644 config/systemd/user/mpd.socket ~/.config/systemd/user
 
 # x session
 install -Dm644 xinitrc ~/.xinitrc

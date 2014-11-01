@@ -12,10 +12,6 @@
 	#-tcpdump-view-only-traffic
 	tcpdump -q -i eth1 tcp dst port 80 and src host 192.168.0.10
 
-#-irssi
-# enable notification
-sudo apt-get install --reinstall perl perl-base perl-modules system-tools-backends
-
 #-tcpdump-read-cap-file
 /usr/sbin/tcpdump -qns 0 -A -r ~/data.pcap
 /usr/sbin/tcpdump -qns 0 -X -r ~/data.pcap
@@ -524,77 +520,10 @@ mvn org.codehaus.mojo:cobertura-maven-plugin:2.4.1:cobertura
 mvn org.apache.maven.plugins:maven-eclipse-plugin:2.9:eclipse
 }}}
 #-archlinux{{{
-# pacman
-pacman -S xf86-input-synaptics
-pacman -S base-devel
-pacman -S usb_modeswitch
-pacman -S modemmanager
-pacman -S networkmanager
-pacman -S network-manager-applet
-pacman -S xfce4-notifyd
-pacman -S gnome-keyring
-pacman -S vim
-pacman -S sudo
-pacman -S nvidia
-pacman -S tmux
-pacman -S xclip
-pacman -S grub-bios
-pacman -S gzip
-pacman -S axel
-pacman -S xlockmore
-pacman -S zip
-pacman -S unzip
-pacman -S unrar
-pacman -S wpa_supplicant
-pacman -S wireless_tools
-pacman -S systemd
-pacman -S xorg-xinit
-pacman -S xterm
-pacman -S rxvt-unicode
-pacman -S links
-pacman -S alsa-utils
-pacman -S rtorrent
-pacman -S tor
-pacman -S ack
-pacman -S libreoffice-en-GB
-pacman -S libreoffice-calc
-pacman -S libreoffice-writer
-pacman -S libreoffice-impress
-pacman -S mupdf
-pacman -S firefox
-pacman -S flashplugin
-pacman -S thunderbird
-pacman -S openbox
-pacman -S samba
-pacman -S iptables
-pacman -S subversion
-pacman -S git
-pacman -S openssh
-pacman -S mplayer
-pacman -S feh
-pacman -S nitrogen
-pacman -S mutt
-pacman -S xchm
-pacman -S tint2
-pacman -S cvs
-pacman -S yaourt
-pacman -S netpbm
-pacman -S ffmpeg
-pacman -S mc
-pacman -S xorg-fonts-100dpi
-pacman -S cdrkit
-yaourt -S dropbox dropbox-cli
-yaourt -S shrew-vpn-client
 
-# openbox
-pacman -S obconf
-pacman -S openbox-themes
-
-# for install olad8
-pacman -S lib32-gtk
-pacman -S lib32-alsa-lib
-pacman -S lib32-nvidia-utils
-pacman -S lib32-libdbus
+# update all
+pacman -Syu
+pacman -Ss subversion
 
 # install new consolas
 set -e
@@ -607,37 +536,17 @@ cabextract ppviewer.cab
 cd /usr/local/share/fonts
 sudo mkdir microsoftfonts
 
-# update all
-pacman -Syu
-pacman -Ss subversion
-
-# pkgfile search package info of a lib
-sudo yaourt -S pkgfile
 
 # view library dependency of built file
 ldd /opt/oald8/oald8-bin
 
-#-systemctl
+# user systemd
 systemctl list-unit-files
 
-# create a new service
-$ cat /usr/lib/systemd/system/urxvtd.service
+# user systemd
+systemctl --user enable mpd
 
-[Unit]
-Description=RXVT-Unicode Daemon
 
-[Service]
-Type=oneshot
-RemainAfterExit=yes
-User=%i
-ExecStart=/usr/bin/urxvtd -q -f -o
-
-[Install]
-WantedBy=multi-user.target
-
-$ sudo systemctl enable urxvtd
-
-#
 systemctl enable ntpd
 systemctl start ntpd
 
@@ -1322,12 +1231,28 @@ tmux kill-session -t tptai
 split-window -h -l 20 'cat ~/.irssi/nicklistfifo'
 }}}
 #-bitlbee {{{
-account add jabber phuoctaitp@gmail.com
 account phuoctptai@gmail.com del
-/oper
-account phuoctaitp on
-account list
-account 0 on
+
+# install new account
+acc add jabber phuoctaitp@gmail.com
+acc gtalk set oauth on
+acc gtalk set ssl true
+acc gtalk set server talk.google.com
+acc gtalk set port 5223
+acc gtalk set nick_format %full_name
+acc gtalk on
+
+# register local bilbee profile
+register <passwd>
+
+# load your bitlbee profile
+identify <passwd>
+
+# start nicklist
+/nicklist fifo
+/set nicklist_width 20
+/set nicklist_height 42
+
 }}}
 #-production {{{
 vncserver -kill :33
@@ -2265,10 +2190,6 @@ tcpdump -i eth0 -s 65535 host 192.168.95.227 and port 8080 -w ~/soap
 #-tcpdump-view-only-traffic
 tcpdump -q -i eth1 tcp dst port 80 and src host 192.168.0.10
 
-#-irssi
-# enable notification
-sudo apt-get install --reinstall perl perl-base perl-modules system-tools-backends
-
 #-tcpdump-read-cap-file
 /usr/sbin/tcpdump -qns 0 -A -r ~/data.pcap
 /usr/sbin/tcpdump -qns 0 -X -r ~/data.pcap
@@ -2699,121 +2620,6 @@ mvn org.codehaus.mojo:cobertura-maven-plugin:2.4.1:cobertura
 mvn org.apache.maven.plugins:maven-eclipse-plugin:2.9:eclipse
 mvn install:install-file -DgroupId=com.sun -DartifactId=tools -Dversion=1.7.0_51 -Dpackaging=jar -Dfile=$JAVA_HOME/lib/tools.jar
 #1}}}---------------------------------------------------------------------------
-
-# install archP {{{
-
-# 0. Swap caps lock and ctrl 
-sudo loadkeys /usr/share/kbd/keymaps/i386/qwerty/emacs2.map.gz
-kbdrate -d 30  -r 400
-
-# 1. Partitioning
-
-lsblk
-fdisk -l
-
-mkfs.ext3 /dev/sda1
-mkfs.ext4 /dev/sda5
-mkfs.ext4 /dev/sda6
-mkfs.ext4 /dev/sda8
-
-/dev/sda5        46G   12G   32G  27% /
-/dev/sda1       227M   36M  179M  17% /boot
-/dev/sda6        30G  4.0G   24G  15% /var
-/dev/sda8       610G  123G  457G  22% /home
-
-# 2. Mounting 
-
-mount /dev/sda5 /mnt 
-mkdir /mnt/boot /mnt/var /mnt/home
-
-mount /dev/sda1 /mnt/boot
-mount /dev/sda6 /mnt/var
-mount /dev/sda8 /mnt/home
-
-# 3. install system base
-pacstrap /mnt base vim tmux
-
-# 4. generate fstab 
-genfstab -p /mnt >> /mnt/etc/fstab 
-
-# 5. change root new env
-arch-chroot /mnt
-
-# 6. create hostname
-echo "jkoz_arch_linux" > /etc/hostname
-
-# 7. locale setting
-ln -s /usr/share/zoneinfo/Canada/Mountain /etc/localtime
-
-# 8. enable us locale 
-
-sed -i 's!#en_US.UTF-8 UTF-8!en_US.UTF-8 UTF-8!' /etc/locale.gen
-sed -i 's!#en_US ISO-8859-1!en_US ISO-8859-1!' /etc/locale.gen
-
-locale-gen
-
-# 9. increase kdb rate and persistent keymap (swap caplocks and ctrl)
-
-echo "KEYMAP=\"emacs2\"" > /etc/vconsole.conf
-kbdrate -d 30  -r 400
-
-# 10. install grub
-pacman -S grub
-
-mkinitcpio -p linux
-grub-install /dev/sda
-grub-mkconfig -o /boot/grub/grub.cfg
-
-# 11. reboot and set up root passwd
-passwd
-
-# 12. enable service network 
-systemctl list-unit-files
-systemctl enable dhcpcd
-
-# 13. add new user
-useradd -m -d/home/tait -s /usr/bin/zsh tait 
-useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power -s /usr/bin/zsh tait
-
-# 14. install my favorite apps 
-pacman -S dialog wpa_supplicant elinks zsh sudo fbterm ttf-inconsolata git subversion \
-				 cvs xclip axel zip unzip unrar dmenu xorg xorg-server xorg-xinit i3 mplayer \
-                 ffmpeg firefox chromium rtorrent flashplugin xlockmore rxvt-unicode alsa-utils \
-                 alsa-oss mupdf samba openssh feh mutt ranger cdrkit net-tools cabextract cmake \
-                 ntfs-3g simple-mtpfs freetype2 fetchmail libxft x11vnc wmctrl xautolock procmail
-
-# 15. enable yaourt
-echo "[archlinuxfr]" >> /etc/pacman.conf
-echo "SigLevel = Never" >> /etc/pacman.conf
-echo "Server = http://repo.archlinux.fr/$arch" >> /etc/pacman.conf
-
-pacman -S yaourt
-pacman -S --needed base-devel
-yaourt -S dropbox dropbox-cli grive ttf-vista-fonts chromium-pepper-flash
-yaourt -S shrew-vpn-client
-
-# 16. enable sudo for wheel groups
-su - 
-sudoedit /etc/sudoers
-
-uncomment %wheel ALL=(ALL) ALL
-# DONE!!!!
-
-# for install olad8
-pacman -S lib32-gtk lib32-alsa-lib lib32-nvidia-utils lib32-libdbus 
-
-#pacman-upate all package
-pacman -Syu
-
-# search for package
-pacman -Ss subversion
-
-#pkgfile search package info of a lib
-sudo yaourt -S pkgfile
-
-# view library dependency of built file
-ldd /opt/oald8/oald8-bin
-}}}
 
 #-cdrom-cdkit-burn-iso {{{1
 sudo pacman -S cdrkit

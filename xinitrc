@@ -33,8 +33,8 @@ xautolock -locker  "xlock -mode blank" -corners 0+00  -cornerdelay 1 &
 # Sharp Aquos : Menu > System Options > View Option > View Mode > Dot by Dot
 
 # monitors
-xrandr --output HDMI1 --auto --primary --left-of LVDS1
-xrandr --output LVDS1 --off
+#xrandr --output HDMI1 --auto --primary --left-of LVDS1
+#xrandr --output LVDS1 --off
 #xrandr --output LVDS1 --auto --primary --on
 
 
@@ -48,11 +48,7 @@ xsetroot -name " " &
 compton -b
 
 # start kuake-liked urxvt
-urxvtc -name "scratchpadterm" -pe "kuake,default,matcher" -e "zsh" -c "tmux -q has-session && exec tmux attach-session -d || exec tmux new-session" &
-
-# i3 use i3bar
-# conky
-#(conky | dzen2 -fn "Inconsolata:10" -dock -bg "#16171c" ) &
+~/bin/urxvt-kuake &
 
 # vnc
 x11vnc -shared -rfbport 5900 -forever -usepw -display :0.0 -bg

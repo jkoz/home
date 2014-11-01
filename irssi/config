@@ -2,13 +2,13 @@ servers = (
   { address = "eu.irc6.net"; chatnet = "IRCnet"; port = "6667"; },
   { address = "open.ircnet.net"; chatnet = "IRCnet"; port = "6667"; },
   { address = "irc.efnet.org"; chatnet = "EFNet"; port = "6667"; },
-  {
+  { 
     address = "irc.undernet.org";
     chatnet = "Undernet";
     port = "6667";
   },
   { address = "irc.dal.net"; chatnet = "DALnet"; port = "6667"; },
-  {
+  { 
     address = "irc.quakenet.org";
     chatnet = "QuakeNet";
     port = "6667";
@@ -23,6 +23,14 @@ servers = (
   { address = "irc.rizon.net"; chatnet = "Rizon"; port = "6667"; },
   { address = "irc.link-net.org"; chatnet = "LinkNet"; port = "6667"; },
   { address = "silc.silcnet.org"; chatnet = "SILC"; port = "706"; },
+  {
+    address = "localhost";
+    chatnet = "bitlbee";
+    port = "6667";
+    use_ssl = "no";
+    ssl_verify = "no";
+    autoconnect = "yes";
+  }
 );
 
 chatnets = {
@@ -33,7 +41,7 @@ chatnets = {
     max_whois = "4";
     max_query_chans = "5";
   };
-  EFNet = {
+  EFNet = { 
     type = "IRC";
     max_kicks = "4";
     max_msgs = "3";
@@ -57,7 +65,7 @@ chatnets = {
     max_msgs = "3";
     max_whois = "30";
   };
-  OFTC = {
+  OFTC = { 
     type = "IRC";
     max_kicks = "1";
     max_msgs = "3";
@@ -75,7 +83,7 @@ chatnets = {
     max_msgs = "3";
     max_whois = "30";
   };
-  Rizon = {
+  Rizon = { 
     type = "IRC";
     max_kicks = "1";
     max_msgs = "3";
@@ -88,11 +96,19 @@ chatnets = {
     max_whois = "30";
   };
   SILC = { type = "SILC"; };
+  bitlbee = { type = "IRC"; };
 };
 
 channels = (
   { name = "#irssi"; chatnet = "ircnet"; autojoin = "No"; },
-  { name = "silc"; chatnet = "silc"; autojoin = "No"; }
+  { name = "silc"; chatnet = "silc"; autojoin = "No"; },
+  {
+    name = "&bitlbee";
+    chatnet = "bitlbee";
+    autojoin = "yes";
+    autosendcmd = "/say identify phuoctaitp; /nicklist fifo";
+    /*autosendcmd = "/say identify; /oper phuoctaitp; /nicklist fifo";*/
+  }
 );
 
 aliases = {
@@ -276,13 +292,13 @@ settings = {
     awl_display_key = "$Q%K|$N%n $H$C$S";
     awl_display_key_active = "$Q%K|$N%n $H%U$C%n$S";
     awl_display_nokey = "[$N]$H$C$S";
-    nicklist_height = "73";
+    nicklist_height = "42";
     nicklist_width = "20";
   };
 };
 logs = { };
 windows = {
-  1 = {
+  1 = { 
     immortal = "yes";
     name = "(status)";
     level = "ALL";
@@ -294,3 +310,4 @@ windows = {
 #  1 = { first_line = "61"; lines = "69"; };
 #  2 = { first_line = "1"; lines = "60"; };
 #};
+keyboard = ( { key = "^R"; id = "command"; data = "history_search "; } );

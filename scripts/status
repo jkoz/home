@@ -19,7 +19,7 @@ music () {
     music_color="#99802020"
 
     ret=$(mpc current --format "[%title% ]|[%file%]" 2>/dev/null)
-    test -z $ret && echo "" || echo "U%{F${music_color}}${music_text} %{F${default}}$ret"
+    test -z $ret && echo "" || echo "U%{F${music_color}}${music_text} %{F${default}}${ret}"
 }
 clock () {
     glyph_clock="\uF109"
@@ -226,6 +226,9 @@ loop () {
             U*)
                 music_info="${sep}${line#?}"
                 ;;
+            R*)
+                weather_info="${sep}${line#?}"
+                ;;
             W*)
                 wm_infos=""
                 line=$(echo $line | sed 's/:/ /g')
@@ -277,9 +280,6 @@ loop () {
                     esac
                     shift
                 done
-                ;;
-            R*)
-                weather_info="${line#?}${sep}"
                 ;;
         esac
 

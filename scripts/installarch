@@ -89,8 +89,8 @@ ctags bc dialog wpa_supplicant elinks zsh sudo fbterm git subversion cvs xclip a
 alsa-utils alsa-oss samba openssh ranger cdrkit net-tools cabextract cmake mutt ntfs-3g fetchmail procmail \
 
 # fonts
-pacman -S pcf2bdf xorg-xfontsel xorg-xfontsel xorg-xfd xorg-xlsfonts ttf-inconsolata
-yaourt -S gbdfed terminus-font-ttf
+pacman -S pcf2bdf xorg-xfontsel xorg-xfontsel xorg-xfd xorg-xlsfonts 
+yaourt -S gbdfed ttf-mac-fonts
 
 # file manager
 pacman -S pcmanfm
@@ -148,6 +148,12 @@ yaourt -S makedict
  pacman -S base-devel abs dmenu
  pacman -S libxft
  pacman -S freetype2
+
+# for install olad8
+pacman -S lib32-gtk
+pacman -S lib32-alsa-lib
+pacman -S lib32-nvidia-utils
+pacman -S lib32-libdbus
 
 # 16 generate Downloads, Documents,...
 xdg-user-dirs-update
