@@ -20,10 +20,19 @@ install -Dm644 zshrc ~/.zshrc
 #install -Dm644 bashrc ~/.bashrc
 #install -Dm644 bashrc.d/* ~/.bashrc.d
 
+# mpd, ncmpcpp
+install -d ~/.ncmpcpp
+install -Dm644 ncmpcpp/config ~/.ncmpcpp/config
+install -Dm644 mpdconf ~/.mpdconf
+
 # mail
 install -Dm644 muttrc ~/.muttrc
 #install -Dm644 muttrc.d/* ~/.muttrc.d
 install -Dm644 procmailrc ~/.procmailrc
+
+# desktop notification
+install -d ~/.config/dunst
+install -Dm644 config/dunst/dunstrc ~/.config/dunst/dunstrc
 
 # x session
 install -Dm644 xinitrc ~/.xinitrc

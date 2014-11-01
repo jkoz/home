@@ -19,6 +19,9 @@ sxhkd &
 # start urxvtd
 /usr/bin/urxvtd -q -f -o
 
+# desktop notification
+dunst &
+
 # wall paper
 feh --bg-scale ~/Dropbox/arch/tait/media/images/wallpapers/debian-7271-1680x1050.jpg &
 

@@ -1325,7 +1325,6 @@ split-window -h -l 20 'cat ~/.irssi/nicklistfifo'
 account add jabber phuoctaitp@gmail.com
 account phuoctptai@gmail.com del
 /oper
-mygmailpasswd
 account phuoctaitp on
 account list
 account 0 on

@@ -29,7 +29,7 @@ mount /dev/sda8 /mnt/home
 # 3. install system base
 pacstrap /mnt base vim tmux ctags bc dialog wpa_supplicant elinks zsh fish sudo fbterm git subversion \
               cvs xclip axel zip unzip unrar rtorrent alsa-utils alsa-oss samba openssh ranger cdrkit \
-              net-tools cabextract cmake mutt ntfs-3g fetchmail procmail bitlbee irssi mpd mpc ncmpcpp gdb \
+              net-tools wireless_tools cabextract cmake mutt ntfs-3g fetchmail procmail bitlbee irssi mpd mpc ncmpcpp gdb \
               perl-cpanplus-dist-arch python-pip
 
 # 4. generate fstab
@@ -90,7 +90,10 @@ alsa-utils alsa-oss samba openssh ranger cdrkit net-tools cabextract cmake mutt 
 
 # fonts
 pacman -S pcf2bdf xorg-xfontsel xorg-xfontsel xorg-xfd xorg-xlsfonts ttf-inconsolata
-yaourt -S gbdfed
+yaourt -S gbdfed terminus-font-ttf
+
+# file manager
+pacman -S pcmanfm
 
 # disk
 yaourt -S simple-mtpfs sxhkd
@@ -118,6 +121,12 @@ yaourt -S shrew-vpn-client
 pacman -S xdg-user-dirs
 yaourt -S silver-searcher-git
 
+# perl, cpan
+cpan Net:DBus
+
+# desktop notification
+pacman -S libnotify dunst
+
 # pip
 pip install yweather
 
@@ -137,7 +146,6 @@ yaourt -S makedict
  pacman -S gimp
  pacman -S nitrogen
  pacman -S base-devel abs dmenu
- pacman -S pcmanfm
  pacman -S libxft
  pacman -S freetype2
 

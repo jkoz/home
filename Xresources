@@ -83,6 +83,8 @@ URxvt.matcher.button: 1
 URxvt*scrollBar: false
 URxvt*saveLines: 10000
 
+!URxvt.urgentOnBell:  true
+
 !URxvt.letterSpace: -1
 
 !Disables the insanely annoying Ctrl+Shift shortcut that enters ISO14755 mode

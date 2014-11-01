@@ -1,0 +1,39 @@
+# INSTALL new blank database
+#mkdir -p ~/.mpd/playlists && touch ~/.mpd/{database,log,pid,state,sticker.sql}
+
+# Required files
+db_file            "~/.mpd/database"
+log_file           "~/.mpd/log"
+
+# Optional
+music_directory    "~/Music"
+playlist_directory "~/.mpd/playlists"
+pid_file           "~/.mpd/pid"
+state_file         "~/.mpd/state"
+sticker_file       "~/.mpd/sticker.sql"
+
+audio_output {
+    type                    "fifo"
+    name                    "my_fifo"
+    path                    "/tmp/mpd.fifo"
+    format                  "44100:16:2"
+}
+#audio_output {
+    #type        "alsa"
+    #name        "Master"
+
+    #device      "hw:0,3"    # laptop
+
+## format      "44100:16:2"    # optional
+## mixer_type      "hardware"  # optional
+## mixer_device    "default"   # optional
+## mixer_control   "PCM"       # optional
+## mixer_index "0"     # optional
+#}
+audio_output {
+    type        "alsa"
+    name        "Master"
+
+    device      "hw:0,0"    # laptop
+}
+

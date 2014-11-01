@@ -1,5 +1,7 @@
 #!/bin/zsh
 #
+trap 'trap - TERM; kill 0' INT TERM QUIT EXIT
+
 script_name=$(basename $0)
 script_dir=$(dirname $0)
 
@@ -7,20 +9,27 @@ sep=" %{Fcyan}| "
 default="#90707070"
 wm_socket="bspwm:[0-9+]-socket"
 
-music () {
-    glyph_music="\u266b"  #musicalnotedbl
-}
-
 mail () {
     glyph_mail="\u136"
 }
 
+music () {
+    glyph_music="\u266B"
+    music_text=${glyph_music}
+    music_color="#99802020"
+
+    ret=$(mpc current --format "[%title% ]|[%file%]" 2>/dev/null)
+    test -z $ret && echo "" || echo "U%{F${music_color}}${music_text} %{F${default}}$ret"
+}
 clock () {
     glyph_clock="\uF109"
     clock_text=${glyph_clock}
     clock_color="#99802080"
 
-    ret=$(date '+%a %d %b %Y %I:%M:%S %p %Z')
+    # full date and time
+    #ret=$(date '+%a %d %b %Y %I:%M:%S %p %Z')
+
+    ret=$(date '+%I:%M %p')
 
     echo "%{F${clock_color}}${clock_text} %{F${default}}${ret}"
 }
@@ -59,9 +68,11 @@ battery() {
             bat_text="${glyph_battery_40_20}"
         elif test $ret -le 20; then
             bat_text="${glyph_battery_20_0}"
+        else
+            bat_text="Unknown"
         fi
     fi
-    echo "%{F${bat_color}}${bat_text} %{F${default}}${ret}%"
+    test -z ${ret} && echo "" || echo "%{F${bat_color}}${bat_text} %{F${default}}${ret}%%"
 }
 
 volume() {
@@ -91,7 +102,7 @@ cpu () {
     cpu_color="#90805050"
 
     ret=$(ps -eo pcpu |grep -vE '^\s*(0.0|%CPU)' | sed -n '1h;$!H;$g;s/\n/ +/gp' | bc)
-    echo "%{F${cpu_color}}${cpu_text} %{F${default}}${ret}"
+    echo "%{F${cpu_color}}${cpu_text} %{F${default}}${ret}%%"
 }
 
 memory() {
@@ -101,7 +112,7 @@ memory() {
 
     echo `grep -E 'Mem(Total|Free)' /proc/meminfo |awk '{print $2}'` | read t f
     ret=$(bc <<< "scale=2; 100 - $f / $t * 100" | cut -d. -f1)
-    echo "%{F${mem_color}}${mem_text} %{F${default}}${ret}"
+    echo "%{F${mem_color}}${mem_text} %{F${default}}${ret}%%"
 }
 
 network() {
@@ -120,25 +131,40 @@ network() {
     fi
 
     # check if it's up
-    addr=$(ifconfig $eth0| grep "inet " | awk '{print $2}')
+    addr=$(ifconfig $eth0 | grep "inet " | awk '{print $2}')
     if test -n "$addr"; then
-        int="$eth0"
-        int_text=${glyph_wire}
-    else
+        int_text="${glyph_wire} %{F${default}}$eth0"
+
+        network_text=$(ping -c 1 8.8.8.8 >/dev/null 2>&1 || echo "Disconnected")
+    else # wifi
         addr=$(ifconfig $eth0| grep "inet " | awk '{print $2}')
-        int="$wifi"
+
         int_text=${glyph_wifi_80_100}
+
+        if [ ping -c 1 8.8.8.8 >/dev/null 2>&1 ]; then
+            # TODO wifi signal strength
+            signalStrength=$(cat /proc/net/wireless | awk 'NR==3 { print $3}' | sed 's/\.//')
+            if [ "$signalStrength" -gt 64 ]; then
+                int_text="\uf11b\uf11c\uf11d\uf11e"
+            elif [ "$signalStrength" -lt 65 ] && [ "$signalStrength" -gt 39 ]; then
+                int_text="\uf11b\uf11c\uf11d\uf10e"
+            elif [ "$signalStrength" -lt 40 ]; then
+                int_text="\uf11b\uf11c\uf10d\uf10e"
+            else
+                int_text="\uf11b\uf10c\uf10d\uf10e Connecting..."
+            fi
+        else
+            int_text="Disconnected"
+        fi
     fi
 
-    ip_addr=$(ping -c 1 8.8.8.8 >/dev/null 2>&1 && echo "$addr" || echo "Disconnected")
 
-    echo "%{F${network_color}}${int_text} %{F${default}}${int} ${ip_addr}"
+    echo "%{F${network_color}}${int_text}"
 }
 
 weather() {
-    glyph_weather="\u00d2"
-    #weather_text="${glyph_weather}"
-    weather_text="W"
+    glyph_weather="\u263c"
+    weather_text="${glyph_weather}"
     weather_color="#be9b7b00"
 
     ret=`python <<EOF
@@ -155,9 +181,10 @@ if __name__ == '__main__':
         #print(temp + humidity + wind_speed)
         print(temp)
     except IOError:
-        print("Weather: -")
+        print("")
 EOF`
-    echo "%{F${weather_color}}${weather_text} %{F${default}}$ret"
+
+    test -z $ret && echo "" || echo "R%{F${weather_color}}${weather_text} %{F${default}}$ret"
 }
 
 loop () {
@@ -168,6 +195,7 @@ loop () {
     mem_info=""
     network_info=""
     volume_info=""
+    music_info=""
     weather_info=""
 
     num_mon=$(bspc query -M | wc -l)
@@ -178,22 +206,25 @@ loop () {
                 [ ! -z ${title_info} ] && title_info=" - ${title_info}"
                 ;;
             D*)
-                clock_info="${line#?}${sep}"
+                clock_info="${sep}${line#?}"
                 ;;
             C*)
-                cpu_info="${line#?}${sep}"
+                cpu_info="${sep}${line#?}"
                 ;;
             M*)
-                mem_info="${line#?}${sep}"
+                mem_info="${sep}${line#?}"
                 ;;
             B*)
-                battery_info="${line#?}${sep}"
+                battery_info="${sep}${line#?}"
                 ;;
             N*)
-                network_info="${line#?}${sep}"
+                network_info="${sep}${line#?}"
                 ;;
             V*)
-                volume_info="${line#?}${sep}"
+                volume_info="${sep}${line#?}"
+                ;;
+            U*)
+                music_info="${sep}${line#?}"
                 ;;
             W*)
                 wm_infos=""
@@ -252,7 +283,7 @@ loop () {
                 ;;
         esac
 
-        echo "%{l}${wm_infos}${title_info}%{r}${weather_info}${network_info}${cpu_info}${mem_info}${clock_info}${volume_info}${battery_info}" | sed "s/${sep}$/ /"
+        echo "%{l}${wm_infos}${title_info}%{r} $(echo "${music_info}${weather_info}${cpu_info}${mem_info}${network_info}${clock_info}${volume_info}${battery_info} " | sed "s/^${sep}/ /")"
 
         [ -z $(ls /tmp | egrep "${wm_socket}") ] && kill 0
     done
@@ -276,7 +307,8 @@ register () {
     while true; do echo "M$(memory)"; sleep 1; done > $PANEL_FIFO &
     while true; do echo "N$(network)"; sleep 5; done > $PANEL_FIFO &
     while true; do echo "V$(volume)"; sleep 1; done > $PANEL_FIFO &
-    while true; do echo "R$(weather)"; sleep 5; done > $PANEL_FIFO &
+    while true; do echo "$(weather)"; sleep 5; done > $PANEL_FIFO &
+    while true; do echo "$(music)"; sleep 1; done > $PANEL_FIFO &
 }
 
 main () {
