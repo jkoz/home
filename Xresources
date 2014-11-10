@@ -3,8 +3,10 @@
 ! http://ethanschoonover.com/solarized
 
 
-! Common
+!xft:Inconsolata:style=Regular:size=11
+#define S_font -xos4-Terminus-Medium-R-Normal--14-140-72-72-C-80-ISO10646-1
 
+! Common
 #define S_yellow        #b58900
 #define S_orange        #cb4b16
 #define S_red           #dc322f
@@ -14,9 +16,7 @@
 #define S_cyan          #2aa198
 #define S_green         #859900
 
-
 ! Dark
-
 #define S_base03        #002b36
 #define S_base02        #073642
 #define S_base01        #586e75
@@ -26,9 +26,7 @@
 #define S_base2         #eee8d5
 #define S_base3         #fdf6e3
 
-
 ! Light
-
 ! #define S_base03        #fdf6e3
 ! #define S_base02        #eee8d5
 ! #define S_base01        #93a1a1
@@ -38,12 +36,7 @@
 ! #define S_base2         #073642
 ! #define S_base3         #002b36
 
-
-! To only apply colors to your terminal, for example, prefix
-! the color assignment statement with its name. Example:
-!
-! URxvt*background:            S_base03
-
+# X windows
 *background:              S_base03
 *foreground:              S_base0
 *fading:                  40
@@ -51,7 +44,6 @@
 *cursorColor:             S_base1
 *pointerColorBackground:  S_base01
 *pointerColorForeground:  S_base1
-
 *color0:                  S_base02
 *color1:                  S_red
 *color2:                  S_green
@@ -69,35 +61,16 @@
 *color14:                 S_base1
 *color15:                 S_base3
 
-! Specifies the terminal type name to be set in the TERM environment variable
+# URxvt
 URxvt*termName: xterm-256color
-
-! Create the window with the specified X window geometry [default 80x24]
-!URxvt*geometry: 130x40
-
-! enable clickable links
 URxvt.urlLauncher: /usr/bin/chromium
 URxvt.matcher.button: 1
-
-!no scroll
 URxvt*scrollBar: false
 URxvt*saveLines: 10000
-
-!URxvt.urgentOnBell:  true
-
-!URxvt.letterSpace: -1
-
 !Disables the insanely annoying Ctrl+Shift shortcut that enters ISO14755 mode
 URxvt.iso14755: False
-
-! fonts
-!URxvt*font: xft:Inconsolata:style=Regular:size=11
-URxvt*font: -xos4-Terminus-Medium-R-Normal--14-140-72-72-C-80-ISO10646-1
-!
-! perl extension
+URxvt*font: S_font
 URxvt.perl-ext-common: default,matcher
-
-! Keycode fixes for Ctrl+direction in Vim
 URxvt.keysym.C-Up: \033[1;5A
 URxvt.keysym.C-Down: \033[1;5B
 URxvt.keysym.C-Right: \033[1;5C

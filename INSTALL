@@ -9,6 +9,7 @@ install -m755 config/sxhkd/* ~/.config/sxhkd
 # editor
 install -d ~/.vim ~/.vim/bundle
 install -Dm644 vimrc ~/.vimrc
+install -Dm644 vim/ycm_extra_conf.py ~/.vim/.ycm_extra_conf.py
 
 # fetchmail
 install -d ~/.fetchmail/tai.t@hotmail.com
@@ -17,6 +18,9 @@ install -Dm644 fetchmailrc ~/.fetchmailrc
 # terminal
 install -Dm644 tmux.conf ~/.tmux.conf
 #install -Dm644 screenrc ~/.screenrc
+
+# dmenu
+install -Dm644 dmenurc ~/.dmenurc
 
 # shell
 install -Dm644 zshrc ~/.zshrc
@@ -29,10 +33,13 @@ install -d ~/.ncmpcpp
 install -Dm644 ncmpcpp/config ~/.ncmpcpp/config
 install -Dm644 mpdconf ~/.mpdconf
 
+# git
+install gitconfig ~/.gitconfig
+
 # mail
 install -Dm644 muttrc ~/.muttrc
 #install -Dm644 muttrc.d/* ~/.muttrc.d
-install -Dm644 procmailrc ~/.procmailrc
+#install -Dm700 procmailrc ~/.procmailrc
 
 # desktop notification
 install -d ~/.config/dunst
@@ -75,8 +82,8 @@ install -d ~/.mplayer
 install -Dm644 mplayer/config ~/.mplayer/config
 
 # scripts
-install -d ~/bin
-install -Dm755 scripts/* ~/bin
+#install -d ~/bin
+#install -Dm755 scripts/* ~/bin
 
 # fonts
 install -d ~/.fonts

@@ -1,0 +1,17 @@
+# calculation geometry
+#width=$(xrandr | grep "*" | awk '{print $1}' | cut -d'x' -f1)
+#height=$(xrandr | grep "*" | awk '{print $1}' | cut -d'x' -f2)
+#x=$(echo "($width * 10) / 100" | bc)
+#y=$(echo "($height * 20) / 100" | bc)
+#w=$(echo "($width * 80) / 100" | bc)
+#h=20
+#l=20
+#DMENU="dmenu -i -x $x -y $y -w $w -h $h  -l $l -fn -xos4-Terminus-Medium-R-Normal--14-140-72-72-C-80-ISO10646-1"
+
+font = -xos4-Terminus-Medium-R-Normal--14-140-72-72-C-80-ISO10646-1
+lines = 20 # -l
+lineheight = 20 # -h
+xoffset = 136 # -x
+yoffset = 153 # -y
+width = 1092 # -w
+caseinsensitive = 0

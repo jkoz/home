@@ -47,14 +47,12 @@ xsetroot -name " " &
 # composite
 compton -b
 
-# start kuake-liked urxvt
-~/bin/urxvt-kuake &
-
 # vnc
 x11vnc -shared -rfbport 5900 -forever -usepw -display :0.0 -bg
 
-# dropbox
-dropboxd &
+# following services are now managed by systemd
+# dropboxd &
+# fetchmail
 
 # wm
 exec bspwm

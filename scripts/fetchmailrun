@@ -1,0 +1,5 @@
+#!/usr/bin/sh
+
+source $(gpg2 -dq ~/.mypwd.gpg)
+
+fetchmail -f ~/.fetchmailrc --user "tai.t@hotmail.com" --pass "${my_hotmail}

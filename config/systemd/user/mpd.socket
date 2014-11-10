@@ -2,7 +2,7 @@
 Description=Music Player Daemon Sockets
 
 [Socket]
-ListenStream=/var/run/mpd/socket
+ListenStream=~/.mpd/socket
 ListenStream=6600
 
 [Install]

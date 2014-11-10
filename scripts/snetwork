@@ -1,0 +1,41 @@
+#!/usr/bin/zsh
+
+# dependencies: wireless_tools, networkctl
+
+display () {
+    [ -z $1 ] && return;
+
+    signalStrength=$1
+    if [ $signalStrength -gt 80 ]; then
+        text="\uf11b\uf11c\uf11d\uf11e"
+    elif [ $signalStrength -le 80 ] && [ $signalStrength -gt 50 ]; then
+        text="\uf11b\uf11c\uf11d\uf10e"
+    elif [ $signalStrength -le 50 ] && [ $signalStrength -gt 30 ]; then
+        text="\uf11b\uf11c\uf11d\uf10e"
+    elif [ $signalStrength -le 30 ]; then
+        text="\uf11b\uf10c\uf10d\uf10e"
+    fi
+    printf "$text"
+}
+
+network() {
+    default="#90707070"
+
+    network_color="#90503055"
+    glyph_wire="\uf108"
+
+
+    int_text=
+    networkctl --no-pager --no-legend | awk '{print $2 " " $3}' | while read -r int type; do
+        case $type in
+            lo) ;;
+            ether) ip addr show $int | grep -q '\<inet\>' && echo $glyph_wire ;;
+            wlan) int_text=$(display "$(grep $int /proc/net/wireless | awk 'gsub(/:|\./,"") { print $3}')") ;;
+        esac
+    done
+
+echo "%{F${default}}${int_text}"
+}
+
+
+network

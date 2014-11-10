@@ -1,0 +1,5 @@
+[user]
+	email = phuoctaitp@gmail.com
+	name = jkoz
+[credential]
+	helper = cache --timeout=3600

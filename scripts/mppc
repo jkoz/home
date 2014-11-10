@@ -1,0 +1,350 @@
+#!/usr/bin/env python
+
+import sys
+import os
+import datetime
+import configparser
+import argparse
+import types
+from string import Formatter
+from mpd import MPDClient
+import time
+client = MPDClient()
+config = configparser.ConfigParser()
+
+# cat ~/.config/mppc/config
+#[server]
+#config.read(os.environ["HOME"] + "/.config/mppc/config")
+#try:
+    #host = config['server']['host']
+    #port = str(config['server']['port'])
+#except KeyError:
+    #print('Couldnt find host and port in {}/.config/mppc/config'.format(os.environ['HOME']))
+    #sys.exit(0)
+
+
+host = os.environ["HOME"] + "/.mpd/socket"
+port = 6600
+
+# connect to the mpd-server
+client.connect(str(host), str(port))
+
+#if 'password' in config['server']:
+    # use a password
+    #client.password(str(config['server']['password']))
+#else:
+#    print('connecting without a password')
+
+
+# class to format output
+class MPCFormatter(Formatter):
+    def format(self, format_string, *args, **kwargs):
+        if len(args) < 1:
+            raise TypeError("no song object specified")
+
+        song = args[0]
+
+        if not isinstance(song, dict):
+            raise TypeError("song object is not a dict")
+
+        return super(MPCFormatter, self).format(format_string, *args, **kwargs)
+
+    def get_field(self, field_name, args, kwargs):
+        song = args[0]
+
+        try:
+            value = song[field_name]
+        except KeyError:
+            # Use an empty string for non-existant tags
+            value = ""
+
+        if isinstance(value, list):
+            # Join multiple tags into a single comma-separated string
+            value = ", ".join(value)
+
+        return (value, field_name)
+
+    def convert_field(self, value, conversion):
+        # Don't do field conversion
+        return value
+
+    def format_field(self, value, format_spec):
+        try:
+            return super(MPCFormatter, self).format_field(value, format_spec)
+        except ValueError:
+            # Ignore format errors (f.e., using integer formatting on strings)
+            return value
+
+
+# create aliases
+mpc_formatter = MPCFormatter()
+format_song = mpc_formatter.format
+
+def addMPD(args):
+    for line in sys.stdin.read().splitlines():
+        client.add(line)
+
+def listAll(args):
+    client.iterate = True
+
+    listtags=client.listallinfo()
+
+    if "format" in vars(args) and args.format != None:
+        format_pattern = args.format
+
+        for song in listtags:
+            if "file" in song:
+                print(format_song(format_pattern, song))
+
+    if "format" in vars(args) and args.format == None:
+        for song in listtags:
+            print(song)
+
+def currentSong(args):
+    #set default format
+    format_pattern = "{artist} - {title}"
+
+    if "format" in vars(args) and args.format != None:
+        format_pattern = args.format
+
+    print(format_song(format_pattern, client.currentsong()))
+
+def playList(args):
+    #set default format
+    format_pattern = "{artist} - {title}"
+
+    if "format" in vars(args) and args.format != None:
+        format_pattern = args.format
+
+    pl = client.playlistinfo()
+    for song in pl:
+            print(format_song(format_pattern, song))
+
+def playSong(args):
+    client.play()
+    mpd_status = client.status()
+    statusMPD(args)
+
+def toggleSong(args):
+    client.pause()
+    mpd_status = client.status()
+    statusMPD(args)
+
+def nextSong(args):
+    mpd_status = client.status()
+    playlist = client.status()
+    if 'nextsong' in mpd_status:
+        client.next()
+        mpd_status = client.status()
+        statusMPD(args)
+    else:
+        print("nothing left to play")
+        client.next()
+
+def prevSong(args):
+    client.previous()
+    mpd_status = client.status()
+    statusMPD(args)
+
+def stopSong(args):
+    client.stop()
+    mpd_status = client.status()
+    statusMPD(args)
+
+def mpdStats(args):
+    def dt(u): return datetime.datetime.fromtimestamp(u)
+    def ut(d): return time.mktime(d.timetuple())
+    u = int(client.stats()['db_update'])
+
+    print("Artists:      " + client.stats()['artists'])
+    print("Albums:       " + client.stats()['albums'])
+    print("Songs:        " + client.stats()['songs'])
+    print(" ")
+    print("Play Time:    " + str(datetime.timedelta(seconds=int(client.stats()['playtime']))))
+    print("Uptime:       " + str(datetime.timedelta(seconds=int(client.stats()['uptime']))))
+    print("DB Updated:   " + str(dt(u)))
+    print("DB Play Time: " + str(datetime.timedelta(seconds=int(client.stats()['db_playtime']))))
+
+def statusMPD(args):
+    mpd_status = client.status()
+    def statusline():
+        mpdrandom = "off" if mpd_status['random'] == '0' else 'on'
+        mpdrepeat = "off" if mpd_status['repeat'] == '0' else 'on'
+        mpdsingle = "off" if mpd_status['single'] == '0' else 'on'
+        mpdconsume = "off" if mpd_status['consume'] == '0' else 'on'
+
+        if mpd_status['volume'] == '-1':
+            mpdvolume = "n/a"
+        else:
+            mpdvolume = mpd_status['volume']
+
+        print("volume: " + mpdvolume + "    repeat: " + mpdrepeat +
+                "   random: " + mpdrandom + "   single: " + mpdsingle +
+                "   consume: " + mpdconsume)
+
+    def firstline():
+        print(client.currentsong()['artist'] + " - " + client.currentsong()['title'])
+
+    statusstr = {'play' : "[playing]  #", 'pause' : "[paused]  #"}
+    if mpd_status['state'] != 'stop':
+        trackstatus = str(int(client.status()['song']) +1 ) if 'song' in client.status() else "foo"
+        firstline()
+        current_time = mpd_status['time'].split(sep=":")
+        time_current = '%.2i:%.2i' % ( int( current_time[0] ) // 60, int( current_time[0] ) % 60 )
+        time_comp = '%.2i:%.2i' % ( int( current_time[1] ) // 60, int( current_time[1] ) % 60 )
+        print(statusstr[mpd_status['state']] + trackstatus + "/" + mpd_status['playlistlength'] +
+        "   " + time_current + "/" + time_comp)
+
+    statusline()
+
+def search(args):
+    args=vars(args)
+
+    #set default format
+    format_pattern = "{artist} - {title} ({album})"
+
+    #hier muss das anders aussehen, weil oben die argumente schon
+    #in ein dictionary konvertiert wurden
+    if "format" in args and args["format"] != None:
+        format_pattern = args["format"]
+
+    result = client.search(*args["filter"])
+
+    for entry in result:
+        print(format_song(format_pattern, entry))
+
+def listMPD(args):
+    args=vars(args)
+
+    mlist = (client.list(*args["filter2"]))
+
+    for entry in mlist:
+        print(entry)
+
+def search(args):
+    args=vars(args)
+
+    #set default format
+    format_pattern = "{artist} - {title} ({album})"
+
+    #hier muss das anders aussehen, weil oben die argumente schon
+    #in ein dictionary konvertiert wurden
+    if "format" in args and args["format"] != None:
+        format_pattern = args["format"]
+
+    result = client.find(*args["filter"])
+
+    for entry in result:
+        print(format_song(format_pattern, entry))
+
+def listMPD(args):
+    args=vars(args)
+
+    mlist = (client.list(*args["filter2"]))
+
+    for entry in mlist:
+        print(entry)
+
+def readComments(args):
+    args=vars(args)
+
+    comments = (client.readcomments(sys.stdin.read()[:-1]))
+    for key, value in sorted(comments.items()):
+        print('%s : %s' % (key, value))
+
+def searchAdd(args):
+    #Argumente in ein Dictionary kopieren
+    args=vars(args)
+
+    client.searchadd(*args["filter"])
+
+def searchAdd(args):
+    #Argumente in ein Dictionary kopieren
+    args=vars(args)
+
+    client.findadd(*args["filter"])
+
+def prioSong(args):
+    for line in sys.stdin.read().splitlines():
+        client.prio(255, line)
+
+
+#create commandline arguments
+parser = argparse.ArgumentParser(prog='mppc', description='A mpc clone in python')
+subparsers = parser.add_subparsers()
+
+parser_current = subparsers.add_parser('current', help="show current track")
+parser_current.add_argument('--format', help="format output")
+parser_current.set_defaults(call=currentSong)
+
+parser_playlist = subparsers.add_parser('playlist', help="show current playlist")
+parser_playlist.add_argument('--format', help="format output")
+parser_playlist.set_defaults(call=playList)
+
+parser_search = subparsers.add_parser('search', help="search songs in database")
+parser_search.add_argument('--format', help="format output")
+parser_search.set_defaults(call=search)
+parser_search.add_argument("filter", nargs="+", help="search filter")
+
+parser_find = subparsers.add_parser('find', help="find songs in database")
+parser_find.add_argument('--format', help="format output")
+parser_find.set_defaults(call=search)
+parser_find.add_argument("filter", nargs="+", help="search filter")
+
+parser_list = subparsers.add_parser('list', help="list tags from database")
+parser_list.set_defaults(call=listMPD)
+parser_list.add_argument("filter2", nargs="+", help="search filter")
+
+parser_play = subparsers.add_parser('play', help="start playback")
+parser_play.set_defaults(call=playSong)
+
+parser_stats = subparsers.add_parser('stats', help="show statistics")
+parser_stats.set_defaults(call=mpdStats)
+
+parser_toggle = subparsers.add_parser('toggle', help="pauses/resumes playback")
+parser_toggle.set_defaults(call=toggleSong)
+
+parser_next = subparsers.add_parser('next', help="skip to next song in playlist")
+parser_next.set_defaults(call=nextSong)
+
+parser_prev = subparsers.add_parser('prev', help="skip to previous song in playlist")
+parser_prev.set_defaults(call=prevSong)
+
+parser_stop = subparsers.add_parser('stop', help="stop playback")
+parser_stop.set_defaults(call=stopSong)
+
+parser_status = subparsers.add_parser('status', help="show MPD status")
+parser_status.set_defaults(call=statusMPD)
+
+parser_prio = subparsers.add_parser('prio', help="prioritize song")
+parser_prio.set_defaults(call=prioSong)
+
+parser_readcomments = subparsers.add_parser('readcomments', help="show all tags of current song")
+parser_readcomments.set_defaults(call=readComments)
+
+parser_add = subparsers.add_parser('add', help="add <uri>")
+parser_add.set_defaults(call=addMPD)
+
+parser_listall = subparsers.add_parser('listall', help="list all songs in library")
+parser_listall.add_argument('--format', help="format output")
+parser_listall.set_defaults(call=listAll)
+
+parser_searchadd = subparsers.add_parser('searchadd', help="add search result to playlist")
+parser_searchadd.set_defaults(call=searchAdd)
+parser_searchadd.add_argument("filter", nargs="+", help="search filter")
+
+parser_findadd = subparsers.add_parser('findadd', help="add find result to playlist")
+parser_findadd.set_defaults(call=searchAdd)
+parser_findadd.add_argument("filter", nargs="+", help="search filter")
+
+
+#parse arguments (thanks jat)
+args = parser.parse_args()
+
+if "filter" in args and len(args.filter) % 2 != 0:
+    parser.error("filter args not a multiple of 2")
+
+try:
+    args.call(args)
+except AttributeError:
+    print("No arguments given. Try mppc -h")

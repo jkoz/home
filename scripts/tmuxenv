@@ -1,15 +1,12 @@
-#!/usr/bin/zsh
+session_name="${USER}-dropdown"
 
-perl_ext="kuake,default,matcher"
-urxvt_name="urxvt-kuake"
-shell=${SHELL}
-session_name=${USER}
+#urxvtc -title ${terminal_name} -name ${terminal_name} -e $SHELL -c "tmux attach-session -t ${tmux_dropdown}"
 
 if test -z $(pgrep tmux | head -1); then
     tmux new-session -d -s ${session_name}
 
     # wait for session created
-    #while ! $(tmux -q has-session); do ; done
+    #while ! $(tmux -q has-session 2>/dev/null); do ; done
 
     # ncmpcpp
     tmux new-window -dP -t $session_name:2
@@ -27,13 +24,10 @@ if test -z $(pgrep tmux | head -1); then
 
     # irssi
     tmux new-window -dP -t $session_name:4 irssi
-    tmux splitw -t $session_name:4 -h -p 17
+    tmux splitw -t $session_name:4 -h -p 10
     tmux send-keys -t $session_name:4 "cat ~/.irssi/nicklistfifo" C-m
     tmux select-pane -t $session_name:4.0
 
     # select first window
     tmux select-window -t $session_name:1
 fi
-
-# attach tmux to urxvt
-urxvtc -name ${urxvt_name}  -pe ${perl_ext} -e ${shell} -c "tmux attach-session -t ${session_name}"

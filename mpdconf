@@ -12,6 +12,8 @@ pid_file           "~/.mpd/pid"
 state_file         "~/.mpd/state"
 sticker_file       "~/.mpd/sticker.sql"
 
+bind_to_address    "~/.mpd/socket"
+
 audio_output {
     type                    "fifo"
     name                    "my_fifo"

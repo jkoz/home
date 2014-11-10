@@ -2,6 +2,15 @@
 	a->b : address, pointer
 	a.b : address, value
 
+#xdotool
+xdotool getwindowgeometry --shell $(xdotool search --classname quake_urxvt) 
+
+# bspc
+urxvt -name "urxvttest" &
+bspc rule -a urxvttest -o floating=on
+
+xdotool search --classname urxvttest
+
 #tcpdump
 	# Captured Packets in ASCII using tcpdump -A
 	tcpdump -A -i eth0
@@ -232,9 +241,12 @@ useradd -m -d/home/jkoz -G root  -s /bin/bash jkoz
 #1}}}---------------------------------------------------------------------------
 #-network{{{
 #wifi
+#
 iwconfig wlan1 essid "baop-ubuntu" mode "ad-hoc" key "s:passwd"
 #show all networks
 nmap -sP 192.168.1.0/24
+rfkill list all
+sudo rfkill unblock all
 
 # interface up
 ifconfig eth0:1 192.168.95.45/24 up
@@ -540,20 +552,9 @@ sudo mkdir microsoftfonts
 # view library dependency of built file
 ldd /opt/oald8/oald8-bin
 
-# user systemd
-systemctl list-unit-files
-
-# user systemd
-systemctl --user enable mpd
 
 
-systemctl enable ntpd
-systemctl start ntpd
 
-#-disable auto suspended on laptop 
-#add HandleLidSwitch=ignore in /etc/systemd/logind.conf
-systemctl stop systemd-logind
-systemctl start systemd-logind
 }}}
 #-mplayer {{{1
 # load sub with unicode
@@ -1058,6 +1059,12 @@ git config --global http.proxy
 
 git clone git://github.com/ervandew/eclim.git
 git checkout indigo
+
+# create new branch
+git branch dmenu2_new_keybind
+
+# cache password for period of time
+git config --global credential.helper 'cache --timeout=3600'
 
 # show current revision
 git describe --tags
@@ -1605,8 +1612,8 @@ jre/bin/java
 -Dupdate.site=ams-client
 -Ddeveloper=true
 
-#-jdb                                        gdb
-step "step in to func                         s
+#-jdb
+step "step in to func
 next                                          n
 locals
 dump this
@@ -2657,13 +2664,27 @@ dpkg --get-selections | grep -v deinstall
 
 #-systemd-systemctl-services {{{1
 
-systemctl enable ntpd
-systemctl start ntpd
+# scanning for new & changes
+systemctl daemon-reload
 
 #-disable auto suspended on laptop 
 #add HandleLidSwitch=ignore in /etc/systemd/logind.conf
 systemctl stop systemd-logind
 systemctl start systemd-logind
+
+# user systemd
+systemctl --user list-unit-files
+systemctl --user enable mpd
+
+#-disable auto suspended on laptop
+#add HandleLidSwitch=ignore in /etc/systemd/logind.conf
+systemctl stop systemd-logind
+systemctl start systemd-logind
+
+# ntpd
+systemctl enable ntpd
+systemctl start ntpd
+
 #1}}}
 
 # vpn {{{1

@@ -20,59 +20,63 @@
 " 2. java import have problem
 " 3. choose item in auto complete box
 " }}}
-" vundle {{{
-if !1 | finish | endif
-
-if has('vim_starting')
-    set nocompatible               " Be iMproved
-    set runtimepath+=~/.vim/bundle/neobundle.vim/
+" auto clone vundle {{{
+let iCanHazVundle=1
+let vundle_readme=expand('~/.vim/bundle/vundle/README.md')
+if !filereadable(vundle_readme)
+    echo "Installing Vundle.."
+    echo ""
+    silent !mkdir -p ~/.vim/bundle
+    silent !git clone https://github.com/gmarik/vundle ~/.vim/bundle/vundle
+    let iCanHazVundle=0
 endif
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
 
-call neobundle#begin(expand('~/.vim/bundle/'))
+set nocompatible
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
 
-NeoBundleFetch 'Shougo/neobundle.vim'
-
-NeoBundle 'kien/ctrlp.vim'
-NeoBundle 'altercation/vim-colors-solarized'
-
-NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'scrooloose/nerdcommenter'
-NeoBundle 'vim-scripts/dbext.vim'
-NeoBundle 'Lokaltog/vim-easymotion'
-NeoBundle 'bling/vim-airline'
-NeoBundle 'tpope/vim-surround'
-NeoBundle 'vim-scripts/vcscommand.vim'
-NeoBundle 'majutsushi/tagbar'
-NeoBundle 'gavinbeatty/dragvisuals.vim'
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'mileszs/ack.vim'
-NeoBundle 'sjl/gundo.vim'
-NeoBundle 'klen/python-mode'
-NeoBundle 'naquad/ctrlp-digraphs.vim'
-NeoBundle 'atweiden/vim-betterdigraphs'
-NeoBundle 'chrisbra/unicode.vim'
-NeoBundle 'suy/vim-ctrlp-commandline'
-NeoBundle 'vim-scripts/vim-auto-save'
-NeoBundle 'altercation/vim-colors-solarized'
-NeoBundle 'tpope/vim-dispatch'
-"NeoBundle 'airblade/vim-rooter'
-NeoBundle 'vimoutliner/vimoutliner'
-NeoBundle 'SirVer/ultisnips'
-NeoBundle 'honza/vim-snippets'
-"NeoBundle 'ervandew/eclim'
-"Bundle 'Valloric/YouCompleteMe'
-
-
-call neobundle#end()
-
-" Required:
+call vundle#begin()
+Plugin 'Syntastic'
+Plugin 'kien/ctrlp.vim'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'scrooloose/nerdtree'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'vim-scripts/dbext.vim'
+Plugin 'Lokaltog/vim-easymotion'
+Plugin 'bling/vim-airline'
+Plugin 'tpope/vim-surround'
+Plugin 'vim-scripts/vcscommand.vim'
+Plugin 'majutsushi/tagbar'
+Plugin 'gavinbeatty/dragvisuals.vim'
+Plugin 'tpope/vim-fugitive'
+Plugin 'mileszs/ack.vim'
+Plugin 'sjl/gundo.vim'
+"Plugin 'klen/python-mode'
+Plugin 'naquad/ctrlp-digraphs.vim'
+Plugin 'atweiden/vim-betterdigraphs'
+Plugin 'chrisbra/unicode.vim'
+Plugin 'suy/vim-ctrlp-commandline'
+Plugin 'vim-scripts/vim-auto-save'
+Plugin 'tpope/vim-dispatch'
+Plugin 'myusuf3/numbers.vim'
+Plugin 'vimoutliner/vimoutliner'
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+Plugin 'Valloric/YouCompleteMe'
+"Plugin 'ervandew/eclim'
+"Plugin 'airblade/vim-rooter'
+call vundle#end()
 filetype plugin indent on
-
-" If there are uninstalled bundles found on startup,
-" this will conveniently prompt you to install them.
-NeoBundleCheck
 syntax on
 
+"...All your other bundles...
+if iCanHazVundle == 0
+    echo "Installing Bundles, please ignore key map error messages"
+    echo ""
+    :BundleInstall
+endif
 " }}}
 " Mappings {{{
 let mapleader = ","
@@ -86,7 +90,7 @@ nn <leader>s :so $MYVIMRC<cr>
 "se verbose=0
 
 " IPA
-           "i 
+           "i
 dig ii 618 "ɪ  - small cap I
 dig uu 650 "ʊ  - upside down upsilon
            "u:
@@ -120,10 +124,11 @@ dig ez 676 "ʤ - Latin Small Letter Dezh Digraph
 
 
 " switching vim window buffer
-map <c-j> <c-w>j<c-w>_
-map <c-k> <c-w>k<c-w>_
-map <c-h> <c-w>h<c-w>_
-map <c-l> <c-w>l<c-w>_
+" TODO: c-j conflict utilsnip
+"map <c-j> <c-w>j<c-w>_
+"map <c-k> <c-w>k<c-w>_
+"map <c-h> <c-w>h<c-w>_
+"map <c-l> <c-w>l<c-w>_
 
 " this good but i familiar with shift ;
 nn ; :
@@ -145,8 +150,6 @@ nn <silent> <F12> :exe "vert res +2" <cr>
 nn <silent> <F9>  :exe "res -2" <cr>
 nn <silent> <F10> :exe "res +2" <cr>
 
-" Toggle line numbers
-nn <leader>N :setl number!<cr>
 " Toggle wrap
 nn <Leader>W :setl nowrap! <CR>
 
@@ -218,7 +221,7 @@ if has("multi_byte")
 en
 
 
-se relativenumber
+"se relativenumber
 se t_Co=256
 se sw=4
 se autowrite
@@ -251,7 +254,8 @@ se showmatch " set show matching parenthesis
 se incsearch " show search matches as you type
 se hlsearch " highlight search terms
 
-se ai " always set autoindenting on
+se noai " always set autoindenting on
+se nosi " no smart indenting
 se copyindent " copy the previous indentation on autoindenting
 
 " windows stuffs
@@ -268,7 +272,6 @@ se mouse=a " enable mouse
 se pastetoggle=<F2> " when in insert mode, press <F2> to go to paste mode, where you can paste mass data that won't be autoindented
 se fileformats="unix,dos,mac"
 se wildmenu " make tab completion for files/buffers act like bash
-se wildmode=list:longest
 se ruler " Show the cursor position all the time
 se laststatus=2
 se gdefault " :%s/foo/bar/g by default
@@ -280,7 +283,7 @@ se softtabstop=4 shiftwidth=4 tabstop=4 " not tabs, but spaces
 se expandtab
 se shiftround " use multiple of shiftwidth when indenting with '<' and '>'
 
-se number " turn on number
+"se number " turn on number
 "se nonumber " turn on number
 se cursorline " highlight current light
 " se cursorcolumn
@@ -326,8 +329,12 @@ se stl+=\|\ %<%P
 "se stl=\ %F%m%r%h\ %w\ \ \ %r%{getcwd()}%h\ \ \ %=%-33.(Line\ %l\ of\ %L\ \|\ Column\ %c%V\ \|\ (%P)%)
 
 " completeopt
-set cot=menuone,menu,longest
-se dict=/usr/share/dict/words
+"set cot=menuone,menu,longest
+"se dict=/usr/share/dict/words
+set complete=.,b,u,]
+set wildmode=longest,list:longest
+set completeopt=menu,preview
+
 hi Pmenu ctermbg=238 gui=bold
 
 " color
@@ -351,6 +358,7 @@ hi Normal	ctermbg=NONE	cterm=NONE
 hi NonText	ctermbg=NONE	cterm=NONE
 " }}}
 " functions {{{
+
 " toggle between number and relativenumber
 fu! MvnTest()
    exe "Mvn test -Dtest=" . expand("%:t:r")
@@ -365,18 +373,9 @@ fu! MvnTestDebug()
 endf
 com! DoMvnTestDebug cal MvnTestDebug()
 
-fu! ToggleNumber()
-    if(&relativenumber == 1)
-        set norelativenumber
-        set number
-    else
-        set relativenumber
-    endif
-endfunc
-
 " strips trailing whitespace at the end of files. this
 " is called on buffer write in the autogroup above.
-function! <SID>StripTrailingWhitespaces()
+fu! <SID>StripTrailingWhitespaces()
     " save last search & cursor position
     let _s=@/
     let l = line(".")
@@ -384,7 +383,7 @@ function! <SID>StripTrailingWhitespaces()
     %s/\s\+$//e
     let @/=_s
     call cursor(l, c)
-endfunction
+endf
 
 fu! Format()
     exe "%s/\s\+$//"
@@ -482,7 +481,7 @@ aug configgroup
 
     au BufNewFile,BufRead *.otl setl listchars=tab:\|\ ,extends:>,precedes:<,nbsp:~,trail:.
 
-    
+
 augroup END
 
 "au FileType css setl omnifunc=csscomplete#CompleteCSS
@@ -641,7 +640,7 @@ vm <expr> D DVB_Duplicate()
 nn <silent> <Leader>a :Ack <cword><cr>
 " }}}
 " utilsnip{{{
-let g:UltiSnipsExpandTrigger="<c-j>"
+let g:UltiSnipsExpandTrigger="<c-t>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 "let g:UltiSnipsSnippetsDir="~/.vim/bundle/vim-snippets/UltiSnips"
@@ -661,6 +660,9 @@ nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
 let g:ycm_confirm_extra_conf = 0
 let g:syntastic_always_populate_loc_list = 1
 let g:ycm_collect_identifiers_from_tags_files = 1
+
+let g:ycm_server_use_vim_stdout = 1
+let g:ycm_server_log_level = 'debug'
 set tags+=./.tags
 " }}}
 " gui {{{
@@ -671,4 +673,8 @@ if has('gui_running')
     set guioptions-=L  "remove left-hand scroll bar
     set guifont=Consolas\ 12
 endif
+" }}}
+" numbers {{{
+nn <leader>N :call NumbersToggle()<cr>
+let g:enable_numbers = 0
 " }}}

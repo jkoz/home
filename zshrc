@@ -19,9 +19,27 @@ stty -ixon
 bindkey -v
 bindkey ^R history-incremental-pattern-search-backward
 bindkey ^S history-incremental-pattern-search-forward
-# scroll history with C-k & C-j
+
+#vi-like keybinding (with ctrl)
 bindkey '^k'    up-line-or-history
 bindkey '^j'    down-line-or-history
+bindkey '^h' backward-char
+bindkey '^l' forward-char
+#bindkey '^g' beginning-of-line
+
+#bindkey '^e' end-of-line
+
+bindkey '^d' delete-char
+
+#bindkey '^o' backward-delete-char
+#bindkey '^]' clear-screen
+
+bindkey '^w' backward-delete-word
+
+ #map to n because it conflicts with tmux
+#bindkey '^b' backward-word
+#bindkey '^w' forward-word
+
 # }}}
 # zstyle {{{
 zstyle ':completion:*' auto-description 'specify: %d'
@@ -47,7 +65,8 @@ export WM_NORM_FG_COLOR="#696969"
 export WM_NORM_BG_COLOR="#121212"
 export WM_SEL_FG_COLOR="#E0E0E0"
 export WM_SEL_BG_COLOR="#121212"
-# arch linux
+#}}}
+# arch linux {{{
 ZSH=/usr/share/oh-my-zsh
 if test "$UID" -eq 0
 then
@@ -69,7 +88,8 @@ export SNDPLAY="mplayer"
 export TERMINAL="urxvt"
 # }}}
 # projects {{{
-export DROPBOX_HOME="$HOME/Dropbox/arch/${USER}"
+export DROPBOX_HOME="$HOME/Dropbox"
+export ARCH_HOME="$HOME/Dropbox/arch/${USER}"
 export PROJECT="$HOME/data/projects"
 export CATALINA_HOME="${PROJECT}/apache-tomcat-8.0.5/"
 export AXS_HOME="${PROJECT}/axs"
@@ -114,6 +134,9 @@ export LESS_TERMCAP_se=$'\E[0m'           # end standout-mode
 export LESS_TERMCAP_so=$'\E[38;5;246m'    # begin standout-mode - info box
 export LESS_TERMCAP_ue=$'\E[0m'           # end underline
 export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
+# }}}
+# mpd {{{
+export MPD_HOST=~/.mpd/socket
 # }}}
 ## aliases
 # browser {{{
@@ -176,7 +199,7 @@ alias lD='ls ~/Downloads'
 alias D='cd ~/Downloads'
 # }}}
 # update dotfile {{{
-alias uD="cd ${DROPBOX_HOME} && ./INSTALL"
+alias uD="cd ${ARCH_HOME} && ./INSTALL"
 # }}}
 # mutt {{{
 alias mutt='TERM=screen-256color mutt -y'
@@ -189,15 +212,15 @@ alias b='mvn clean install -Dtest'
 alias e='mvn eclipse:clean eclipse:eclipse'
 # }}}
 # X Resources Stuff {{{
-alias eX='vim ${DROPBOX_HOME}/.Xresources; uD'
+alias eX='vim ${ARCH_HOME}/.Xresources; uD'
 alias XTR='xrdb -merge ~/.Xresources'
 # }}}
 # Quick edit {{{
 alias e='vim'
-alias eZ='vim ${DROPBOX_HOME}/zshrc; uD'
-alias eI='vim ${DROPBOX_HOME}/i3/config; uD'
-alias eV='vim ${DROPBOX_HOME}/vimrc; uD'
-alias eC='vim ${DROPBOX_HOME}/outliners/cmd.txt;'
+alias eZ='vim ${ARCH_HOME}/zshrc; uD'
+alias eI='vim ${ARCH_HOME}/i3/config; uD'
+alias eV='vim ${ARCH_HOME}/vimrc; uD'
+alias eC='vim ${ARCH_HOME}/outliners/cmd.txt;'
 # }}}
 # rip CDs {{{
 alias CDinfo='cdparanoia -vsQ'
@@ -226,11 +249,6 @@ alias gcal-agenda='gcalcli agenda'
 256colors() {
     for code in {0..255}; do echo -e "\e[38;5;${code}m"'\\e[38;5;'"$code"m"\e[0m"; done
 }
-# kill process {{{
-dkill () {
-    ps -ef | dmenu -l 10 | awk '{print $2}' | xargs kill -9 &>/dev/null
-}
-# }}}
 # dictionary {{{
 #dict() {
     #sdcv -u "Cambridge Advanced Learner's Dictionary" -u"Merriam-Webster Collegiate Dictionary" --utf8-output $1 | sed 's/yle=/style=/' | elinks -dump | sed -r 's!(.*). -->(.*)!\2!' | sed -r 's!(.*)>(.*)!\2!' | vim -
@@ -282,9 +300,25 @@ scribd () {
 getwindowinfo () {
     xprop  | grep "WM_CLASS\|WM_NAME(STRING)" | sort | sed -e 's/WM_CLASS(STRING)/instance, class/; s/WM_NAME(STRING)/title/'
 }
+#xdg{{{
+XDG_DESKTOP_DIR="$HOME/Desktop"
+XDG_DOCUMENTS_DIR="$HOME/Documents"
+XDG_DOWNLOAD_DIR="$HOME/Downloads"
+XDG_MUSIC_DIR="$HOME/Music"
+XDG_PICTURES_DIR="$HOME/Pictures"
+XDG_PUBLICSHARE_DIR="$HOME/Public"
+XDG_TEMPLATES_DIR="$HOME/.Templates"
+XDG_VIDEOS_DIR="$HOME/Videos"
+#}}}
 #perl
 PATH="/home/tait/perl5/bin${PATH+:}${PATH}"; export PATH;
 PERL5LIB="/home/tait/perl5/lib/perl5${PERL5LIB+:}${PERL5LIB}"; export PERL5LIB;
 PERL_LOCAL_LIB_ROOT="/home/tait/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_ROOT}"; export PERL_LOCAL_LIB_ROOT;
 PERL_MB_OPT="--install_base \"/home/tait/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/home/tait/perl5"; export PERL_MM_OPT;
+
+PATH=$HOME/bin:${PATH}
+
+#TODO 
+
+[ $(id -u) -ne 0 ] && cd ~/Dropbox/arch/tait

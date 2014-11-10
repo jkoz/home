@@ -2,11 +2,17 @@
 mod4 + Return
     urxvtc
 
+mod4 + i
+    mapunmap --classname "tmux-urxvt-dropdown" "term --name tmux-urxvt-dropdown"
+
 mod4 + d
     ldoce5viewer
 
-mod4 + i
-    xvkbd -text '\[F10]'
+mod4 + f
+    dm fm $HOME
+
+mod4 + w
+    dm sw
 
 mod4 + Up
     xbacklight -inc 20
@@ -21,10 +27,10 @@ mod4 + Left
     amixer -c 0 set Master 1-
 
 mod4 + p
-    sh -c '~/bin/dmenudesktop'
+    dm ru
 
 mod4 + u
-    sh -c '~/bin/dmenuproc'
+    dm kl
 
 mod4 + bracketright
     xlock -mod blank
@@ -36,7 +42,7 @@ mod4 + s
     systemctl poweroff
 
 mod4 + b
-    chromium
+    google-chrome-stable
 
 Print
     scrot -e 'mv $f /tmp/ && gimp /tmp/$f'
@@ -45,7 +51,16 @@ mod4 + Print
     scrot -s -e 'mv $f /tmp/ && gimp /tmp/$f'
 
 mod4 + space
-    dmenu_run
+    dm ru
+
+mod4 + 0
+    mpc -h ~/.mpd/socket toggle
+
+mod4 + 8
+    clerk
+
+mod4 + 1
+    dm sy
 
 ############################################
 # bspwm

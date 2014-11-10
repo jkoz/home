@@ -1,13 +1,17 @@
 #!/bin/zsh
 #
+# dependencies: acpi
+#
 trap 'trap - TERM; kill 0' INT TERM QUIT EXIT
 
 script_name=$(basename $0)
 script_dir=$(dirname $0)
 
-sep=" %{Fcyan}| "
+#sep=" %{Fcyan}| "
+sep=" "
 default="#90707070"
 wm_socket="bspwm:[0-9+]-socket"
+wm_icons="\uf118"
 
 mail () {
     glyph_mail="\u136"
@@ -20,59 +24,6 @@ music () {
 
     ret=$(mpc current --format "[%title% ]|[%file%]" 2>/dev/null)
     test -z $ret && echo "" || echo "U%{F${music_color}}${music_text} %{F${default}}${ret}"
-}
-clock () {
-    glyph_clock="\uF109"
-    clock_text=${glyph_clock}
-    clock_color="#99802080"
-
-    # full date and time
-    #ret=$(date '+%a %d %b %Y %I:%M:%S %p %Z')
-
-    ret=$(date '+%I:%M %p')
-
-    echo "%{F${clock_color}}${clock_text} %{F${default}}${ret}"
-}
-
-battery() {
-    glyph_battery_full="\uf100"
-    glyph_battery_charging="\uf100"
-    glyph_battery_20_0="\uf107"
-    glyph_battery_40_20="\uf106"
-    glyph_battery_60_40="\uf105"
-    glyph_battery_80_60="\uf104"
-    glyph_battery_80_90="\uf103"
-    glyph_battery_90_100="\uf102"
-    glyph_battery_100="\uf101"
-    bat_color="#99106000"
-
-    bat_status="/sys/class/power_supply/BAT1/status"
-    ret=$(sed -n p "/sys/class/power_supply/BAT1/capacity")
-
-    if test "$(cat $bat_status)" = "Charging"; then
-        bat_text="${glyph_battery_charging}"
-    elif test "$(cat $bat_status)" = "Full"; then
-        bat_text="${glyph_battery_full}"
-    else
-        if test $ret -eq 100; then
-            bat_text="${glyph_battery_100}"
-        elif test $ret -le 100 -a $ret -gt 90; then
-            bat_text="${glyph_battery_90_100}"
-        elif test $ret -le 90 -a $ret -gt 80; then
-            bat_text="${glyph_battery_80_90}"
-        elif test $ret -le 80 -a $ret -gt 60; then
-            bat_text="${glyph_battery_80_60}"
-        elif test $ret -le 60 -a $ret -gt 40; then
-            bat_text="${glyph_battery_60_40}"
-        elif test $ret -le 40 -a $ret -gt 20; then
-            bat_text="${glyph_battery_40_20}"
-        elif test $ret -le 20; then
-            bat_text="${glyph_battery_20_0}"
-        else
-            bat_text="Unknown"
-        fi
-    fi
-    test -z ${ret} && echo "" || echo "%{F${bat_color}}${bat_text} %{F${default}}${ret}%%"
 }
 
 volume() {
@@ -115,76 +66,28 @@ memory() {
     echo "%{F${mem_color}}${mem_text} %{F${default}}${ret}%%"
 }
 
-network() {
-    network_color="#90503055"
-    glyph_wire="\uf108"
+proc_wm_info() {
+    num_mon=$2
+    line=$(echo $1 | sed 's/:/ /g')
 
-    echo `ip link | sed -n 's/^[0-9]: \(.*\):.*$/\1/p'` | read lo int1 int2
-
-    # check which interface is wifi
-    if iwconfig $int1 >/dev/null 2>&1; then
-        wifi=$int1
-        eth0=$int2
-    else
-        wifi=$int2
-        eth0=$int1
-    fi
-
-    # check if it's up
-    addr=$(ifconfig $eth0 | grep "inet " | awk '{print $2}')
-    if test -n "$addr"; then
-        int_text="${glyph_wire} %{F${default}}$eth0"
-
-        network_text=$(ping -c 1 8.8.8.8 >/dev/null 2>&1 || echo "Disconnected")
-    else # wifi
-        addr=$(ifconfig $eth0| grep "inet " | awk '{print $2}')
-
-        int_text=${glyph_wifi_80_100}
-
-        if [ ping -c 1 8.8.8.8 >/dev/null 2>&1 ]; then
-            # TODO wifi signal strength
-            signalStrength=$(cat /proc/net/wireless | awk 'NR==3 { print $3}' | sed 's/\.//')
-            if [ "$signalStrength" -gt 64 ]; then
-                int_text="\uf11b\uf11c\uf11d\uf11e"
-            elif [ "$signalStrength" -lt 65 ] && [ "$signalStrength" -gt 39 ]; then
-                int_text="\uf11b\uf11c\uf11d\uf10e"
-            elif [ "$signalStrength" -lt 40 ]; then
-                int_text="\uf11b\uf11c\uf10d\uf10e"
-            else
-                int_text="\uf11b\uf10c\uf10d\uf10e Connecting..."
-            fi
-        else
-            int_text="Disconnected"
-        fi
-    fi
-
-
-    echo "%{F${network_color}}${int_text}"
-}
-
-weather() {
-    glyph_weather="\u263c"
-    weather_text="${glyph_weather}"
-    weather_color="#be9b7b00"
-
-    ret=`python <<EOF
-from yweather import Client
-city, country = "Edmonton", "Canada"
-
-if __name__ == '__main__':
-    client = Client()
-    try:
-        weather = client.fetch_weather(client.fetch_woeid(city + ", " + country), metric=True)
-        temp = weather["condition"]["temp"] + "°C "
-        #humidity = "H " + weather["atmosphere"]["humidity"] + "%% "
-        #wind_speed = "W " + weather["wind"]["speed"] + "km/h"
-        #print(temp + humidity + wind_speed)
-        print(temp)
-    except IOError:
-        print("")
-EOF`
-
-    test -z $ret && echo "" || echo "R%{F${weather_color}}${weather_text} %{F${default}}$ret"
+    wm_infos=""
+    eval set -- "$line";
+    while [ $# -gt 0 ] ; do
+        item=$1
+        name=${item#?}
+        case $item in
+            M*) [ $num_mon -gt 1 ] && wm_infos="${wm_infos}${name}" ;;  # active monitor
+            m*) [ $num_mon -gt 1 ] && wm_infos="${wm_infos}${name}" ;;  # inactive monitor
+            O*) wm_infos="${wm_infos} %{F${focus_workspace}}${name}" ;; # focused occupied desktop
+            F*) wm_infos="${wm_infos} %{F${focus_workspace}}${name}";; # focused free desktop
+            U*) wm_infos="${wm_infos}%{F${default}}${name}" ;;  # focused urgent desktop
+            o*) wm_infos="${wm_infos} %{F${default}}${name}" ;; # occupied desktop
+            f*) wm_infos="${wm_infos} %{F${default}}${name}";; # free desktop
+            u*) wm_infos="${wm_infos}%{F${default}}${name}";; # urgent desktop
+            L*) wm_infos="%{F${default}}[${name}]%{F${default}}${wm_infos}" ;; # layout
+        esac
+        shift
+    done
 }
 
 loop () {
@@ -201,89 +104,20 @@ loop () {
     num_mon=$(bspc query -M | wc -l)
     while read -r line; do
         case $line in
-            T*)
-                title_info="${line#?}"
-                [ ! -z ${title_info} ] && title_info=" - ${title_info}"
-                ;;
-            D*)
-                clock_info="${sep}${line#?}"
-                ;;
-            C*)
-                cpu_info="${sep}${line#?}"
-                ;;
-            M*)
-                mem_info="${sep}${line#?}"
-                ;;
-            B*)
-                battery_info="${sep}${line#?}"
-                ;;
-            N*)
-                network_info="${sep}${line#?}"
-                ;;
-            V*)
-                volume_info="${sep}${line#?}"
-                ;;
-            U*)
-                music_info="${sep}${line#?}"
-                ;;
-            R*)
-                weather_info="${sep}${line#?}"
-                ;;
-            W*)
-                wm_infos=""
-                line=$(echo $line | sed 's/:/ /g')
-                eval set -- "$line";
-                while [ $# -gt 0 ] ; do
-                    item=$1
-                    name=${item#?}
-                    case $item in
-                        M*)
-                            # active monitor
-                            if [ $num_mon -gt 1 ] ; then
-                                wm_infos="${wm_infos}${name}"
-                            fi
-                            ;;
-                        m*)
-                            # inactive monitor
-                            if [ $num_mon -gt 1 ] ; then
-                                wm_infos="${wm_infos}${name}"
-                            fi
-                            ;;
-                        O*)
-                            # focused occupied desktop
-                            wm_infos="${wm_infos} %{F${focus_workspace}}${name}"
-                            ;;
-                        F*)
-                            # focused free desktop
-                            wm_infos="${wm_infos} %{F${focus_workspace}}${name}"
-                            ;;
-                        U*)
-                            # focused urgent desktop
-                            wm_infos="${wm_infos}%{F${default}}${name}"
-                            ;;
-                        o*)
-                            # occupied desktop
-                            wm_infos="${wm_infos} %{F${default}}${name}"
-                            ;;
-                        f*)
-                            # free desktop
-                            wm_infos="${wm_infos} %{F${default}}${name}"
-                            ;;
-                        u*)
-                            # urgent desktop
-                            wm_infos="${wm_infos}%{F${default}}${name}"
-                            ;;
-                        L*)
-                            # layout
-                            wm_infos="%{F${default}}[${name}]%{F${default}}${wm_infos}"
-                            ;;
-                    esac
-                    shift
-                done
-                ;;
+            T*) title_info="${line#?}" && [ ! -z ${title_info} ] && title_info=" ${title_info}" ;;
+            D*) clock_info="${sep}${line#?}" ;;
+            C*) cpu_info="${sep}${line#?}" ;;
+            M*) mem_info="${sep}${line#?}" ;;
+            B*) battery_info="${sep}${line#?}";;
+            N*) network_info="${sep}${line#?}";;
+            V*) volume_info="${sep}${line#?}";;
+            U*) music_info="${sep}${line#?}";;
+            R*) weather_info="${sep}${line#?}";;
+            W*) proc_wm_info $line $num_mon ;;
         esac
 
-        echo "%{l}${wm_infos}${title_info}%{r} $(echo "${music_info}${weather_info}${cpu_info}${mem_info}${network_info}${clock_info}${volume_info}${battery_info} " | sed "s/^${sep}/ /")"
+        echo "%{l}   ${wm_icons}${title_info}%{r} $(echo "${music_info}${weather_info}${cpu_info}${mem_info}${battery_info}${network_info}${clock_info}${volume_info}   " | sed "s/^${sep}/ /")"
+        #echo "%{l}   ${wm_infos} - ${title_info}%{r} $(echo "${music_info}${weather_info}${cpu_info}${mem_info}${battery_info}${network_info}${clock_info}${volume_info}   " | sed "s/^${sep}/ /")"
 
         [ -z $(ls /tmp | egrep "${wm_socket}") ] && kill 0
     done
@@ -301,28 +135,36 @@ register () {
     xtitle -sf 'T%s' > "$PANEL_FIFO" &
 
     # script
-    while true; do echo "D$(clock)"; sleep 1; done > $PANEL_FIFO &
-    while true; do echo "B$(battery)"; sleep 1; done > $PANEL_FIFO &
-    while true; do echo "C$(cpu)"; sleep 1; done > $PANEL_FIFO &
-    while true; do echo "M$(memory)"; sleep 1; done > $PANEL_FIFO &
-    while true; do echo "N$(network)"; sleep 5; done > $PANEL_FIFO &
-    while true; do echo "V$(volume)"; sleep 1; done > $PANEL_FIFO &
-    while true; do echo "$(weather)"; sleep 5; done > $PANEL_FIFO &
-    while true; do echo "$(music)"; sleep 1; done > $PANEL_FIFO &
+    #while true; do echo "C$(cpu)"; sleep 1; done > $PANEL_FIFO &
+    #while true; do echo "M$(memory)"; sleep 1; done > $PANEL_FIFO &
+    #true; do echo "N$(snetwork)"; sleep 5; done > $PANEL_FIFO &
+    #while true; do echo "V$(volume)"; sleep 1; done > $PANEL_FIFO &
+    #while true; do echo "$(music)"; sleep 1; done > $PANEL_FIFO &
+
+    ssnoop -c sweather -sf 'R%s' -i 5 > $PANEL_FIFO &
+    ssnoop -c sclock -sf 'D%s' -i 1 > $PANEL_FIFO &
+    ssnoop -c sbattery -sf 'B%s' -i 1 > $PANEL_FIFO &
+    ssnoop -c snetwork -sf 'N%s' -i 3 > $PANEL_FIFO &
 }
 
-main () {
+check() {
     if [ $(pgrep -cx ${script_name}) -gt 1 ] ; then
         printf "%s\n" "The ${script_name} is already running." >&2
         exit 1
     fi
+}
 
-    font="-xos4-Terminus-Medium-R-Normal--14-140-72-72-C-80-ISO10646-1"
-    colo_background="#99050505"
-
+main () {
+    check
     register "/tmp/panel-fifo"
 
-    cat "/tmp/panel-fifo" | loop | bar -f ${font} -B ${colo_background} &
+    cat "/tmp/panel-fifo" | loop | bar -f "-xos4-Terminus-Medium-R-Normal--14-140-72-72-C-80-ISO10646-1" -B "#99050505" | while read action; do
+        echo $action
+            case $action in
+                ayforecast) sweather -a;;
+                asclock) sclock -a ;;
+            esac
+        done &
     #cat "/tmp/panel-fifo" | loop
     wait
 }
