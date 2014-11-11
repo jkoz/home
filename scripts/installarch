@@ -89,6 +89,7 @@ sudoedit /etc/sudoers
 uncomment %wheel ALL=(ALL) ALL
 
 # start ntp
+sudo systemctl start ntpd
 
 # 15. install my favorite apps
 # required
