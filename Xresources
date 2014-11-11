@@ -36,7 +36,7 @@
 ! #define S_base2         #073642
 ! #define S_base3         #002b36
 
-# X windows
+! X windows
 *background:              S_base03
 *foreground:              S_base0
 *fading:                  40
@@ -61,7 +61,7 @@
 *color14:                 S_base1
 *color15:                 S_base3
 
-# URxvt
+! URxvt
 URxvt*termName: xterm-256color
 URxvt.urlLauncher: /usr/bin/chromium
 URxvt.matcher.button: 1
