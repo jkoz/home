@@ -1,0 +1,44 @@
+# network
+wifi-menu
+systemctl start netctl-auto@wlan0
+systemctl start ntpd
+
+# git & scripts
+pacman -S vim tmux git
+git clone https://github.com/jkoz/home jkoz/home
+cd /root/jkoz/home && INSTALL
+
+# hostname
+echo "jkoz_arch_linux" > /etc/hostname
+
+# locale
+sed -i 's!#en_US.UTF-8 UTF-8!en_US.UTF-8 UTF-8!' /etc/locale.gen
+sed -i 's!#en_US ISO-8859-1!en_US ISO-8859-1!' /etc/locale.gen
+locale-gen
+localectl set-locale LANG=en_US.UTF-8
+
+# swap caps
+echo "KEYMAP=\"emacs2\"" > /etc/vconsole.conf
+
+# create users
+useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power -d/home/tait -s /usr/bin/zsh tait
+
+# require for yaourt
+pacman -S base-devel
+
+pacman -S elinks zsh sudo xclip axel zip unzip unrar rtorrent alsa-utils samba openssh ranger net-tools wireless_tools ntfs-3g mpd
+
+# yaourt
+curl -O https://aur.archlinux.org/packages/pa/package-query/package-query.tar.gz && tar xzvf package-query.tar.gz && cd package-query && makepkg -si --asroot
+curl -O https://aur.archlinux.org/packages/ya/yaourt/yaourt.tar.gz && tar xzvf yaourt.tar.gz && cd yaourt && makepkg -si --asroot
+rm -rf package-query.tar.gz yaourt.tar.gz
+
+# wm
+pacman -S libxcb xcb-util xcb-util-keysyms xcb-util-wm bspwm-git
+yaourt -S sxhkd-git xtitle-git bar-aint-recursive
+
+
+pacman -S xdotool dmenu xorg xorg-server xorg-xinit mplayer xlockmore rxvt-unicode
+
+#TODO: not necessity
+pacman -S bc

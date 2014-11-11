@@ -27,10 +27,7 @@ mount /dev/sda6 /mnt/var
 mount /dev/sda8 /mnt/home
 
 # 3. install system base
-pacstrap /mnt base vim tmux ctags bc dialog wpa_supplicant wpa_actiond elinks zsh fish sudo fbterm git hg subversion \
-              cvs xclip axel zip unzip unrar rtorrent alsa-utils alsa-oss samba openssh ranger cdrkit \
-              net-tools wireless_tools cabextract cmake mutt ntfs-3g fetchmail procmail bitlbee irssi mpd mpc ncmpcpp gdb \
-              perl-cpanplus-dist-arch python-pip rfkill ntp
+pacstrap /mnt base vim tmux
 
 # 4. generate fstab
 genfstab -p /mnt >> /mnt/etc/fstab
@@ -85,26 +82,51 @@ useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power -d/home/
 usermod -s /usr/bin/zsh root
 
 # 14. enable sudo for wheel groups
+pacman -S sudo
 sudoedit /etc/sudoers
 uncomment %wheel ALL=(ALL) ALL
 
-# start ntp
+# 14.0 persistent network wireless and wire profiles
+sudo pacman -S wpa_actiond  # require
+sudo systemctl enable netctl-auto@wlp2s0
+systemctl enable netctl-auto@enp3s0
+
+# 14.1 
+# require for yaourt
+sudo pacman -S base-devel
+# ctags bc dialog wpa_supplicant wpa_actiond elinks zsh fish sudo fbterm git hg subversion \
+              cvs xclip axel zip unzip unrar rtorrent alsa-utils alsa-oss samba openssh ranger cdrkit \
+              net-tools wireless_tools cabextract cmake mutt ntfs-3g fetchmail procmail bitlbee irssi mpd mpc ncmpcpp gdb \
+              perl-cpanplus-dist-arch python-pip rfkill ntp
+
+# 14.2 yaourt
+echo "[archlinuxfr]" >> /etc/pacman.conf
+echo "SigLevel = Never" >> /etc/pacman.conf
+echo "Server = http://repo.archlinux.fr/$arch" >> /etc/pacman.conf
+
+# 14.3 wm
+pacman -S libxcb xcb-util xcb-util-keysyms xcb-util-wm
+
+git clone https://github.com/baskerville/xtitle baskerville/xtitle
+git clone https://github.com/LemonBoy/bar  LemonBoy/bar
+git clone https://github.com/baskerville/bspwm baskerville/bspwm
+git clone https://github.com/jkoz/dmenu2 jkoz/dmenu2
+
+git clone https://github.com/jkoz/ldoce5viewer
+
+
 
 # 15. install my favorite apps
 # required
 ctags bc dialog wpa_supplicant elinks zsh sudo fbterm git subversion cvs xclip axel zip unzip unrar rtorrent \
 alsa-utils alsa-oss samba openssh ranger cdrkit cabextract cmake mutt ntfs-3g fetchmail procmail \
 
+############################################
 # network
 net-tools rfkill wireless_tools wifi-menu
 
 # choose essid
 sudo wifi-menu
-
-# persistent network wireless and wire profiles
-sudo pacman -S wpa_actiond  # require
-sudo systemctl enable netctl-auto@wlp2s0
-systemctl enable netctl-auto@enp3s0
 
 #####################################################################
 # IF WE USE netctl-auto@wlan0 service, please don't touch wpa_supplicant low
@@ -135,7 +157,6 @@ sudo wpa_cli
 sudo systemctl stop wpa_supplicant@wlp0s29u1u2
 sudo wpa_cli terminate
 
-
 # fonts
 pacman -S pcf2bdf xorg-xfontsel xorg-xfontsel xorg-xfd xorg-xlsfonts
 yaourt -S gbdfed ttf-mac-fonts
@@ -151,15 +172,6 @@ mupdf feh freetype2  libxft x11vnc xautolock scrot
 
 yaourt -S cabaret compton
 
-ibxcb xcb-util xcb-util-keysyms xcb-util-wm
-
-# yaourt
-echo "[archlinuxfr]" >> /etc/pacman.conf
-echo "SigLevel = Never" >> /etc/pacman.conf
-echo "Server = http://repo.archlinux.fr/$arch" >> /etc/pacman.conf
-
-pacman -S yaourt --needed base-devel
-
 # browser
 pacman -S chromium
 yaourt -S dropbox dropbox-cli grive chromium-pepper-flash
@@ -174,9 +186,6 @@ cpan Net:DBus
 
 # desktop notification
 pacman -S libnotify dunst
-
-# pip
-pip install yweather
 
 # status
 yaourt -S archey
@@ -213,7 +222,6 @@ xdg-user-dirs-update
 # 17 git experimental apps
 git clone https://github.com/baskerville/xtitle
 git clone https://github.com/LemonBoy/bar
-git clone https://github.com/baskerville/bspwm
 git clone https://github.com/jkoz/ldoce5viewer
 git clone https://github.com/mrshankly/dmenu2 mrshankly/dmenu2
 
