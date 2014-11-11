@@ -27,10 +27,10 @@ mount /dev/sda6 /mnt/var
 mount /dev/sda8 /mnt/home
 
 # 3. install system base
-pacstrap /mnt base vim tmux ctags bc dialog wpa_supplicant elinks zsh fish sudo fbterm git hg subversion \
+pacstrap /mnt base vim tmux ctags bc dialog wpa_supplicant wpa_actiond elinks zsh fish sudo fbterm git hg subversion \
               cvs xclip axel zip unzip unrar rtorrent alsa-utils alsa-oss samba openssh ranger cdrkit \
               net-tools wireless_tools cabextract cmake mutt ntfs-3g fetchmail procmail bitlbee irssi mpd mpc ncmpcpp gdb \
-              perl-cpanplus-dist-arch python-pip rfkill
+              perl-cpanplus-dist-arch python-pip rfkill ntp
 
 # 4. generate fstab
 genfstab -p /mnt >> /mnt/etc/fstab
@@ -76,7 +76,9 @@ passwd
 
 # 12. enable service network
 systemctl list-unit-files
-systemctl enable dhcpcd # a workaround method to enable wire connection. In fact, we should use netctl
+
+# to temporarily use wire connection start dhcpcd client
+systemctl start dhcpcd # a workaround method to enable wire connection. In fact, we should use netctl
 
 # 13. add new user
 useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power -d/home/tait -s /usr/bin/zsh tait
@@ -86,6 +88,8 @@ usermod -s /usr/bin/zsh root
 sudoedit /etc/sudoers
 uncomment %wheel ALL=(ALL) ALL
 
+# start ntp
+
 # 15. install my favorite apps
 # required
 ctags bc dialog wpa_supplicant elinks zsh sudo fbterm git subversion cvs xclip axel zip unzip unrar rtorrent \
@@ -93,7 +97,20 @@ alsa-utils alsa-oss samba openssh ranger cdrkit cabextract cmake mutt ntfs-3g fe
 
 # network
 net-tools rfkill wireless_tools wifi-menu
+
+# choose essid
 sudo wifi-menu
+
+# persistent network wireless and wire profiles
+sudo pacman -S wpa_actiond  # require
+sudo systemctl enable netctl-auto@wlp2s0
+systemctl enable netctl-auto@enp3s0
+
+#####################################################################
+# IF WE USE netctl-auto@wlan0 service, please don't touch wpa_supplicant low
+# level configuration
+# netctl manually enable network profile
+#####################################################################
 sudo netctl enable wlp2s0-tp
 
 # use wpa_supplicant
