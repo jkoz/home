@@ -1,5 +1,5 @@
 # 0. Swap caps lock and ctrl
-sudo loadkeys /usr/share/kbd/keymaps/i386/qwerty/emacs2.map.gz
+loadkeys /usr/share/kbd/keymaps/i386/qwerty/emacs2.map.gz
 kbdrate -d 30  -r 400
 
 # 1. Partitioning
@@ -81,62 +81,106 @@ systemctl start dhcpcd # a workaround method to enable wire connection. In fact,
 useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power -d/home/tait -s /usr/bin/zsh tait
 usermod -s /usr/bin/zsh root
 
-# 14. enable sudo for wheel groups
+# 14. enable for wheel groups
 pacman -S sudo
 sudoedit /etc/sudoers
 uncomment %wheel ALL=(ALL) ALL
 
 # 14.0 persistent network wireless and wire profiles
-sudo pacman -S wpa_actiond  # require
-sudo systemctl enable netctl-auto@wlp2s0
+pacman -S wifi-menu net-tools rfkill wireless_tools wpa_actiond
+systemctl enable netctl-auto@wlp2s0
 systemctl enable netctl-auto@enp3s0
 
 # 14.1 
-# require for yaourt
-sudo pacman -S base-devel
-# ctags bc dialog wpa_supplicant wpa_actiond elinks zsh fish sudo fbterm git hg subversion \
-              cvs xclip axel zip unzip unrar rtorrent alsa-utils alsa-oss samba openssh ranger cdrkit \
-              net-tools wireless_tools cabextract cmake mutt ntfs-3g fetchmail procmail bitlbee irssi mpd mpc ncmpcpp gdb \
-              perl-cpanplus-dist-arch python-pip rfkill ntp
+# ctags bc dialog wpa_supplicant wpa_actiond elinks zsh fish fbterm git hg subversion \
+              cvs xclip axel zip unzip unrar rtorrent alsa-utils alsa-oss samba openssh cdrkit \
+              cabextract cmake mutt ntfs-3g fetchmail procmail bitlbee irssi mpd mpc ncmpcpp gdb \
+              perl-cpanplus-dist-arch python-pip
+
+# 14.1.0 battery info
+pacman -S acpid
+
+# 14.1.1 ntpd
+pacman -S ntp
+systemctl start ntpd
+    
 
 # 14.2 yaourt
-echo "[archlinuxfr]" >> /etc/pacman.conf
-echo "SigLevel = Never" >> /etc/pacman.conf
-echo "Server = http://repo.archlinux.fr/$arch" >> /etc/pacman.conf
+pacman -S base-devel
+curl -O https://aur.archlinux.org/packages/pa/package-query/package-query.tar.gz && tar xzvf package-query.tar.gz && cd package-query && makepkg -si --asroot
+curl -O https://aur.archlinux.org/packages/ya/yaourt/yaourt.tar.gz && tar xzvf yaourt.tar.gz && cd yaourt && makepkg -si --asroot
+rm -rf package-query.tar.gz yaourt.tar.gz
 
-# 14.3 wm
-pacman -S libxcb xcb-util xcb-util-keysyms xcb-util-wm
+# 14.2.1 clouds
+yaourt -S dropbox-cli grive
 
-git clone https://github.com/baskerville/xtitle baskerville/xtitle
-git clone https://github.com/LemonBoy/bar  LemonBoy/bar
-git clone https://github.com/baskerville/bspwm baskerville/bspwm
+# 14.2.2 Ack Grep Ag
+yaourt -S silver-searcher-git
+
+# 14.3 x & wm
+pacman -S xdotool xorg xorg-server xorg-xinit xlockmore rxvt-unicode xautolock x11vnc
+pacman -S libxcb xcb-util xcb-util-keysyms xcb-util-wm bspwm-git
+yaourt -S sxhkd-git xtitle-git bar-aint-recursive
+
+# 14.3.1 desktop notification
+pacman -S libnotify dunst
+
+# 14.3.2 fonts
+pacman -S pcf2bdf
+yaourt -S gbdfed
+
+# 14.3 media
+pacman -S mplayer
+
+# 14.4 pdf
+mupdf
+# 14.5 photos
+feh
+imagemagick
+gimp
+ncitrogen
+
+# 14.6 screenshoot
+scrot
+# 14.7 mount camera, android, etc.
+yaourt -S simple-mtpfs
+
+# 14.8 composite
+yaourt -S cabaret compton
+
+# 14.8 file manager
+pacman -S pcmanfm ranger
+
+# 14.9 browsers
+pacman -S chromium chromium-pepper-flash
+
+# 15 extras
+# cpan
+cpan Net:DBus
+# status
+yaourt -S archey
+
+# 16 mines
 git clone https://github.com/jkoz/dmenu2 jkoz/dmenu2
-
 git clone https://github.com/jkoz/ldoce5viewer
 
 
-
-# 15. install my favorite apps
-# required
-ctags bc dialog wpa_supplicant elinks zsh sudo fbterm git subversion cvs xclip axel zip unzip unrar rtorrent \
-alsa-utils alsa-oss samba openssh ranger cdrkit cabextract cmake mutt ntfs-3g fetchmail procmail \
-
+# start ntp
 ############################################
-# network
-net-tools rfkill wireless_tools wifi-menu
 
-# choose essid
-sudo wifi-menu
+# network
+ wifi-menu
 
 #####################################################################
 # IF WE USE netctl-auto@wlan0 service, please don't touch wpa_supplicant low
 # level configuration
-# netctl manually enable network profile
 #####################################################################
-sudo netctl enable wlp2s0-tp
+
+# netctl manually enable network profile
+netctl enable wlp2s0-tp
 
 # use wpa_supplicant
-sudo cat /etc/wpa_supplicant/wpa_supplicant-wlp0s29u1u2.conf
+# create /etc/wpa_supplicant/wpa_supplicant-wlp0s29u1u2.conf
 #ctrl_interface=/run/wpa_supplicant
 #ctrl_interface_group=wheel
 #ap_scan=1
@@ -145,50 +189,20 @@ sudo cat /etc/wpa_supplicant/wpa_supplicant-wlp0s29u1u2.conf
 #network={
     #ssid="tp"
     #scan_ssid=1
-    #psk="7804786472"
+    #psk="mykey"
 #}
 # start
-sudo systemctl start wpa_supplicant@wlp0s29u1u2
-
-# monitor
-sudo wpa_cli
-
+systemctl start wpa_supplicant@wlp0s29u1u2
 # stop wpa
-sudo systemctl stop wpa_supplicant@wlp0s29u1u2
-sudo wpa_cli terminate
+systemctl stop wpa_supplicant@wlp0s29u1u2
+wpa_cli terminate
 
-# fonts
-pacman -S pcf2bdf xorg-xfontsel xorg-xfontsel xorg-xfd xorg-xlsfonts
-yaourt -S gbdfed ttf-mac-fonts
 
-# file manager
-pacman -S pcmanfm
-
-# disk
-yaourt -S simple-mtpfs sxhkd
-
-xdotool dmenu xorg xorg-server xorg-xinit i3 mplayer xlockmore rxvt-unicode
-mupdf feh freetype2  libxft x11vnc xautolock scrot
-
-yaourt -S cabaret compton
-
-# browser
-pacman -S chromium
-yaourt -S dropbox dropbox-cli grive chromium-pepper-flash
 yaourt -S shrew-vpn-client
 
-# utils
+# xdg
 pacman -S xdg-user-dirs
-yaourt -S silver-searcher-git
-
-# perl, cpan
-cpan Net:DBus
-
-# desktop notification
-pacman -S libnotify dunst
-
-# status
-yaourt -S archey
+xdg-user-dirs-update
 
 # dict
 yaourt -S stardict-tools
@@ -197,16 +211,8 @@ yaourt -Ss golden
 yaourt -Ss stardict
 yaourt -S makedict
 
-# graphic
-imagemagick
-gimp
-
 # extra
  pacman -S lm_sensors
- pacman -S acpid
- pacman -S gimp
- pacman -S ncitrogen
- pacman -S base-devel abs dmenu
  pacman -S libxft
  pacman -S freetype2
 
@@ -215,16 +221,3 @@ pacman -S lib32-gtk
 pacman -S lib32-alsa-lib
 pacman -S lib32-nvidia-utils
 pacman -S lib32-libdbus
-
-# 16 generate Downloads, Documents,...
-xdg-user-dirs-update
-
-# 17 git experimental apps
-git clone https://github.com/baskerville/xtitle
-git clone https://github.com/LemonBoy/bar
-git clone https://github.com/jkoz/ldoce5viewer
-git clone https://github.com/mrshankly/dmenu2 mrshankly/dmenu2
-
-# DONE!!!!
-
-#################
