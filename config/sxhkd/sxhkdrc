@@ -9,10 +9,10 @@ mod4 + d
     ldoce5viewer
 
 mod4 + f
-    dm fm $HOME
+    mapunmap --classname "dfm" "dfm"
 
 mod4 + w
-    dm sw
+    mapunmap --classname "dsw" "dsw"
 
 mod4 + Up
     xbacklight -inc 20
@@ -27,10 +27,10 @@ mod4 + Left
     amixer -c 0 set Master 1-
 
 mod4 + p
-    dm ru
+    mapunmap --classname "dru" "dru"
 
 mod4 + u
-    dm kl
+    mapunmap --classname "dkl" "dkl"
 
 mod4 + bracketright
     xlock -mod blank
@@ -51,7 +51,7 @@ mod4 + Print
     scrot -s -e 'mv $f /tmp/ && gimp /tmp/$f'
 
 mod4 + space
-    dm ru
+    mapunmap --classname "dru" "dru"
 
 mod4 + 0
     mpc -h ~/.mpd/socket toggle
@@ -60,7 +60,7 @@ mod4 + 8
     clerk
 
 mod4 + 1
-    dm sy
+    mapunmap --classname "dsy" "dsy"
 
 ############################################
 # bspwm
