@@ -17,7 +17,7 @@ clock_color="#99802080"
 #ret=$(date '+%a %d %b %Y %I:%M:%S %p %Z')
 
 if [ $all = "true" ]; then
-    notify-send "Calendar\n" "$(cal)"
+    notify-send "Calendar\n" "$(cal -w)"
 else
     ret=$(date '+%a %I:%M %p')
     echo "%{A:asclock:}%{F${clock_color}}${clock_text}%{F${default}}${ret}%{A}"
