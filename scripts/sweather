@@ -34,7 +34,7 @@ if [ $all = "true" ]; then
         low=$(echo $line | sed -r 's/<yweather:forecast day="(.*)" date="(.*)" low="(.*)" high="(.*)" text="(.*)" code="(.*)".*/\3/')
         high=$(echo $line | sed -r 's/<yweather:forecast day="(.*)" date="(.*)" low="(.*)" high="(.*)" text="(.*)" code="(.*)".*/\4/')
         text=$(echo $line | sed -r 's/<yweather:forecast day="(.*)" date="(.*)" low="(.*)" high="(.*)" text="(.*)" code="(.*)".*/\5/')
-        weather_info="${weather_info}\n${day}\t${low} C\t${high} C\t${text}"
+        weather_info="${weather_info}\n$(printf "%5s\t%3s C\t%3s C\t%s" ${day} ${low} ${high} ${text})"
     done
 
     notify-send -i "/tmp/icons/${gif_file}.png" "${today}" "$weather_info"
