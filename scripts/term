@@ -17,4 +17,4 @@ eval set -- "$args"; while true; do
     esac
 done # $@ will store all remaing args
 
-urxvtc -name "${name}" -title "${title}" -e $SHELL -c "tmux has-session && tmux attach || tmux new-session" &
+urxvtc -name "${name}" -title "${title}" -e $SHELL -c "wresize ${name}; tmux has-session && tmux attach || tmux new-session" &
