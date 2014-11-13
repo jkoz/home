@@ -87,11 +87,17 @@ sudoedit /etc/sudoers
 uncomment %wheel ALL=(ALL) ALL
 
 # 14.0 persistent network wireless and wire profiles
-pacman -S wifi-menu net-tools rfkill wireless_tools wpa_actiond
-systemctl enable netctl-auto@wlp2s0
-systemctl enable netctl-auto@enp3s0
+pacman -S wifi-menu net-tools rfkill wireless_tools
 
-# 14.1 
+pacman -S wpa_actiond ifplugd
+
+#wifi-menu wlp2s0
+systemctl enable netctl-auto@wlp2s0
+
+#cp /etc/netctl/examples/ethernet-dhcp /etc/netctl/enp3s0-tp & replace the ethenert name
+systemctl enable netctl-ifplugd@enp3s0
+
+# 14.1
 # ctags bc dialog wpa_supplicant wpa_actiond elinks zsh fish fbterm git hg subversion \
               cvs xclip axel zip unzip unrar rtorrent alsa-utils alsa-oss samba openssh cdrkit \
               cabextract cmake mutt ntfs-3g fetchmail procmail bitlbee irssi mpd mpc ncmpcpp gdb \
@@ -103,7 +109,7 @@ pacman -S acpid
 # 14.1.1 ntpd
 pacman -S ntp
 systemctl start ntpd
-    
+
 
 # 14.2 yaourt
 pacman -S base-devel
@@ -134,6 +140,8 @@ pacman -S mplayer
 
 # 14.4 pdf
 mupdf
+cabaret
+
 # 14.5 photos
 feh
 imagemagick
@@ -146,13 +154,14 @@ scrot
 yaourt -S simple-mtpfs
 
 # 14.8 composite
-yaourt -S cabaret compton
+yaourt -S compton
 
 # 14.8 file manager
 pacman -S pcmanfm ranger
 
 # 14.9 browsers
 pacman -S chromium chromium-pepper-flash
+pacman -S dwb
 
 # 15 extras
 # cpan
@@ -221,3 +230,23 @@ pacman -S lib32-gtk
 pacman -S lib32-alsa-lib
 pacman -S lib32-nvidia-utils
 pacman -S lib32-libdbus
+
+#######################################
+readcd -v dev=/dev/cdrom -f abc.iso
+
+#systemd
+systemctl daemon-reload  # scanning for new & changes
+systemctl restart systemd-logind  # disable auto suspended on laptop; add HandleLidSwitch=ignore in /etc/systemd/logind.conf
+systemctl --user list-unit-files # list user units
+systemctl --user enable mpd # enable users units
+
+pacman -Q # list all installed packages
+pacman -Qi # list all installed packages with more info
+pacman -Q -n # list all installed packages founded in sync db
+pacman -Q -m # list all installed packages founded elsewhere, aur
+pacman -Q -g base base-devel # list all installed package belongs to group base or base devel
+
+
+expac -HM "%011m\t%-20n\t%10d" $(comm -23 <(pacman -Qqen | sort) <(pacman -Qqg base base-devel | sort) ) | sort -n # list all installed package that no base or base-devel
+
+#bspc
