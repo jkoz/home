@@ -4,11 +4,12 @@
 ### MAIN ###
 
 # The most robust getopt
-args=$(getopt -q -o c: -l "classname:" -n "$(basename $0)" -- "$@")
+args=$(getopt -q -o c:f: -l "classname:,first:" -n "$(basename $0)" -- "$@")
 test $# -lt 2 -o $? -ne 0 && printf "usage: -c classname command\n" && exit 1
 eval set -- "$args"; while true; do
     case "$1" in
         -c|--classname) shift; classname=$1; shift ;;
+        -f|--first) shift; first=$1; shift ;;
         --) shift; break ;;
     esac
 done # $@ will store all remaing args
@@ -27,6 +28,6 @@ else
     else
         #echo "create window first time with cmd: $@" >> /tmp/.mapunmap.log
         eval "$@"
-        wresize ${classname}
+        [ ! -z $first ] && eval "$first"
     fi
 fi
