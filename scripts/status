@@ -52,6 +52,8 @@ cpu () {
     cpu_text="${glyph_cpu}"
     cpu_color="#90805050"
 
+    # cat /proc/cpuinfo
+    #
     ret=$(ps -eo pcpu |grep -vE '^\s*(0.0|%CPU)' | sed -n '1h;$!H;$g;s/\n/ +/gp' | bc)
     echo "%{F${cpu_color}}${cpu_text} %{F${default}}${ret}%%"
 }

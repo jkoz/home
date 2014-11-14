@@ -1,3 +1,6 @@
+# encrypts DNS traffic between the user and a DNS resolver, preventing spying, spoofing or man-in-the-middle attacks.
+#dnscrypt-proxy &
+
 # load x resources
 xrdb ~/.Xresources
 
@@ -51,8 +54,27 @@ compton -b
 x11vnc -shared -rfbport 5900 -forever -usepw -display :0.0 -bg
 
 # following services are now managed by systemd
-# dropboxd &
+# dropboxd &   # TODO: need test
 # fetchmail
+
+# auto mount usb
+#udiskie &
+#
+# Redshift - changed screen colour temp
+# redshift-gtk -l 55.978301:-3.228586 -t 6000:4500 &
+#
+# Volume system tray
+# pa-applet &
+# volti &
+#
+# # Radio streams
+# radiotray &
+#
+# copy /past handler
+# autocutsel -fork &
+#
+# Unclutter - hides the mouse cursor after 5 seconds of idle
+# unclutter -root -jitter 10 &
 
 # wm
 exec bspwm
