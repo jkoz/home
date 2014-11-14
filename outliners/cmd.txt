@@ -3,13 +3,28 @@
 	a.b : address, value
 
 #xdotool
-xdotool getwindowgeometry --shell $(xdotool search --classname quake_urxvt) 
+xdotool getwindowgeometry --shell $(xdotool search --classname quake_urxvt)
 
 # bspc
 urxvt -name "urxvttest" &
 bspc rule -a urxvttest -o floating=on
 
 xdotool search --classname urxvttest
+
+# htop
+t tree
+-/+ colapse/expand
+
+\ incremental search
+k kill
+] incr pri
+[ dec priority
+u filter user
+
+P sort by processor usage
+M sort by memory usage
+S show menu
+
 
 #tcpdump
 	# Captured Packets in ASCII using tcpdump -A
@@ -73,9 +88,6 @@ tcpdump -nnvvXSs
 sudo cdrdao copy
 k3b
 
-#-cdkit
-readcd -v dev=/dev/cdrom -f abc.iso
-
 }}}
 #-curl {{{1
 #-curl-post-soap
@@ -87,7 +99,7 @@ curl http://something/json | python -mjson.tool
 #1}}}---------------------------------------------------------------------------
 #-sed {{{1
 #-sed-xml-tag
-sed '/<dependency>/,/<\/dependency>/!d' 
+sed '/<dependency>/,/<\/dependency>/!d'
 #-sed-delete-break-line
 sed -n -e ":a" -e "$ s/\n/ /gp;N;b a"
 #-sed-remove-space-tab
@@ -144,7 +156,7 @@ Redirect both STDERR & STDOUT to /dev/null (nothing shows up on console)
 Redirect STDOUT to /dev/null (only STDERR shows on console)
 2>&-
 
-# bash-history 
+# bash-history
 # exe previous cmds
 ls ~
 !!
@@ -179,7 +191,7 @@ vim -D -c "breakadd file *commandline.vim"
 ^w-
 ^w+
 sp horizontal
-vsp vertical 
+vsp vertical
 
 #-eclim
 cd ~/projects/eclim/ && git checkout indigo && \
@@ -261,9 +273,9 @@ route add -net 20.0.0.0/8 gw 192.168.1.3
 cat /etc/sysconfig/network-scripts/route-eth0
 ADDRESS0=172.21.129.0
 NETMASK0=255.255.255.0
-GATEWAY0=192.168.99.160                   
+GATEWAY0=192.168.99.160
 
-# way to access internet when wah 
+# way to access internet when wah
 sudo route del -net 192.168.1.0/24 gw 192.168.19.54
 sudo route del default gw 192.168.19.54 dev tap0
 disable dns setting
@@ -534,8 +546,6 @@ mvn org.apache.maven.plugins:maven-eclipse-plugin:2.9:eclipse
 #-archlinux{{{
 
 # update all
-pacman -Syu
-pacman -Ss subversion
 
 # install new consolas
 set -e
@@ -627,7 +637,7 @@ zoneadm list -vi
 # solaris
 route add 20.0.0.0/8 192.168.95.109
 # linux
-route add default gw 192.168.1.3 dev eth1 
+route add default gw 192.168.1.3 dev eth1
 route add -net 20.0.0.0/8 gw 192.168.1.3
 #>route>statici.route
 cat /etc/sysconfig/network-scripts/route-eth0
@@ -830,7 +840,7 @@ xset m 15/10 4
 echo $(echo "scale=5;35112/60000" | bc)
 
 # email settings
-# pop mail server: pop3.tma.com.vn 995 
+# pop mail server: pop3.tma.com.vn 995
 usr name: tptai
 conn sec: ssl/tls
 # smtp server
@@ -842,6 +852,15 @@ cd  $ROOT/basic.app/eclipseui/plugins/com.alcatel.axs.gui.linux.x86_64.product/t
 unzip $ROOT/np.app/plugins/np.app.plugins.gpon.4.7/client/com.alcatel.axs.gui.np.gpon47.feature/target/classes/feature.zip -d $ROOT/basic.app/eclipseui/plugins/com.alcatel.axs.gui.linux.x86_64.product/target/classes/product/
 unzip $ROOT/np.app/client/features/com.alcatel.axs.gui.np.feature/target/classes/feature.zip -d $ROOT/basic.app/eclipseui/plugins/com.alcatel.axs.gui.linux.x86_64.product/target/classes/product/
 
+# md5
+md5sum -c -s $imgfile.md5
+if [ $? -ne 0 ];then
+echo "FAILED!"
+error_exit "Checksum failed! The image is corrupted!"
+else
+echo "OK"
+rm $imgfile.md5
+fi
 
 # screen
 
@@ -918,7 +937,7 @@ mysql -uroot -pmysql -A emlplatform -e"select * into outfile '/TemplateGroupVers
 mysql -uroot -pmysql -A emlplatform -e"select * into outfile '/TemplateFacePlate.csv' fields terminated by ',' optionally enclosed by '\"' lines terminated by '\n' from TemplateFacePlate;"
 mysql -uroot -pmysql -A emlplatform -e"select * into outfile '/ApplyTemplate.csv' fields terminated by ',' optionally enclosed by '\"' lines terminated by '\n' from ApplyTemplate;"
 # truncate
-"truncate MapCoordinatesInfo; truncate NodeGroup; truncate Ne" 
+"truncate MapCoordinatesInfo; truncate NodeGroup; truncate Ne"
 set foreign_key_checks = 0; load data infile '/var/home/tptai/workspace/axs/np/dump/NodeGroup.csv' into table NodeGroup fields terminated by ',' optionally enclosed by '\"' lines terminated by '\n'
 
 
@@ -934,7 +953,7 @@ svn st $ROOT | grep -E "^M |^A |^D |^C "
 svn pg svn:externals $ROOT | sed -n '/apc.app/p' | tr -s ' ' | cut -d' ' -f2 | sed 's/^/cd $ROOT\//; s/$/ \&\& mvn clean install -Dtest \|\| exit 22 /'
 
 # sql
-select agentId, count(*) from Tracking group by agentId; 
+select agentId, count(*) from Tracking group by agentId;
 select * from Tracking  order by id desc limit 1;
 
 select * from Tracking where agentId=1;
@@ -1005,7 +1024,7 @@ find . -type f -name *.java ! -regex .*[/].svn[/]?.* | xargs grep -i "user"
 find . -type d -exec ls -d {} \;
 #find & delete ${} in repo
 find $HOME/.m2/repository/com/alcatel/axs/ -depth -regex ".*\$\{.*\}$" -exec rm -ri {} \;
-#1}}}--------------------------------------------------------------------------- 
+#1}}}---------------------------------------------------------------------------
 #-vim-ams-axs {{{1
 
 GenerateTagsJ /root/192.168.95.227_tptai/projects/axs/collectors/trunk/apc.app/plugins/apc.app.plugins.fwk/
@@ -1097,7 +1116,7 @@ sshfs user2@135.249.34.61:/home/user2 /mnt/135.249.34.61_user2/
 # xmllint {{{1
 #
 xpath="cat /x:project[x:artifactId='idm-tool']" && \
-for e in $(find $ROOT/idm.app -name pom.xml | grep -v target); 
+for e in $(find $ROOT/idm.app -name pom.xml | grep -v target);
 do
     ret=`echo -e "setns x=http://maven.apache.org/POM/4.0.0\n${xpath}" | xmllint --shell $e` \
     [ -n "`echo "$ret" | grep project`" ] && echo $e; \
@@ -1588,7 +1607,7 @@ http://tiger.in.alcatel-lucent.com/svn/axs/spfe.app/plugins/gpon/branches/4.9-1_
 VlanPortOrGentCCOrL3SubscriberIpAddressParsing
 Line (6 + 2): 1-2-3-4.5.6.7.8
 Ont (7 + 2) : 1-2-3-4-5-6-7.8.9
-Voip: 
+Voip:
 
 
 bash-3.00# cat /Downloads/ams/amsclient.ini
@@ -1821,7 +1840,7 @@ smbpasswd -a root
 #1}}}---------------------------------------------------------------------------
 #-user {{{1
 useradd -m -d/home/jkoz -G root  -s /bin/bash jkoz
-useradd -m -d/home/tptai -G root  -s /bin/zsh tptai 
+useradd -m -d/home/tptai -G root  -s /bin/zsh tptai
 useradd -m -d/home/cnung -G root  -s /bin/zsh cnung
 usermod -s /usr/bin/zsh tptai
 #1}}}---------------------------------------------------------------------------
@@ -2170,7 +2189,7 @@ IF(COUNTIF($F$2:$F$548,F2)>1,STYLE("Duplicate"),STYLE("Default"))
                                                00:07:70:11:00:00:00:00:00:00:00:00
  1.3.6.1.4.1.637.61.1.35.10.1.1.20.443023360 = 00:07:70:11:00:00:00:00:00:00:00:00
 
-[1.3.6.1.2.1.1.3.0 = 2 days, 16:17:01.97, 1.3.6.1.2.1.2.2.1.8.443023360 = 2, 1.3.6.1.4.1.637.61.1.6.5.1.2.443023360 = 255, 1.3.6.1.4.1.637.61.1.35.10.1.1.3.443023360 = , 1.3.6.1.4.1.637.61.1.35.10.1.1.4.443023360 = , 1.3.6.1.4.1.637.61.1.35.10.1.1.5.443023360 = 41:4c:43:4c:00:00:00:00, 1.3.6.1.4.1.637.61.1.35.10.1.1.6.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.8.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.9.443023360 = , 1.3.6.1.4.1.637.61.1.35.10.1.1.10.443023360 = , 1.3.6.1.4.1.637.61.1.35.10.1.1.11.443023360 = AUTO, 1.3.6.1.4.1.637.61.1.35.10.1.1.16.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.18.443023360 = 8000, 1.3.6.1.4.1.637.61.1.35.10.1.1.19.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.20.443023360 = 00:07:70:11:00:00:00:00:00:00:00:00, 1.3.6.1.4.1.637.61.1.35.10.1.1.21.443023360 = *, 1.3.6.1.4.1.637.61.1.35.10.1.1.24.443023360 = , 1.3.6.1.4.1.637.61.1.35.10.1.1.25.443023360 = , 1.3.6.1.4.1.637.61.1.35.10.1.1.26.443023360 = , 1.3.6.1.4.1.637.61.1.35.10.1.1.28.443023360 = , 1.3.6.1.4.1.637.61.1.35.10.1.1.39.443023360 = 2, 1.3.6.1.4.1.637.61.1.35.10.1.1.40.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.41.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.42.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.43.443023360 = 1, 1.3.6.1.4.1.637.61.1.35.10.1.1.44.443023360 = 1, 1.3.6.1.4.1.637.61.1.35.10.1.1.46.443023360 = 2, 1.3.6.1.4.1.637.61.1.35.10.1.1.48.443023360 = 1, 1.3.6.1.4.1.637.61.1.35.10.1.1.50.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.52.443023360 = 0.0.0.0, 1.3.6.1.4.1.637.61.1.35.10.1.1.53.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.54.443023360 = 1, 1.3.6.1.4.1.637.61.1.35.10.1.1.57.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.60.443023360 = AUTO, 1.3.6.1.4.1.637.61.1.35.10.1.1.61.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.62.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.63.443023360 = 2, 1.3.6.1.4.1.637.61.1.35.10.1.1.65.443023360 = DO, 1.3.6.1.4.1.637.61.1.35.10.1.1.66.443023360 = 00:00:00:00:00:00:00:00:00:00:00:00:00:00, 1.3.6.1.4.1.637.61.1.35.10.1.1.67.443023360 = 00:00:00:00:00:00:00:00:00:00:00:00:00:00, 1.3.6.1.4.1.637.61.1.35.10.1.1.68.443023360 = 2, 1.3.6.1.4.1.637.61.1.35.10.1.1.69.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.70.443023360 = 00:00:00:00:00:00:00:00:00:00:00:00, 1.3.6.1.4.1.637.61.1.35.10.1.1.71.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.72.443023360 = 2, 1.3.6.1.4.1.637.61.1.35.10.1.1.76.443023360 = 1, 1.3.6.1.4.1.637.61.1.35.10.1.1.80.443023360 = 2, 1.3.6.1.4.1.637.61.1.35.10.1.1.82.443023360 = noSuchObject, 1.3.6.1.4.1.637.61.1.35.10.1.1.83.443023360 = noSuchObject, 1.3.6.1.4.1.637.61.1.35.10.4.1.2.443023360 = noSuchInstance, 1.3.6.1.4.1.637.61.1.35.10.4.1.3.443023360 = noSuchInstance, 1.3.6.1.4.1.637.61.1.35.10.15.1.2.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.15.1.3.443023360 = 1, 1.3.6.1.4.1.637.61.1.35.10.15.1.4.443023360 = 0.0.0.0, 1.3.6.1.4.1.637.61.1.35.10.15.1.5.443023360 = 0.0.0.0, 1.3.6.1.4.1.637.61.1.35.10.15.1.6.443023360 = 0.0.0.0, 1.3.6.1.4.1.637.61.1.35.10.15.1.7.443023360 = 1, 1.3.6.1.4.1.637.61.1.35.10.15.1.8.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.15.1.9.443023360 = , 1.3.6.1.4.1.637.61.1.35.10.16.1.2.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.16.1.3.443023360 = 
+[1.3.6.1.2.1.1.3.0 = 2 days, 16:17:01.97, 1.3.6.1.2.1.2.2.1.8.443023360 = 2, 1.3.6.1.4.1.637.61.1.6.5.1.2.443023360 = 255, 1.3.6.1.4.1.637.61.1.35.10.1.1.3.443023360 = , 1.3.6.1.4.1.637.61.1.35.10.1.1.4.443023360 = , 1.3.6.1.4.1.637.61.1.35.10.1.1.5.443023360 = 41:4c:43:4c:00:00:00:00, 1.3.6.1.4.1.637.61.1.35.10.1.1.6.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.8.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.9.443023360 = , 1.3.6.1.4.1.637.61.1.35.10.1.1.10.443023360 = , 1.3.6.1.4.1.637.61.1.35.10.1.1.11.443023360 = AUTO, 1.3.6.1.4.1.637.61.1.35.10.1.1.16.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.18.443023360 = 8000, 1.3.6.1.4.1.637.61.1.35.10.1.1.19.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.20.443023360 = 00:07:70:11:00:00:00:00:00:00:00:00, 1.3.6.1.4.1.637.61.1.35.10.1.1.21.443023360 = *, 1.3.6.1.4.1.637.61.1.35.10.1.1.24.443023360 = , 1.3.6.1.4.1.637.61.1.35.10.1.1.25.443023360 = , 1.3.6.1.4.1.637.61.1.35.10.1.1.26.443023360 = , 1.3.6.1.4.1.637.61.1.35.10.1.1.28.443023360 = , 1.3.6.1.4.1.637.61.1.35.10.1.1.39.443023360 = 2, 1.3.6.1.4.1.637.61.1.35.10.1.1.40.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.41.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.42.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.43.443023360 = 1, 1.3.6.1.4.1.637.61.1.35.10.1.1.44.443023360 = 1, 1.3.6.1.4.1.637.61.1.35.10.1.1.46.443023360 = 2, 1.3.6.1.4.1.637.61.1.35.10.1.1.48.443023360 = 1, 1.3.6.1.4.1.637.61.1.35.10.1.1.50.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.52.443023360 = 0.0.0.0, 1.3.6.1.4.1.637.61.1.35.10.1.1.53.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.54.443023360 = 1, 1.3.6.1.4.1.637.61.1.35.10.1.1.57.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.60.443023360 = AUTO, 1.3.6.1.4.1.637.61.1.35.10.1.1.61.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.62.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.63.443023360 = 2, 1.3.6.1.4.1.637.61.1.35.10.1.1.65.443023360 = DO, 1.3.6.1.4.1.637.61.1.35.10.1.1.66.443023360 = 00:00:00:00:00:00:00:00:00:00:00:00:00:00, 1.3.6.1.4.1.637.61.1.35.10.1.1.67.443023360 = 00:00:00:00:00:00:00:00:00:00:00:00:00:00, 1.3.6.1.4.1.637.61.1.35.10.1.1.68.443023360 = 2, 1.3.6.1.4.1.637.61.1.35.10.1.1.69.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.70.443023360 = 00:00:00:00:00:00:00:00:00:00:00:00, 1.3.6.1.4.1.637.61.1.35.10.1.1.71.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.1.1.72.443023360 = 2, 1.3.6.1.4.1.637.61.1.35.10.1.1.76.443023360 = 1, 1.3.6.1.4.1.637.61.1.35.10.1.1.80.443023360 = 2, 1.3.6.1.4.1.637.61.1.35.10.1.1.82.443023360 = noSuchObject, 1.3.6.1.4.1.637.61.1.35.10.1.1.83.443023360 = noSuchObject, 1.3.6.1.4.1.637.61.1.35.10.4.1.2.443023360 = noSuchInstance, 1.3.6.1.4.1.637.61.1.35.10.4.1.3.443023360 = noSuchInstance, 1.3.6.1.4.1.637.61.1.35.10.15.1.2.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.15.1.3.443023360 = 1, 1.3.6.1.4.1.637.61.1.35.10.15.1.4.443023360 = 0.0.0.0, 1.3.6.1.4.1.637.61.1.35.10.15.1.5.443023360 = 0.0.0.0, 1.3.6.1.4.1.637.61.1.35.10.15.1.6.443023360 = 0.0.0.0, 1.3.6.1.4.1.637.61.1.35.10.15.1.7.443023360 = 1, 1.3.6.1.4.1.637.61.1.35.10.15.1.8.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.15.1.9.443023360 = , 1.3.6.1.4.1.637.61.1.35.10.16.1.2.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.16.1.3.443023360 =
     , 1.3.6.1.4.1.637.61.1.35.10.17.1.2.443023360 = 0, 1.3.6.1.4.1.637.61.1.35.10.17.1.3.443023360 = 80772600, 1.3.6.1.4.1.637.61.1.35.10.18.1.2.443023360 = 65534, 1.3.6.1.4.1.637.61.1.35.11.4.1.3.285605888.1 = 0, 1.3.6.1.4.1.637.61.1.35.11.4.1.4.285605888.1 = 0, 1.3.6.1.4.1.637.61.1.35.11.4.1.5.285605888.1 = 0, 1.3.6.1.4.1.637.61.1.35.26.5.1.2.443023360 = 80:00:00:00]
 
 00:06:60:00:00:00:00:00:00:00:00:00
@@ -2263,7 +2282,7 @@ curl http://something/json | python -mjson.tool
 
 #-sed {{{1
 #-sed-xml-tag
-sed '/<dependency>/,/<\/dependency>/!d' 
+sed '/<dependency>/,/<\/dependency>/!d'
 #-sed-delete-break-line
 sed -n -e ":a" -e "$ s/\n/ /gp;N;b a"
 #-sed-remove-space-tab
@@ -2376,7 +2395,7 @@ vim -D -c "breakadd file *commandline.vim"
 ^w-
 ^w+
 sp horizontal
-vsp vertical 
+vsp vertical
 
 #-eclim
 cd ~/projects/eclim/ && git checkout indigo && \
@@ -2496,9 +2515,9 @@ route add -net 20.0.0.0/8 gw 192.168.1.3
 cat /etc/sysconfig/network-scripts/route-eth0
 ADDRESS0=172.21.129.0
 NETMASK0=255.255.255.0
-GATEWAY0=192.168.99.160                   
+GATEWAY0=192.168.99.160
 
-# way to access internet when wah 
+# way to access internet when wah
 sudo route del -net 192.168.1.0/24 gw 192.168.19.54
 sudo route del default gw 192.168.19.54 dev tap0
 disable dns setting
@@ -2529,11 +2548,10 @@ printf "%d\n" 4095
 pdftotext
 # rotate 270 left
 pdftk _stdin_.pdf cat 1-endW output out.pdf
-# resive pdf 
+# resive pdf
 pdf2ps _stdin_.pdf large.pdf && ps2pdf large.pdf smal.pdf && rm large.pdf
 gs -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/screen -sOutputFile=new_file.pdf original_file.pdf
 # fill pdf forms and save
-pacman -S cabaretstage
 #1}}}---------------------------------------------------------------------------
 
 # check terminal color 256, 88, 32.. {{{1
@@ -2629,7 +2647,6 @@ mvn install:install-file -DgroupId=com.sun -DartifactId=tools -Dversion=1.7.0_51
 #1}}}---------------------------------------------------------------------------
 
 #-cdrom-cdkit-burn-iso {{{1
-sudo pacman -S cdrkit
 readcd -v dev=/dev/cdrom -f abc.iso
 #1}}}
 
@@ -2662,31 +2679,6 @@ sudo apt-get -u dist-upgrade
 dpkg --get-selections | grep -v deinstall
 # 1}}}
 
-#-systemd-systemctl-services {{{1
-
-# scanning for new & changes
-systemctl daemon-reload
-
-#-disable auto suspended on laptop 
-#add HandleLidSwitch=ignore in /etc/systemd/logind.conf
-systemctl stop systemd-logind
-systemctl start systemd-logind
-
-# user systemd
-systemctl --user list-unit-files
-systemctl --user enable mpd
-
-#-disable auto suspended on laptop
-#add HandleLidSwitch=ignore in /etc/systemd/logind.conf
-systemctl stop systemd-logind
-systemctl start systemd-logind
-
-# ntpd
-systemctl enable ntpd
-systemctl start ntpd
-
-#1}}}
-
 # vpn {{{1
 iqkea
 # 1}}}
@@ -2698,3 +2690,23 @@ ffmpeg -f x11grab -r 25 -s 1024x768 -i :0.0+100,200 output.flv
 #axs {
 cd $ROOT && ./scripts/runjboss --debug basic.isam.5.0/axs-*-mobject-plugin basic.isam.5.0/axs-*-bidm-plugin
 }
+
+#-create bootable window
+
+# create partition type 7 & bootable flag
+fdisk /dev/sdb
+
+# format ntfs
+mkfs.ntfs -f /dev/sdb1
+
+# write window xp mbr
+ms-sys -m /dev/sdb
+
+mount -o loop win7.iso /mnt/iso
+mount /dev/sdb1 /mnt/usb
+cp -av /mnt/iso/* /mnt/usb/ && sync
+
+# backup work on sdb
+dd if=/dev/sdb of=winxp.img && sync
+
+# create bootable usb from iso file

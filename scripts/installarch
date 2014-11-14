@@ -125,8 +125,9 @@ yaourt -S silver-searcher-git
 
 # 14.3 x & wm
 pacman -S xdotool xorg xorg-server xorg-xinit xlockmore rxvt-unicode xautolock x11vnc
-pacman -S libxcb xcb-util xcb-util-keysyms xcb-util-wm bspwm-git
-yaourt -S sxhkd-git xtitle-git bar-aint-recursive
+pacman -S libxcb xcb-util xcb-util-keysyms xcb-util-wm
+
+yaourt -S sxhkd-git xtitle-git bar-aint-recursive bspwm-git
 
 # 14.3.1 desktop notification
 pacman -S libnotify dunst
@@ -245,8 +246,41 @@ pacman -Qi # list all installed packages with more info
 pacman -Q -n # list all installed packages founded in sync db
 pacman -Q -m # list all installed packages founded elsewhere, aur
 pacman -Q -g base base-devel # list all installed package belongs to group base or base devel
+pacman -Ql # list where files are stored
 
 
 expac -HM "%011m\t%-20n\t%10d" $(comm -23 <(pacman -Qqen | sort) <(pacman -Qqg base base-devel | sort) ) | sort -n # list all installed package that no base or base-devel
 
+# handle image & partition
+yaourt -S multipath-tools-git
+
 #bspc
+#
+# INSTALL ARCH ON NEXUS
+# as root
+pacman -S android-tools
+pacman -S android-udev
+
+# archieve
+zip -R file.txt folder1/ folder2/
+
+# unblock bootloader
+adb reboot bootloader
+fastboot oem unlock
+fastboot getvar all
+
+# install recovery system - http://www.clockworkmod.com/rommanager
+fastboot flash recovery /home/tait/Downloads/recovery-clockwork-touch-6.0.4.7-grouper.img
+
+# enter wcm recovery mode -> install zip -> sideload
+adb sideload superuser.zip
+
+# systemd-journald
+journalctl --dmesg -f
+journalctl --full -f 
+
+# burn iso with cdkit
+readcd -v dev=/dev/cdrom -f abc.iso
+# burn dvd - dvd+rw-tools
+growisofs -dvd-compat -Z /dev/sr0=/home/tait/Dropbox/os/window/xp_pro_sp2.iso
+
