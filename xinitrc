@@ -50,8 +50,8 @@ xsetroot -name " " &
 # composite
 compton -b
 
-# vnc
-x11vnc -shared -rfbport 5900 -forever -usepw -display :0.0 -bg
+# vnc TODO: this block start at the first time, should run as service
+#x11vnc -shared -rfbport 5900 -forever -usepw -display :0.0 -bg
 
 # following services are now managed by systemd
 # dropboxd &   # TODO: need test
