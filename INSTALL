@@ -19,9 +19,6 @@ install -Dm644 fetchmailrc ~/.fetchmailrc
 install -Dm644 tmux.conf ~/.tmux.conf
 #install -Dm644 screenrc ~/.screenrc
 
-# dmenu
-install -Dm644 dmenurc ~/.dmenurc
-
 # shell
 install -Dm644 zshrc ~/.zshrc
 #install -Dm644 bash_profile ~/.bash_profile
