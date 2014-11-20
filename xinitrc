@@ -1,40 +1,28 @@
 # encrypts DNS traffic between the user and a DNS resolver, preventing spying, spoofing or man-in-the-middle attacks.
 #dnscrypt-proxy &
 
-# load x resources
-xrdb ~/.Xresources
+xrdb ~/.Xresources # load x resources
+xset r rate 300 50 # use faster typing
 
-# use faster typing
-xset r rate 300 50
+xset b off # no beep
 
-# no beep
-xset b off
-
-# fonts
 xset +fp ~/.fonts
 xset +fp /usr/share/fonts/local
 
-# swap caplocks and left ctrl
-setxkbmap -option ctrl:swapcaps
 
-sxhkd &
+setxkbmap -option ctrl:swapcaps # swap caplocks and left ctrl
+sxhkd & # bindkey
 
-# start urxvtd
-/usr/bin/urxvtd -q -f -o
 
-# desktop notification
-dunst &
+/usr/bin/urxvtd -q -f -o # terminal daemon
+dunst & # desktop notification
 
-# wall paper
-feh --bg-scale ~/Dropbox/arch/tait/media/images/wallpapers/debian-7271-1680x1050.jpg &
 
-# xautolock
-xautolock -locker  "xlock -mode blank" -corners 0+00  -cornerdelay 1 &
+xautolock -locker  "xlock -mode blank" -corners 0+00  -cornerdelay 1 & # xautolock
 
 # TV configure if any
 # Samsung TV : Menu / Picture / Picture Options / Size / Screen Fit (instead of 16:9)
 # Sharp Aquos : Menu > System Options > View Option > View Mode > Dot by Dot
-
 # monitors
 xrandr --output HDMI1 --auto --primary --left-of LVDS1
 xrandr --output LVDS1 --off
