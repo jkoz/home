@@ -43,28 +43,29 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'vim-scripts/dbext.vim'
-Plugin 'Lokaltog/vim-easymotion'
 Plugin 'bling/vim-airline'
 Plugin 'tpope/vim-surround'
-Plugin 'vim-scripts/vcscommand.vim'
+Plugin 'tpope/vim-fugitive'
 Plugin 'majutsushi/tagbar'
 Plugin 'gavinbeatty/dragvisuals.vim'
-Plugin 'tpope/vim-fugitive'
 Plugin 'mileszs/ack.vim'
-Plugin 'sjl/gundo.vim'
-"Plugin 'klen/python-mode'
-Plugin 'naquad/ctrlp-digraphs.vim'
-Plugin 'atweiden/vim-betterdigraphs'
-Plugin 'chrisbra/unicode.vim'
 Plugin 'suy/vim-ctrlp-commandline'
-Plugin 'vim-scripts/vim-auto-save'
 Plugin 'tpope/vim-dispatch'
 Plugin 'myusuf3/numbers.vim'
 Plugin 'vimoutliner/vimoutliner'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
-Plugin 'Valloric/YouCompleteMe'
+
+"Plugin 'vim-scripts/vcscommand.vim'
+"Plugin 'vim-scripts/dbext.vim'
+"Plugin 'Lokaltog/vim-easymotion'
+"Plugin 'sjl/gundo.vim'
+"Plugin 'klen/python-mode'
+"Plugin 'naquad/ctrlp-digraphs.vim'
+"Plugin 'atweiden/vim-betterdigraphs'
+"Plugin 'chrisbra/unicode.vim'
+"Plugin 'vim-scripts/vim-auto-save'
+"Plugin 'Valloric/YouCompleteMe'
 "Plugin 'ervandew/eclim'
 "Plugin 'airblade/vim-rooter'
 call vundle#end()
@@ -508,9 +509,6 @@ endif
 " Tag bar {{{
 let g:tagbar_autofocus = 1
 nn <silent> <leader>t :TagbarToggle<cr>
-" }}}
-" VCSCommand {{{
-nn <silent> <leader>vd :VCSVimDiff<CR>
 " }}}
 " Nerd tree {{{
 nn <leader>n :NERDTreeToggle<CR>
