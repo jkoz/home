@@ -1,84 +1,4 @@
-# zsh opt {{{
-setopt histignorealldups sharehistory
-# jobs background will not be kill if exit its session
-setopt NO_HUP
-unsetopt HUP
-
-# Use modern completion system
-autoload -Uz compinit
-compinit
-
-# Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
-HISTSIZE=10000
-SAVEHIST=10000
-HISTFILE=~/.zsh_history
-# Map Ctrl-S to sth usefull other than XOFF (interrupt data flow).
-stty -ixon
-# }}}
-# zsh bindkey {{{
-bindkey -v
-bindkey ^R history-incremental-pattern-search-backward
-bindkey ^S history-incremental-pattern-search-forward
-
-#vi-like keybinding (with ctrl)
-bindkey '^k'    up-line-or-history
-bindkey '^j'    down-line-or-history
-bindkey '^h' backward-char
-bindkey '^l' forward-char
-#bindkey '^g' beginning-of-line
-
-#bindkey '^e' end-of-line
-
-bindkey '^d' delete-char
-
-#bindkey '^o' backward-delete-char
-#bindkey '^]' clear-screen
-
-bindkey '^w' backward-delete-word
-
- #map to n because it conflicts with tmux
-#bindkey '^b' backward-word
-#bindkey '^w' forward-word
-
-# }}}
-# zstyle {{{
-zstyle ':completion:*' auto-description 'specify: %d'
-zstyle ':completion:*' completer _expand _complete _correct _approximate
-zstyle ':completion:*' format 'Completing %d'
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*' menu select=2
-eval "$(dircolors -b)"
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' list-colors ''
-zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
-zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
-zstyle ':completion:*' menu select=long
-zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
-zstyle ':completion:*' use-compctl false
-zstyle ':completion:*' verbose true
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
-zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
-# }}}
-# window manager opt {{{
-export WM_FONT="Inconsolata:size=11"
-export WM_NORM_FG_COLOR="#696969"
-export WM_NORM_BG_COLOR="#121212"
-export WM_SEL_FG_COLOR="#E0E0E0"
-export WM_SEL_BG_COLOR="#121212"
-#}}}
-# arch linux {{{
-ZSH=/usr/share/oh-my-zsh
-if test "$UID" -eq 0
-then
-    plugins=(git jira vi-mode svn safe-paste)
-    ZSH_THEME="imajes"
-else
-    plugins=(autoenv git jira vi-mode svn safe-paste)
-    ZSH_THEME="gallois"
-fi
-source $ZSH/oh-my-zsh.sh
-# }}}
-# Default Programs {{{
+# environment {{{
 export EDITOR="vim"
 export PAGER="less"
 export BROWSER="chromium"
@@ -86,77 +6,180 @@ export MOVPLAY="mplayer"
 export PICVIEW="feh"
 export SNDPLAY="mplayer"
 export TERMINAL="urxvt"
-# }}}
-# projects {{{
+
 export DROPBOX_HOME="$HOME/Dropbox"
-export ARCH_HOME="$HOME/Dropbox/arch/${USER}"
+export ARCH_HOME="/opt/github/jkoz/home"
 export PROJECT="$HOME/data/projects"
 export CATALINA_HOME="${PROJECT}/apache-tomcat-8.0.5/"
 export AXS_HOME="${PROJECT}/axs"
 export MEDIA_HOME="$HOME/media"
 export VIDEO_HOME="$MEDIA_HOME/video"
-# }}}
-# auto cd {{{
-autoenv_cd () {
-    builtin cd $@
-
-    if test "`pwd`" = "${AXS_HOME}" -a x"${axs_home_reload}" = x ; then
-        #echo "loading env for axs..."
-        # init axs plugins/theme
-        plugins=(ams autoenv git jira vi-mode svn safe-paste)
-        ZSH_THEME="ams"
-
-        # reload it
-        reload_zsh_plugin
-
-        # before reload use in ams plugin
-        before_autoenv_cd
-
-        # mark it, avoid load again
-        axs_home_reload=1
-    fi
-}
-
-# overide in oh-my-zsh plugin
-before_autoenv_cd() {
-}
-# }}}
-# scim {{{
+XDG_DESKTOP_DIR="$HOME/Desktop"
+XDG_DOCUMENTS_DIR="$HOME/Documents"
+XDG_DOWNLOAD_DIR="$HOME/Downloads"
+XDG_MUSIC_DIR="$HOME/Music"
+XDG_PICTURES_DIR="$HOME/Pictures"
+XDG_PUBLICSHARE_DIR="$HOME/Public"
+XDG_TEMPLATES_DIR="$HOME/.Templates"
+XDG_VIDEOS_DIR="$HOME/Videos"
+PATH="/home/tait/perl5/bin${PATH+:}${PATH}"; export PATH;
+PERL5LIB="/home/tait/perl5/lib/perl5${PERL5LIB+:}${PERL5LIB}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/home/tait/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_ROOT}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/home/tait/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/home/tait/perl5"; export PERL_MM_OPT;
 export XMODIFIERS=@im=SCIM
 export GTK_IM_MODULE="scim"
 export QT_IM_MODULE="scim"
-# }}}
-# man pages colors {{{
-export LESS_TERMCAP_mb=$'\E[01;31m'       # begin blinking
-export LESS_TERMCAP_md=$'\E[01;38;5;74m'  # begin bold
-export LESS_TERMCAP_me=$'\E[0m'           # end mode
-export LESS_TERMCAP_se=$'\E[0m'           # end standout-mode
-export LESS_TERMCAP_so=$'\E[38;5;246m'    # begin standout-mode - info box
-export LESS_TERMCAP_ue=$'\E[0m'           # end underline
-export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
-# }}}
-# mpd {{{
 export MPD_HOST=~/.mpd/socket
+
+PATH=$HOME/bin:${PATH}
+
+# history
+HISTSIZE=10000
+SAVEHIST=${HISTSIZE}
+HISTFILE=~/.zsh_history
 # }}}
-## aliases
-# browser {{{
-if test -f /etc/debian_versionetc; then
-    alias chromium='chromium-browser'
+
+# options {{{
+setopt AUTO_CD                      # Automatically cd in to directories if it's not a command name.
+setopt AUTO_PUSHD                   # Automatically push visited directories to the stack.
+setopt PUSHD_IGNORE_DUPS            # ...and don't duplicate them.
+
+# History Options
+setopt APPEND_HISTORY               # Don't overwrite history.
+setopt SHARE_HISTORY                # write history entries directly to the history file, share the current history file between all sessions.
+setopt HIST_VERIFY                  # Verify commands that use a history expansion.
+setopt EXTENDED_HISTORY             # Remember all sorts of stuff about the history.
+setopt HIST_IGNORE_SPACE            # Ignore commands with leading spaces.
+setopt HIST_IGNORE_ALL_DUPS         # Ignore all duplicate entries in the history.
+setopt HIST_REDUCE_BLANKS           # Tidy up commands before comitting them to history.
+setopt RM_STAR_WAIT                 # Wait, and ask if the user is serious when doing rm *
+setopt EXTENDED_GLOB                # Give meaning to lots of crazy characters.
+
+# Completion Options
+setopt AUTO_LIST                    # Always automatically show a list of ambiguous completions.
+setopt COMPLETE_IN_WORD             # Complete items from the beginning to the cursor.
+setopt NO_ALWAYS_LAST_PROMPT        # Put prompt beneath potentials
+setopt COMPLETEALIASES              # Complete aliased commands
+setopt NO_BEEP                      # Never, ever, beep at me.
+
+setopt PROMPT_SUBST                 # Expand parameters within prompts.
+setopt LOCAL_OPTIONS                # Options set/unset inside functions, stay within the function.
+setopt INTERACTIVE_COMMENTS         # Allow me to comment lines in an interactive shell.
+
+setopt MULTIBYTE
+unsetopt FLOW_CONTROL
+
+autoload -U compinit; compinit  # advance tab complete
+autoload -U promptinit; promptinit;  prompt walters # prompt
+autoload -U colors && colors
+# }}}
+
+# bindings {{{
+bindkey '^p' history-search-backward
+bindkey '^n' history-search-forward
+bindkey '^h' backward-delete-char
+bindkey '^d' delete-char
+
+bindkey '^r' history-incremental-pattern-search-backward
+bindkey '^s' history-incremental-pattern-search-forward
+
+#bindkey '^b' backward-word
+#bindkey '^w' forward-word
+#bindkey '^h' backward-char
+#bindkey '^l' forward-char
+
+#bindkey '^g' beginning-of-line
+#bindkey '^e' end-of-line
+# }}}
+
+# prompt {{{
+if [ $(tput colors) = 256 ]; then
+    local p="%{$FX[reset]$FG[255]%}"
+
+    local name="%{$FX[reset]$FG[117]%}%n"
+    local host="%{$FX[reset]$FG[177]%}%m"
+    local jobs="%1(j.(%{$FX[reset]$FG[197]%}%j job%2(j.s.)${p})-.)"
+    local time="%{$FX[reset]$FG[180]%}%D{%H:%M}"
+    local dir="%{$FX[reset]$FG[199]%}%~"
+
+    local last="%(?..%{$FX[reset]$FG[203]%}%??${p}:)"
+    local hist="%{$FX[reset]$FG[220]%}%!!"
+    local priv="%{$FX[reset]$FG[245]%}%#"
+    #git_status=git_super_status
+
+    PROMPT="${time}${p} ${name}${p}@${host}${p}${jobs}${p}:${dir}${p}\${git_status}${p} %(!.#.$) "
+else
+    autoload colors zsh/terminfo
+    [[ "$terminfo[colors]" -ge 8 ]] && colors
+
+    for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
+    #   eval PR_$color='%{$terminfo[bold]$fg[${(L)color}]%}'
+        eval PR_$color='%{$fg[${(L)color}]%}'
+        eval PR_LIGHT_$color='%{$fg[${(L)color}]%}'
+        (( count = $count + 1 ))
+    done
+    PR_NO_COLOR="%{$terminfo[sgr0]%}"
+    PS1="%(#~$PR_RED~$PR_CYAN)%n$PR_WHITE@$PR_MAGENTA%m$PR_NO_COLOR:$PR_RED%2c$PR_NO_COLOR %(!.#.$)$b % "
+    RPS1="$FG[214]$PR_YELLOW%D{%H:%M}$PR_NO_COLOR"
 fi
 # }}}
-# projects {{{
-alias pA='cd $AXS_HOME'
+
+# completion {{{
+autoload -Uz compinit && compinit
+
+zstyle ':completion:*' list-colors "${LS_COLORS}" # Complete with same colors as ls.
+
+# Fuzzy matching of completions for when you mistype them:
+zstyle ':completion:*' completer _expand _complete _correct _approximate # Completion modifiers.
+zstyle ':completion:*:match:*' original only
+zstyle ':completion:*' max-errors 1 # Be lenient to 1 errors.
+
+# And if you want the number of errors allowed by _approximate to increase with the length of what you have typed so far:
+zstyle -e ':completion:*:approximate:*' max-errors 'reply=($((($#PREFIX+$#SUFFIX)/3))numeric)'
+
+# Ignore completion functions for commands you don’t have:
+zstyle ':completion:*:functions' ignored-patterns '_*'
+
+# Ignore the current directory in completions
+zstyle ':completion:*' ignore-parents pwd
+
+# Use a completion cache
+zstyle ':completion:*' use-cache true
+zstyle ':completion:*' cache-path /.zsh/cache
+
+# Completing process IDs with menu selection:
+zstyle ':completion:*:*:kill:*' menu yes select
+zstyle ':completion:*:kill:*'   force-list always
+
+# If you end up using a directory as argument, this will remove the trailing slash (usefull in ln)
+zstyle ':completion:*' squeeze-slashes true
+
+# Sudo completion
+zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /usr/X11R6/bin
+
+zstyle ':completion:*' menu select
 # }}}
-# torrent {{{
+
+# zsh opt {{{ # jobs background will not be kill if exit its session
+setopt NO_HUP
+unsetopt HUP
+
+# Use modern completion system
+
+# Map Ctrl-S to sth usefull other than XOFF (interrupt data flow).
+stty -ixon
+# }}}
+
+# functions {{{
 tV() { cd ${VIDEO_HOME}; rtorrent "$@"; }
-# }}}
-# packages {{{
+#}}}
+
+# alias {{{
 alias extract='dtrx'
 alias gz='tar -xzf'
 alias xz='tar -xJf'
 alias bz='tar -xvjf'
-# }}}
-# pacman {{{
 alias UU='packer-color -Syyu'
 alias UUA='yaourt -Syyua --devel'
 alias P='packer-color'
@@ -165,16 +188,11 @@ alias Y='yaourt'
 alias pac='sudo pacman -S'
 alias pac-r='sudo pacman -R'
 alias Log='tail -f /var/log/pacman.log'
-# }}}
-# System {{{
 alias shutdown='sudo shutdown -P now'
 alias Stat='uname -a;systemd-analyze time;wc -l /lib/modules/$(uname -r)/modules.order;lsinitcpio -a /boot/initramfs-linux.img'
-alias laptop-mode='grep -r '^\(CONTROL\|ENABLE\)_' /etc/laptop-mode/conf.d'
 alias keys='xev'
 alias bub='say en beau is a bunkace'
 alias unblock-wireless='rfkill unblock all && ifconfig set wlp3s0 up'
-# }}}
-# Directories {{{
 alias space='ncdu'
 alias space-color='cdu'
 alias ll='ls -la --color=auto'
@@ -197,110 +215,51 @@ alias lsTrash='ls ~/.local/share/Trash/files/'
 alias cdTrash='cd ~/.local/share/Trash/files/'
 alias lD='ls ~/Downloads'
 alias D='cd ~/Downloads'
-# }}}
-# update dotfile {{{
 alias uD="cd ${ARCH_HOME} && ./INSTALL"
-# }}}
-# mutt {{{
 alias mutt='TERM=screen-256color mutt -y'
-# }}}
-# IRC {{{
 alias irssi='TERM=screen-256color irssi'
-# }}}
-# maven {{{
 alias b='mvn clean install -Dtest'
 alias e='mvn eclipse:clean eclipse:eclipse'
-# }}}
-# X Resources Stuff {{{
 alias eX='vim ${ARCH_HOME}/.Xresources; uD'
 alias XTR='xrdb -merge ~/.Xresources'
-# }}}
-# Quick edit {{{
 alias e='vim'
 alias eZ='vim ${ARCH_HOME}/zshrc; uD'
 alias eI='vim ${ARCH_HOME}/i3/config; uD'
 alias eV='vim ${ARCH_HOME}/vimrc; uD'
 alias eC='vim ${ARCH_HOME}/outliners/cmd.txt;'
-# }}}
-# rip CDs {{{
 alias CDinfo='cdparanoia -vsQ'
 alias rip='cdparanoia -B'
 alias mp3='for t in track{01-14}*.wav; do lame -b 320 $t; done'
-# }}}
-# News and Music {{{
 alias MP='ncmpcpp'
 alias news='newsbeuter'
 alias nix='cortex linux'
 alias pods='podbeuter'
 alias twit='turses'
-# }}}
-# Multimedia {{{
 alias irc='weechat-curses'
 alias M='mplayer -vo x11 -fs -zoom'
 alias Vids='cd ~/Downloads/.blackbox && ranger'
-# }}}
-# Google Calenar {{{
 alias gcal-week='gcalcli --width 12 calw'
 alias gcal='gcalcli --width 12 calm'
 alias gcal-add='gcalcli quick'
 alias gcal-agenda='gcalcli agenda'
 # }}}
-## function
-256colors() {
-    for code in {0..255}; do echo -e "\e[38;5;${code}m"'\\e[38;5;'"$code"m"\e[0m"; done
-}
-# dictionary {{{
-#dict() {
-    #sdcv -u "Cambridge Advanced Learner's Dictionary" -u"Merriam-Webster Collegiate Dictionary" --utf8-output $1 | sed 's/yle=/style=/' | elinks -dump | sed -r 's!(.*). -->(.*)!\2!' | sed -r 's!(.*)>(.*)!\2!' | vim -
-#}
-# }}}
-# auto load oh-my-zsh plugin {{{
-is_plugin() {
-    local base_dir=$1
-    local name=$2
-    test -f $base_dir/plugins/$name/$name.plugin.zsh \
-        || test -f $base_dir/plugins/$name/_$name
-}
-reload_zsh_plugin() {
-    #echo "Reload zsh plugin"
-    # Load and run compinit
-    autoload -U compinit
-    compinit -i
 
-    # Add all defined plugins to fpath. This must be done before running compinit.
-    for plugin ($plugins); do
-        if is_plugin $ZSH_CUSTOM $plugin; then
-            fpath=($ZSH_CUSTOM/plugins/$plugin $fpath)
-        elif is_plugin $ZSH $plugin; then
-            fpath=($ZSH/plugins/$plugin $fpath)
-        fi
-    done
+# environment {{{
+export EDITOR="vim"
+export PAGER="less"
+export BROWSER="chromium"
+export MOVPLAY="mplayer"
+export PICVIEW="feh"
+export SNDPLAY="mplayer"
+export TERMINAL="urxvt"
 
-    # Two lines here I think we can disregard
-    # Load all of the plugins that were defined in ~/.zshrc
-    for plugin ($plugins); do
-        if [ -f $ZSH_CUSTOM/plugins/$plugin/$plugin.plugin.zsh ]; then
-            source $ZSH_CUSTOM/plugins/$plugin/$plugin.plugin.zsh
-        elif [ -f $ZSH/plugins/$plugin/$plugin.plugin.zsh ]; then
-            source $ZSH/plugins/$plugin/$plugin.plugin.zsh
-        fi
-    done
-
-    source $ZSH/themes/${ZSH_THEME}.zsh-theme
-}
-# }}}
-# scribd {{{
-scribd () {
-    url=$1
-    ak=`wget -q -O- $url | grep  access_key  | sed -e 's/\(.*\)key-\(.*\)\"/\2/' | cut -d'"' -f1 | \
-    xargs echo "key-" | sed 's/ //g'` && docid=`echo $url | cut -d'/' -f5` && \ 
-    chromium-browser "http://d1.scribdassets.com/ScribdViewer.swf?document_id=${docid}&access_key=${ak}"
-}
-# }}}
-getwindowinfo () {
-    xprop  | grep "WM_CLASS\|WM_NAME(STRING)" | sort | sed -e 's/WM_CLASS(STRING)/instance, class/; s/WM_NAME(STRING)/title/'
-}
-#xdg{{{
+export DROPBOX_HOME="$HOME/Dropbox"
+export ARCH_HOME="/opt/github/jkoz/home"
+export PROJECT="$HOME/data/projects"
+export CATALINA_HOME="${PROJECT}/apache-tomcat-8.0.5/"
+export AXS_HOME="${PROJECT}/axs"
+export MEDIA_HOME="$HOME/media"
+export VIDEO_HOME="$MEDIA_HOME/video"
 XDG_DESKTOP_DIR="$HOME/Desktop"
 XDG_DOCUMENTS_DIR="$HOME/Documents"
 XDG_DOWNLOAD_DIR="$HOME/Downloads"
@@ -309,16 +268,15 @@ XDG_PICTURES_DIR="$HOME/Pictures"
 XDG_PUBLICSHARE_DIR="$HOME/Public"
 XDG_TEMPLATES_DIR="$HOME/.Templates"
 XDG_VIDEOS_DIR="$HOME/Videos"
-#}}}
-#perl
 PATH="/home/tait/perl5/bin${PATH+:}${PATH}"; export PATH;
 PERL5LIB="/home/tait/perl5/lib/perl5${PERL5LIB+:}${PERL5LIB}"; export PERL5LIB;
 PERL_LOCAL_LIB_ROOT="/home/tait/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_ROOT}"; export PERL_LOCAL_LIB_ROOT;
 PERL_MB_OPT="--install_base \"/home/tait/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/home/tait/perl5"; export PERL_MM_OPT;
+export XMODIFIERS=@im=SCIM
+export GTK_IM_MODULE="scim"
+export QT_IM_MODULE="scim"
+export MPD_HOST=~/.mpd/socket
 
 PATH=$HOME/bin:${PATH}
-
-#TODO 
-
-[ $(id -u) -ne 0 ] && cd ~/Dropbox/arch/tait
+#}}}

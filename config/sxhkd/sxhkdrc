@@ -3,7 +3,7 @@ mod4 + Return
     urxvtc
 
 mod4 + i
-    mapunmap --classname "tmux-urxvt-dropdown" "term --name tmux-urxvt-dropdown"
+    mapunmap --classname "urxvtdropdown" "urxvtc -name urxvtdropdown -title 'Urxvt Dropdown' -geometry 200x70 -e $SHELL -c 'tmux has-session && tmux attach || tmux new-session'"
 
 mod4 + d
     ldoce5viewer
@@ -42,7 +42,7 @@ mod4 + s
     systemctl poweroff
 
 mod4 + b
-    google-chrome-stable
+    $BROWSER
 
 Print
     scrot -e 'mv $f /tmp/ && gimp /tmp/$f'
@@ -60,7 +60,10 @@ mod4 + 8
     clerk
 
 mod4 + 1
-    mapunmap --classname "dsy" "dsy"
+    mapunmap --classname "dfm" "dfm /etc/systemd/ /usr/lib/systemd ~/.config/systemd"
+
+mod4 + 2
+    mapunmap --classname "dfm" "dfm /opt/github/jkoz/home"
 
 ############################################
 # bspwm
