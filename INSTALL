@@ -72,7 +72,7 @@ install -Dm644 config/tint2/* ~/.config/tint2
 install -Dm644 config/compton.conf ~/.config/compton.conf
 
 # conky
-install -Dm644 conkyrc ~/.conkyrc
+#install -Dm644 conkyrc ~/.conkyrc
 
 # mplayer
 install -d ~/.mplayer
@@ -81,6 +81,13 @@ install -Dm644 mplayer/config ~/.mplayer/config
 # scripts
 #install -d ~/bin
 #install -Dm755 scripts/* ~/bin
+
+# idesk
+install -d ~/.idesktop ~/.idesktop/icons
+install -Dm644 ideskrc ~/.ideskrc
+install -Dm644 idesktop/launcher.lnk ~/.idesktop
+install -Dm644 idesktop/arch-linux-1920x1200.png ~/.idesktop
+install -Dm644 idesktop/icons/* ~/.idesktop/icons
 
 # fonts
 install -d ~/.fonts

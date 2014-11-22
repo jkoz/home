@@ -1,185 +1,139 @@
+########################################################
 # 0. Swap caps lock and ctrl
-loadkeys /usr/share/kbd/keymaps/i386/qwerty/emacs2.map.gz
-kbdrate -d 30  -r 400
+# loadkeys /usr/share/kbd/keymaps/i386/qwerty/emacs2.map.gz || exit 1
+# kbdrate -d 30  -r 400 || exit 1
 
-# 1. Partitioning
+# lsblk
+# fdisk -l
 
-lsblk
-fdisk -l
+# mkfs.ext3 /dev/sda1
+# mkfs.ext4 /dev/sda5
+# mkfs.ext4 /dev/sda6
+# mkfs.ext4 /dev/sda8
 
-mkfs.ext3 /dev/sda1
-mkfs.ext4 /dev/sda5
-mkfs.ext4 /dev/sda6
-mkfs.ext4 /dev/sda8
+# /dev/sda5        46G   12G   32G  27% /
+# /dev/sda1       227M   36M  179M  17% /boot
+# /dev/sda6        30G  4.0G   24G  15% /var
+# /dev/sda8       610G  123G  457G  22% /home
 
-/dev/sda5        46G   12G   32G  27% /
-/dev/sda1       227M   36M  179M  17% /boot
-/dev/sda6        30G  4.0G   24G  15% /var
-/dev/sda8       610G  123G  457G  22% /home
+# mount /dev/sda5 /mnt
+# mkdir /mnt/{boot,var,home}
 
-# 2. Mounting
-
-mount /dev/sda5 /mnt
-mkdir /mnt/boot /mnt/var /mnt/home
-
-mount /dev/sda1 /mnt/boot
-mount /dev/sda6 /mnt/var
-mount /dev/sda8 /mnt/home
+# mount /dev/sda1 /mnt/boot
+# mount /dev/sda6 /mnt/var
+# mount /dev/sda8 /mnt/home
 
 # 3. install system base
-pacstrap /mnt base vim tmux
+# pacstrap /mnt base openssh vim tmux sudo git zsh grub elinks net-tools wireless_tools wpa_actiond ifplugd rfkill axel alsa-utils || exit 1
 
 # 4. generate fstab
-genfstab -p /mnt >> /mnt/etc/fstab
+# genfstab -p /mnt >> /mnt/etc/fstab || exit 1
 
 # 5. change root new env
-arch-chroot /mnt
-# 5.1 clang + vim
-pacman -S clang && vim && cd ~/.vim/bundle/YouCompleteMe && ./install.sh --clang-completer --system-libclang
+#arch-chroot /mnt || { echo fail chroot; exit 1; }
 
-# get stop sweet home
-cd /opt && git clone https://github.com/jkoz/home tait
+#########################################################
+# 5.1 clang + vim
+# pacman -S clang && vim && cd ~/.vim/bundle/YouCompleteMe && ./install.sh --clang-completer --system-libclang
+
+git clone https://github.com/jkoz/home github/jkoz /opt/github/jkoz/home || { echo fail to get dotfiles; exit 1; }
 
 # 6. create hostname
-echo "jkoz_arch_linux" > /etc/hostname
+echo "archlinux" > /etc/hostname || { echo fail to create host name; exit 1; }
 
 # 7. locale setting
-ln -s /usr/share/zoneinfo/Canada/Mountain /etc/localtime
+ln -s /usr/share/zoneinfo/Canada/Mountain /etc/localtime || { echo fail to set local time; exit 1; }
 
 # 8. enable us locale
+sed -i 's!#en_US.UTF-8 UTF-8!en_US.UTF-8 UTF-8!' /etc/locale.gen || { echo fail to enable en_US.UTF-8 UTF-8; exit 1; }
+sed -i 's!#en_US ISO-8859-1!en_US ISO-8859-1!' /etc/locale.gen || { echo fail to enable en_US ISO-8859-1; exit 1; }
+locale-gen || { echo fail to generate locale; exit 1; }
 
-sed -i 's!#en_US.UTF-8 UTF-8!en_US.UTF-8 UTF-8!' /etc/locale.gen
-sed -i 's!#en_US ISO-8859-1!en_US ISO-8859-1!' /etc/locale.gen
-
-locale-gen
-
+# FIXME: error before x installation
 # important in order to support unicode charaters in urxvt; give it a test echo "\udf"
-localectl set-locale LANG=en_US.UTF-8
+localectl set-locale LANG=en_US.UTF-8 || { echo fail to set locale; exit 1; }
 
 # 9. increase kdb rate and persistent keymap (swap caplocks and ctrl)
 
-echo "KEYMAP=\"emacs2\"" > /etc/vconsole.conf
-kbdrate -d 30  -r 400
+echo "KEYMAP=\"emacs2\"" > /etc/vconsole.conf || { echo fail to set keymap; exit 1; }
+kbdrate -d 30  -r 400 || { echo fail to speed up typing; exit 1; }
 
 # 10. install grub
-pacman -S grub
-
-mkinitcpio -p linux
-grub-install /dev/sda
-grub-mkconfig -o /boot/grub/grub.cfg
+mkinitcpio -p linux || { echo fail to init tcpio ; exit 1; }
+grub-install /dev/sda || { echo fail to install grub; exit 1; }
+grub-mkconfig -o /boot/grub/grub.cfg || { echo fail to create grub config; exit 1; }
 
 # 11. reboot and set up root passwd
+echo "Type root passwd"
 passwd
 
-# 12. enable service network
-systemctl list-unit-files
-
-# to temporarily use wire connection start dhcpcd client
-systemctl start dhcpcd # a workaround method to enable wire connection. In fact, we should use netctl
+# 12. enable service network: copy from bootable disk: cp /etct/netctl/wlp0s29u1u2-tp /mnt/etct/netctl/wlp0s29u1u2-tp
+systemctl enable netctl-auto@wlp0s29u1u2 || { exit 1; }
+systemctl enable netctl-ifplugd@enp3s0 || { exit 1; }
 
 # 13. add new user
-useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power -d/home/tait -s /usr/bin/zsh tait
-usermod -s /usr/bin/zsh root
+useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power -d/home/tait -s /usr/bin/zsh tait || { exit 1; }
+usermod -s /usr/bin/zsh root || { exit 1; }
 
-# 14. enable for wheel groups
-pacman -S sudo
-sudoedit /etc/sudoers
-uncomment %wheel ALL=(ALL) ALL
+# 14. enable for wheel groups, uncomment %wheel ALL=(ALL) ALL
+sudoedit /etc/sudoers || { exit 1; }
 
-# 14.0 persistent network wireless and wire profiles
-pacman -S wifi-menu net-tools rfkill wireless_tools
-
-pacman -S wpa_actiond ifplugd
-
-#wifi-menu wlp2s0
-systemctl enable netctl-auto@wlp2s0
-
-#cp /etc/netctl/examples/ethernet-dhcp /etc/netctl/enp3s0-tp & replace the ethenert name
-systemctl enable netctl-ifplugd@enp3s0
 
 # 14.1
-# ctags bc dialog wpa_supplicant wpa_actiond elinks zsh fish fbterm git hg subversion \
-              cvs xclip axel zip unzip unrar rtorrent alsa-utils alsa-oss samba openssh cdrkit \
-              cabextract cmake mutt ntfs-3g fetchmail procmail bitlbee irssi mpd mpc ncmpcpp gdb \
-              perl-cpanplus-dist-arch python-pip
+#pacman -S ctags bc fish fbterm hg subversion cvs xclip axel zip unzip unrar rtorrent alsa-utils samba
+#pacman -S cdrkit growisofs
+#pacman -S cabextract cmake mutt ntfs-3g fetchmail procmail bitlbee irssi mpd mpc ncmpcpp gdb
+#pacman -S perl-cpanplus-dist-arch python-pip
 
-# 14.1.0 battery info
-pacman -S acpid
+#pacman -S acpid # battery info
 
 # 14.1.1 ntpd
-pacman -S ntp
-systemctl start ntpd
-
+pacman -S ntp && systemctl enable ntpd || { exit 1; }
 
 # 14.2 yaourt
-pacman -S base-devel
-curl -O https://aur.archlinux.org/packages/pa/package-query/package-query.tar.gz && tar xzvf package-query.tar.gz && cd package-query && makepkg -si --asroot
-curl -O https://aur.archlinux.org/packages/ya/yaourt/yaourt.tar.gz && tar xzvf yaourt.tar.gz && cd yaourt && makepkg -si --asroot
-rm -rf package-query.tar.gz yaourt.tar.gz
+pacman -S base-devel || { exit 1; }
+cd /tmp || { exit 1; }
+curl -O https://aur.archlinux.org/packages/pa/package-query/package-query.tar.gz && tar xzvf package-query.tar.gz && cd package-query && makepkg -si --asroot || { exit 1; }
+curl -O https://aur.archlinux.org/packages/ya/yaourt/yaourt.tar.gz && tar xzvf yaourt.tar.gz && cd yaourt && makepkg -si --asroot || { exit 1; }
 
-# 14.2.1 clouds
-yaourt -S dropbox-cli grive
-
-# 14.2.2 Ack Grep Ag
+# ack
 yaourt -S silver-searcher-git
 
 # 14.3 x & wm
-pacman -S xdotool xorg xorg-server xorg-xinit xlockmore rxvt-unicode xautolock x11vnc
-pacman -S libxcb xcb-util xcb-util-keysyms xcb-util-wm
-
+pacman -S  --noconfirm xdotool xorg xorg-server xorg-xinit xlockmore rxvt-unicode xautolock x11vnc
+pacman -S  --noconfirm libxcb xcb-util xcb-util-keysyms xcb-util-wm \
 yaourt -S sxhkd-git xtitle-git bar-aint-recursive bspwm-git
+pacman -S  --noconfirm xdg-user-dirs
+pacman -S  --noconfirm chromium
+pacman -S  --noconfirm libnotify dunst
+pacman -S  --noconfirm mplayer
+pacman -S  --noconfirm mupdf
+pacman -S  --noconfirm feh
+pacman -S  --noconfirm imagemagick
+pacman -S  --noconfirm gimp
+pacman -S  --noconfirm scrot
+pacman -S --noconfirm xorg-xlsfonts
+pacman -S --noconfirm terminus-font
 
-# 14.3.1 desktop notification
-pacman -S libnotify dunst
+yaourt -S chromium-pepper-flash
+yaourt -S dropbox-cli
+yaourt -S archey # status
 
-# 14.3.2 fonts
-pacman -S pcf2bdf
-yaourt -S gbdfed
-
-# 14.3 media
-pacman -S mplayer
-
-# 14.4 pdf
-mupdf
-cabaret
-
-# 14.5 photos
-feh
-imagemagick
-gimp
-ncitrogen
-
-# 14.6 screenshoot
-scrot
-# 14.7 mount camera, android, etc.
-yaourt -S simple-mtpfs
-
-# 14.8 composite
-yaourt -S compton
-
-# 14.8 file manager
-pacman -S pcmanfm ranger
-
-# 14.9 browsers
-pacman -S chromium chromium-pepper-flash
-pacman -S dwb
-
-# 15 extras
-# cpan
-cpan Net:DBus
-# status
-yaourt -S archey
+pacman -S  --noconfirm ranger
+yaourt -S gbdfed pcf2bdf # fonts
+yaourt -S cabaret # pdf
+yaourt -S grive
 
 # 16 mines
-git clone https://github.com/jkoz/dmenu2 jkoz/dmenu2
-git clone https://github.com/jkoz/ldoce5viewer
+cd ~ && pkg=/opt/github/jkoz/PKGBUILDs && rm -rf $pkg && git clone https://github.com/jkoz/PKGBUILDs $pkg && cd $pkg && for dir in `ls $pkg`; do cd $dir; ls | grep -v PKGBUID | xargs ;  makepkg -si --asroot; cd .. ; done
+
+yaourt -S dropbox-cli grive
+yaourt -S simple-mtpfs # mount camera, android, etc.
+yaourt -S compton # 14.8 composite
 
 
-# start ntp
-############################################
+cpan Net:DBus # cpan
 
-# network
- wifi-menu
 
 #####################################################################
 # IF WE USE netctl-auto@wlan0 service, please don't touch wpa_supplicant low
@@ -211,7 +165,6 @@ wpa_cli terminate
 yaourt -S shrew-vpn-client
 
 # xdg
-pacman -S xdg-user-dirs
 xdg-user-dirs-update
 
 # dict
@@ -277,10 +230,21 @@ adb sideload superuser.zip
 
 # systemd-journald
 journalctl --dmesg -f
-journalctl --full -f 
+journalctl --full -f
 
 # burn iso with cdkit
 readcd -v dev=/dev/cdrom -f abc.iso
 # burn dvd - dvd+rw-tools
 growisofs -dvd-compat -Z /dev/sr0=/home/tait/Dropbox/os/window/xp_pro_sp2.iso
+
+# xdg
+xdg-mime default feh.desktop image/jpeg
+xdg-mime default mupdf.desktop application/pdf
+xdg-mime default vim.desktop text/plain
+xdg-mime default vim.desktop application/octet-stream
+
+xdg-mime query default image/jpeg
+xdg-mime query default application/pdf
+xdg-mime query default text/plain
+
 

@@ -1,0 +1,10 @@
+table Icon
+  Caption: Urxvt
+  Icon: /home/tait/.idesktop/icons/terminal-32x32.png
+  Width: 32
+  Height: 32
+  X: 31
+  Y: 41
+  Command[0]: urxvt
+end
+

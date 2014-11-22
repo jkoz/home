@@ -8,6 +8,7 @@ xset b off # no beep
 
 xset +fp ~/.fonts
 xset +fp /usr/share/fonts/local
+xset +fp /usr/share/fonts/misc
 
 
 setxkbmap -option ctrl:swapcaps # swap caplocks and left ctrl
@@ -24,16 +25,19 @@ xautolock -locker  "xlock -mode blank" -corners 0+00  -cornerdelay 1 & # xautolo
 # Samsung TV : Menu / Picture / Picture Options / Size / Screen Fit (instead of 16:9)
 # Sharp Aquos : Menu > System Options > View Option > View Mode > Dot by Dot
 # monitors
-xrandr --output HDMI1 --auto --primary --left-of LVDS1
-xrandr --output LVDS1 --off
+#xrandr --output HDMI1 --auto --primary --left-of LVDS1
+#xrandr --output LVDS1 --off
 #xrandr --output LVDS1 --auto --primary --on
 
 
 # use left pointer cursor in all cases
 xsetroot -solid "#002b36" -cursor_name left_ptr -name " "
 
+# idesk
+idesk &
+
 # composite
-compton -b
+#compton -b
 
 # vnc TODO: this block start at the first time, should run as service
 #x11vnc -shared -rfbport 5900 -forever -usepw -display :0.0 -bg
@@ -61,5 +65,33 @@ compton -b
 # Unclutter - hides the mouse cursor after 5 seconds of idle
 # unclutter -root -jitter 10 &
 
-# wm
-exec bspwm
+
+# start with startx ~/.xinitrc bspwm
+# Here dwm is kept as default
+session=${1:-dwm}
+
+case $session in
+    awesome           ) exec awesome;;
+    bspwm             ) exec bspwm;;
+    catwm             ) exec catwm;;
+    cinnamon          ) exec cinnamon-session;;
+    dwm               ) exec dwm;;
+    enlightenment     ) exec enlightenment_start;;
+    ede               ) exec startede;;
+    fluxbox           ) exec startfluxbox;;
+    gnome             ) exec gnome-session;;
+    gnome-classic     ) exec gnome-session --session=gnome-classic;;
+    i3|i3wm           ) exec i3;;
+    icewm             ) exec icewm-session;;
+    jwm               ) exec jwm;;
+    kde               ) exec startkde;;
+    mate              ) exec mate-session;;
+    monster|monsterwm ) exec monsterwm;;
+    notion            ) exec notion;;
+    openbox           ) exec openbox-session;;
+    unity             ) exec unity;;
+    xfce|xfce4        ) exec startxfce4;;
+    xmonad            ) exec xmonad;;
+    # No known session, try to run it as command
+    *) exec $1;;
+esac

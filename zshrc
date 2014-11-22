@@ -13,7 +13,6 @@ export PROJECT="$HOME/data/projects"
 export CATALINA_HOME="${PROJECT}/apache-tomcat-8.0.5/"
 export AXS_HOME="${PROJECT}/axs"
 export MEDIA_HOME="$HOME/media"
-export VIDEO_HOME="$MEDIA_HOME/video"
 XDG_DESKTOP_DIR="$HOME/Desktop"
 XDG_DOCUMENTS_DIR="$HOME/Documents"
 XDG_DOWNLOAD_DIR="$HOME/Downloads"
@@ -172,7 +171,7 @@ stty -ixon
 # }}}
 
 # functions {{{
-tV() { cd ${VIDEO_HOME}; rtorrent "$@"; }
+tV() { cd ${XDG_VIDEOS_DIR}; rtorrent "$@"; }
 #}}}
 
 # alias {{{
@@ -242,41 +241,6 @@ alias gcal-week='gcalcli --width 12 calw'
 alias gcal='gcalcli --width 12 calm'
 alias gcal-add='gcalcli quick'
 alias gcal-agenda='gcalcli agenda'
+alias gitone='git --git-dir=.gitone'
+alias gittwo='git --git-dir=.gittwo'
 # }}}
-
-# environment {{{
-export EDITOR="vim"
-export PAGER="less"
-export BROWSER="chromium"
-export MOVPLAY="mplayer"
-export PICVIEW="feh"
-export SNDPLAY="mplayer"
-export TERMINAL="urxvt"
-
-export DROPBOX_HOME="$HOME/Dropbox"
-export ARCH_HOME="/opt/github/jkoz/home"
-export PROJECT="$HOME/data/projects"
-export CATALINA_HOME="${PROJECT}/apache-tomcat-8.0.5/"
-export AXS_HOME="${PROJECT}/axs"
-export MEDIA_HOME="$HOME/media"
-export VIDEO_HOME="$MEDIA_HOME/video"
-XDG_DESKTOP_DIR="$HOME/Desktop"
-XDG_DOCUMENTS_DIR="$HOME/Documents"
-XDG_DOWNLOAD_DIR="$HOME/Downloads"
-XDG_MUSIC_DIR="$HOME/Music"
-XDG_PICTURES_DIR="$HOME/Pictures"
-XDG_PUBLICSHARE_DIR="$HOME/Public"
-XDG_TEMPLATES_DIR="$HOME/.Templates"
-XDG_VIDEOS_DIR="$HOME/Videos"
-PATH="/home/tait/perl5/bin${PATH+:}${PATH}"; export PATH;
-PERL5LIB="/home/tait/perl5/lib/perl5${PERL5LIB+:}${PERL5LIB}"; export PERL5LIB;
-PERL_LOCAL_LIB_ROOT="/home/tait/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_ROOT}"; export PERL_LOCAL_LIB_ROOT;
-PERL_MB_OPT="--install_base \"/home/tait/perl5\""; export PERL_MB_OPT;
-PERL_MM_OPT="INSTALL_BASE=/home/tait/perl5"; export PERL_MM_OPT;
-export XMODIFIERS=@im=SCIM
-export GTK_IM_MODULE="scim"
-export QT_IM_MODULE="scim"
-export MPD_HOST=~/.mpd/socket
-
-PATH=$HOME/bin:${PATH}
-#}}}

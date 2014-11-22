@@ -1097,6 +1097,8 @@ git tag -l
 # checkout specific release
 git checkout tags/6.0
 
+# git merge
+git merge some_feature_branch
 
 # new git repo
 git init
@@ -2343,19 +2345,15 @@ git push -u origin master
 2>/dev/null
 
 Redirect STDERR to /dev/null (prevent from showing up on console)
-
 |&
 
 Redirect STDERR and STDOUT to STDIN of piped command (cmd1 |& cmd2)
-
 &>/dev/null
 
 Redirect both STDERR & STDOUT to /dev/null (nothing shows up on console)
-
 >/dev/null
 
 Redirect STDOUT to /dev/null (only STDERR shows on console)
-
 2>&-
 #}}}
 
@@ -2709,4 +2707,8 @@ cp -av /mnt/iso/* /mnt/usb/ && sync
 # backup work on sdb
 dd if=/dev/sdb of=winxp.img && sync
 
-# create bootable usb from iso file
+# xdg
+xdg-mime default feh.desktop image/jpeg
+xdg-mime default mupdf.desktop application/pdf
+xdg-mime default vim.desktop text/plain
+xdg-mime default vim.desktop text/x-shellscript

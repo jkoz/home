@@ -3,7 +3,7 @@ mod4 + Return
     urxvtc
 
 mod4 + i
-    mapunmap --classname "urxvtdropdown" "urxvtc -name urxvtdropdown -title 'Urxvt Dropdown' -geometry 200x70 -e $SHELL -c 'tmux has-session && tmux attach || tmux new-session'"
+    mapunmap --classname "urxvtdd" "urxvtc -name urxvtdd -title 'Urxvt Dropdown' -e $SHELL -c 'tmux has-session && tmux attach || tmux new-session'"
 
 mod4 + d
     ldoce5viewer
@@ -53,24 +53,24 @@ mod4 + Print
 mod4 + space
     mapunmap --classname "dru" "dru"
 
-mod4 + 0
-    mpc -h ~/.mpd/socket toggle
+#mod4 + 0
+    #mpc -h ~/.mpd/socket toggle
 
-mod4 + 8
-    clerk
+#mod4 + 8
+    #clerk
 
-mod4 + 1
-    mapunmap --classname "dfm" "dfm /etc/systemd/ /usr/lib/systemd ~/.config/systemd"
+#mod4 + 1
+    #mapunmap --classname "dfm" "dfm /etc/systemd/ /usr/lib/systemd ~/.config/systemd"
 
-mod4 + 2
-    mapunmap --classname "dfm" "dfm /opt/github/jkoz/home"
+#mod4 + 2
+    #mapunmap --classname "dfm" "dfm /opt/github/jkoz/home"
 
 ############################################
 # bspwm
 
 # exit wm
-mod4 + q
-    bspc quit
+#mod4 + q
+    #bspc quit
 
 # reload config file
 mod4 + Shift + c
@@ -78,42 +78,42 @@ mod4 + Shift + c
 
 # bspwm control
 # change different layout, Tiling (T) and (M)
-mod4 + m
-    bspc desktop -l next
+#mod4 + m
+    #bspc desktop -l next
 
 # change pre, next window
-mod4 + {comma,period}
-    bspc desktop -C {backward,forward}
+#mod4 + {comma,period}
+    #bspc desktop -C {backward,forward}
 
 #mod4 + m
     #bspc window -s biggest
 
 # close window
-mod4 + c
-    bspc window -c
+#mod4 + c
+    #bspc window -c
 
 # change work space
-mod4 + {1,2,3,4,5}
-    bspc desktop -f "^{1,2,3,4,5}"
+#mod4 + {1,2,3,4,5}
+    #bspc desktop -f "^{1,2,3,4,5}"
 
-mod4 + shift + {a,o,e,u,i}
-    bspc window -d "^{1,2,3,4,5}"
+#mod4 + shift + {a,o,e,u,i}
+    #bspc window -d "^{1,2,3,4,5}"
 
-mod4 + {h,j,k,l}
-    bspc window -f {left,down,up,right}
+#mod4 + {h,j,k,l}
+    #bspc window -f {left,down,up,right}
 
-mod4 + shift + {h,j,k,l}
-    bspc window -s {left,down,up,right}
+#mod4 + shift + {h,j,k,l}
+    #bspc window -s {left,down,up,right}
 
-~button1
-    bspc pointer -g focus
+#~button1
+    #bspc pointer -g focus
 
-mod4 + button{1-3}
-    bspc pointer -g {move,resize_side,resize_corner}
+#mod4 + button{1-3}
+    #bspc pointer -g {move,resize_side,resize_corner}
 
-mod4 + !button{1-3}
-    bspc pointer -t %i %i
+#mod4 + !button{1-3}
+    #bspc pointer -t %i %i
 
-mod4 + @button{1-3}
-    bspc pointer -u
+#mod4 + @button{1-3}
+    #bspc pointer -u
 

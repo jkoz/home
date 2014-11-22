@@ -4,7 +4,7 @@
 
 
 !xft:Inconsolata:style=Regular:size=11
-#define S_font -xos4-Terminus-Medium-R-Normal--14-140-72-72-C-80-ISO10646-1
+#define S_font -*-terminus-medium-r-*-*-14-*-*-*-*-*-*-*,-*-xbmicons-medium-r-*-*-12-*-*-*-*-*-*-*
 
 ! Common
 #define S_yellow        #b58900
