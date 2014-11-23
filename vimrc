@@ -1,26 +1,4 @@
-" VIMRC
-" READ ME {{{
-" current word - let a=expand('<cword>')
-" count word - vimgrep word %"
-"
-" vim motion
-" c-y - move view point down
-" c-e - move view point up
-"
-" vim diff
-" do - Get changes from other window into the current window.
-" dp - Put the changes from current window into the other window.
-" ]c - Jump to the next change.
-" [c - Jump to the previous change.
-"
-" dump vim setting
-" :mkvimrc /tmp/map
-"
-" 1. remove current file
-" 2. java import have problem
-" 3. choose item in auto complete box
-" }}}
-" auto clone vundle {{{
+" Bundles {{{
 let iCanHazVundle=1
 let vundle_readme=expand('~/.vim/bundle/vundle/README.md')
 if !filereadable(vundle_readme)
@@ -39,7 +17,6 @@ set rtp+=~/.vim/bundle/Vundle.vim
 
 call vundle#begin()
 Plugin 'Syntastic'
-Plugin 'kien/ctrlp.vim'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'
@@ -49,12 +26,18 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'majutsushi/tagbar'
 Plugin 'gavinbeatty/dragvisuals.vim'
 Plugin 'mileszs/ack.vim'
-Plugin 'suy/vim-ctrlp-commandline'
 Plugin 'tpope/vim-dispatch'
 Plugin 'myusuf3/numbers.vim'
 Plugin 'vimoutliner/vimoutliner'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
+
+if system("ps -o tty= -p $$ | grep tty") != ""
+    Plugin 'kien/ctrlp.vim'
+    Plugin 'suy/vim-ctrlp-commandline'
+else
+    Plugin 'jkoz/dmenu.vim'
+endif
 
 "Plugin 'vim-scripts/vcscommand.vim'
 "Plugin 'vim-scripts/dbext.vim'
@@ -68,6 +51,7 @@ Plugin 'honza/vim-snippets'
 "Plugin 'Valloric/YouCompleteMe'
 "Plugin 'ervandew/eclim'
 "Plugin 'airblade/vim-rooter'
+
 call vundle#end()
 filetype plugin indent on
 syntax on
@@ -89,40 +73,6 @@ vn jk <esc>
 "nn ; :
 nn <leader>s :so $MYVIMRC<cr>
 "se verbose=0
-
-" IPA
-           "i
-dig ii 618 "ɪ  - small cap I
-dig uu 650 "ʊ  - upside down upsilon
-           "u:
-"---------------------------------------------------
-           "e
-dig sw 601 "ə  - Latin Small Letter Schwa
-dig ro 604 "ɜ: - Latin Small Letter Reversed Open E
-dig oc 596 "ɔ: - open-mid back rounded vowel
-"---------------------------------------------------
-dig ae 230 "æ  - small ae
-dig lv 652 "ʌ  - small cap lambda
-dig ta 593 "ɑ: - Latin Small Letter Alpha
-dig tu 594 "ɒ  - Latin Small Letter Turned Alpha
-"---------------------------------------------------
-           "p
-           "b
-           "t
-           "d
-"---------------------------------------------------
-           "f
-           "v
-dig te 952 "θ - theta
-           "
-"---------------------------------------------------
-
-
-
-
-dig ez 658 "ʒ - ezh
-dig ez 676 "ʤ - Latin Small Letter Dezh Digraph
-
 
 " switching vim window buffer
 " TODO: c-j conflict utilsnip
@@ -154,24 +104,13 @@ nn <silent> <F10> :exe "res +2" <cr>
 " Toggle wrap
 nn <Leader>W :setl nowrap! <CR>
 
-" Quick save
-nn <silent> <C-s> :update<CR>
-"nn <c-s> :update<CR>
-"ino <c-s> <esc>:update<CR>
-"vn <c-s> <esc>:update<CR>
-
-" Case insensitive search
-" use easy motion instead
-"nn / /\v
-"vn / /\v
-
-" Yank/paste to the OS clipboard with ,y and ,p
-"vm <leader>y "+y
-"nn <leader>p "+p
+" Case insensitive search use easy motion instead
+nn / /\v
+vn / /\v
 
 " match bracket pairs with tab is a hell of a lot easier than %
-"nn <tab> %
-"vn <tab> %
+nn <tab> %
+vn <tab> %
 
 " clear search match
 nn <silent> <leader><space> :nohl<cr>
@@ -184,6 +123,7 @@ nn <silent> - :bd<cr>
 nmap cpd :let @+ = expand("%:p:h")<CR>
 " copy full file path of opened file to clipboard
 nmap cpf :let @+ = expand("%:p")<CR>
+
 " dos2unix
 nm d2u :%s/\r//g<CR>
 
@@ -228,8 +168,7 @@ se sw=4
 se autowrite
 se title
 se list
-"se listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:.
-exec "set listchars=tab:\uBB\uBB,trail:\uB7,extends:>,precedes:<,nbsp:~"
+set listchars=tab:\|\ ,extends:>,precedes:<,nbsp:~,trail:.
 
 se ttyfast
 se ttyscroll=3
@@ -281,6 +220,7 @@ se history=700 " remember more commands and search history
 se undolevels=700 " use many muchos levels of undo
 
 se softtabstop=4 shiftwidth=4 tabstop=4 " not tabs, but spaces
+
 se expandtab
 se shiftround " use multiple of shiftwidth when indenting with '<' and '>'
 
@@ -358,8 +298,7 @@ hi SignColumn cterm=NONE ctermbg=237  guibg=#404040 gui=NONE
 hi Normal	ctermbg=NONE	cterm=NONE
 hi NonText	ctermbg=NONE	cterm=NONE
 " }}}
-" functions {{{
-
+" Functions {{{
 " toggle between number and relativenumber
 fu! MvnTest()
    exe "Mvn test -Dtest=" . expand("%:t:r")
@@ -422,90 +361,19 @@ fu! GenerateTagsForCLibs()
     exe "se tags+=" . l:ctags_files
 endf
 
-"just highlight the match in red...
-"nnoremap <silent> n   n:call HLNext(0.4)<cr>
-"nnoremap <silent> N   N:call HLNext(0.4)<cr>
-"highlight WhiteOnRed ctermbg=Red ctermfg=white
-"function! HLNext (blinktime)
-    "let [bufnum, lnum, col, off] = getpos('.')
-    "let matchlen = strlen(matchstr(strpart(getline('.'),col-1),@/))
-    "let target_pat = '\c\%#'.@/
-    "let ring = matchadd('WhiteOnRed', target_pat, 101)
-    "redraw
-    "exec 'sleep ' . float2nr(a:blinktime * 1000) . 'm'
-    "call matchdelete(ring)
-    "redraw
-"endfunction
 " }}}
 " Auto Groups {{{
-"This is a slew of commands that create language-specific settings for certain
-"filetypes/file extensions. It is important to note they are wrapped in an
-"augroup as this ensures the autocmd's are only applied once. In addition, the
-"autocmd! directive clears all the autocmd's for the current group.
 aug configgroup
     au!
-    "au BufWritePost .vimrc so $MYVIMRC
-    au VimEnter * highlight clear SignColumn
-    "au BufWritePre *.php,*.py,*.js,*.txt,*.hs,*.java,*.md
-                "\:call <SID>StripTrailingWhitespaces()
-    au FileType java setl foldmethod=indent
-    "au FileType java setl list
-    "au FileType java setl listchars=tab:+\ ,eol:-
-    "au FileType java setl formatprg=par\ -w80\ -T4
-    "au FileType php setl expandtab
-    "au FileType php setl list
-    "au FileType php setl listchars=tab:+\ ,eol:-
-    "au FileType php setl formatprg=par\ -w80\ -T4
-    "au FileType ruby setl tabstop=2
-    "au FileType ruby setl shiftwidth=2
-    "au FileType ruby setl softtabstop=2
-    "au FileType ruby setl commentstring=#\ %s
-    "au FileType python setl commentstring=#\ %s
-    "au BufEnter *.cls setl filetype=java
-    "au BufEnter *.zsh-theme setl filetype=zsh
-    "au BufEnter Makefile setl noexpandtab
-    "au BufEnter *.sh setl tabstop=2
-    "au BufEnter *.sh setl shiftwidth=2
-    "au BufEnter *.sh setl softtabstop=2
-    "au BufRead,BufNewFile *.html,*.xhtml,*.xml se softtabstop=2 shiftwidth=2 tabstop=2
-    au BufRead,BufNewFile *.html,*.xhtml,*.xml setl foldmethod=indent|setl foldlevel=0
+    au BufRead,BufNewFile *.html,*.xhtml,*.xml setl foldmethod=indent foldlevel=0
+    autocmd BufRead,BufNewFile *.vim setl shiftwidth=2 tabstop=2 foldmethod=marker foldlevel=0
     "au BufRead,BufNewFile *.c,*.h,*.cpp for each in split(expand('~/.tags/usr-include*'), "\n") | exe "se tags+=" . each | endfo
+    au BufRead,BufNewFile *.c,*.h,*.cpp setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
     au BufEnter *.txt,vimrc,zshrc,muttrc setl foldmethod=marker|setl foldlevel=0
-
-    "au BufReadPost *.twig colorscheme koehler
-    "au BufReadPost *.css colorscheme slate
-    "au BufReadPost *.js colorscheme elflord
-    "au BufReadPost *.py colorscheme molokai
-    "au BufReadPost *.html colorscheme monokai
-    "au BufReadPost *.java colorscheme monokai
-    "au BufReadPost *.php colorscheme two2tango
-
     au BufNewFile,BufRead *.otl setl listchars=tab:\|\ ,extends:>,precedes:<,nbsp:~,trail:.
-
-
 augroup END
-
-"au FileType css setl omnifunc=csscomplete#CompleteCSS
-"au FileType html,markdown setl omnifunc=htmlcomplete#CompleteTags
-"au FileType javascript setl omnifunc=javascriptcomplete#CompleteJS
-"au FileType python setl omnifunc=pythoncomplete#Complete
-"au FileType ruby setl omnifunc=rubycomplete#Complete
-"au FileType java setl omnifunc=javacomplete#Complete
-"au FileType xml setl omnifunc=xmlcomplete#CompleteTags
-"let g:xml_syntax_folding=1
-"au FileType xml,xsd setl foldmethod=syntax
-" automatically open and close the popup menu / preview window
-au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
-
-" allows cursor change in tmux mode
-if exists('$TMUX')
-    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
-else
-    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-endif
 " }}}
+" Plugins {{{
 " Tag bar {{{
 let g:tagbar_autofocus = 1
 nn <silent> <leader>t :TagbarToggle<cr>
@@ -532,51 +400,37 @@ let NERDTreeMouseMode=2
 let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$',
             \ '\.o$', '\.so$', '\.egg$', '^\.git$', '\.svn$', '^target$', '^\.settings$', '^\.classpath$', '^\.project$', '^\.hg', '.pydevproject'  ]
 " }}}
-" CtrlP {{{
-let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
-let g:ctrlp_max_height = 30
-let g:ctrlp_max_files=100000
-let g:ctrlp_clear_cache_on_exit=0
-let g:ctrlp_use_caching = 0
-nn <silent> <Leader>o :CtrlPBufTag<CR>
-"nn <silent> <Leader>i :CtrlPTag<CR>
-nn <silent> <Leader>b :CtrlPBookmarkDir<CR>
-nn <silent> <Leader>z :CtrlPBuffer<CR>
-nn <silent> <Leader>m :CtrlPMRUFiles<CR>
-" conflict with eclim
-"nn <silent> <Leader>j :CtrlPRTS<CR>
-"nn <silent> <Leader>l :CtrlPLine<CR>
-" filter base on wildignore
-let pats = ['\**\([\/?_.0-9A-Za-z]\+\)\([\/]*\)\**\(\\\@<!,\|$\)', '\.', '\\\@<!,']
-let subs = ['\1\2\3', '\\.', '.*|.*']
-let expr = substitute(&wildignore, pats[0], subs[0], 'g')
-let expr = substitute(expr, pats[1], subs[1], 'g')
-let expr = substitute(expr, pats[2], subs[2], 'g')
-let expr = substitute(expr, '\\,', ',', 'g')
-let expr = substitute(expr, '^', '.*', '')
-let expr = substitute(expr, '$', '.*', '')
-"let g:ctrlp_user_command='find %s -type f -regextype posix-extended -not -regex "'.expr .'"'
-" }}}
-" CtrlP command line {{{
-let g:ctrlp_extensions = ['commandline']
-com! CtrlPCommandline cal ctrlp#init(ctrlp#commandline#id())
-nn <silent> <Leader>q :CtrlPCommandline<CR>
-com! CtrlPUnicode call ctrlp#init(ctrlp#unicode#id())
-" }}}
-" CppOmniComplete {{{
-"let OmniCpp_NamespaceSearch = 1
-"let OmniCpp_GlobalScopeSearch = 1
-"let OmniCpp_ShowAccess = 1
-"let OmniCpp_MayCompleteDot = 1
-"let OmniCpp_MayCompleteArrow = 1
-"let OmniCpp_MayCompleteScope = 1
-"let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
-" }}}
-" EasyMotion {{{
-"map  / <Plug>(easymotion-sn)
-"omap / <Plug>(easymotion-tn)
-"map  n <Plug>(easymotion-next)
-"map  N <Plug>(easymotion-prev)
+" Ctrlp, Dmenu {{{
+if system("ps -o tty= -p $$ | grep tty") != ""
+    let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
+    let g:ctrlp_max_height = 30
+    let g:ctrlp_max_files=100000
+    let g:ctrlp_clear_cache_on_exit=0
+    let g:ctrlp_use_caching = 0
+    nn <silent> <Leader>o :CtrlPBufTag<CR>
+    "nn <silent> <Leader>i :CtrlPTag<CR>
+    nn <silent> <Leader>b :CtrlPBookmarkDir<CR>
+    nn <silent> <Leader>z :CtrlPBuffer<CR>
+    nn <silent> <Leader>m :CtrlPMRUFiles<CR>
+    " conflict with eclim
+    "nn <silent> <Leader>j :CtrlPRTS<CR>
+    "nn <silent> <Leader>l :CtrlPLine<CR>
+    " filter base on wildignore
+    let pats = ['\**\([\/?_.0-9A-Za-z]\+\)\([\/]*\)\**\(\\\@<!,\|$\)', '\.', '\\\@<!,']
+    let subs = ['\1\2\3', '\\.', '.*|.*']
+    let expr = substitute(&wildignore, pats[0], subs[0], 'g')
+    let expr = substitute(expr, pats[1], subs[1], 'g')
+    let expr = substitute(expr, pats[2], subs[2], 'g')
+    let expr = substitute(expr, '\\,', ',', 'g')
+    let expr = substitute(expr, '^', '.*', '')
+    let expr = substitute(expr, '$', '.*', '')
+    "let g:ctrlp_user_command='find %s -type f -regextype posix-extended -not -regex "'.expr .'"'
+    let g:ctrlp_extensions = ['commandline']
+    com! CtrlPCommandline cal ctrlp#init(ctrlp#commandline#id())
+    nn <silent> <Leader>q :CtrlPCommandline<CR>
+    com! CtrlPUnicode call ctrlp#init(ctrlp#unicode#id())
+endif
+
 " }}}
 " dbext {{{
 let g:dbext_default_profile_192_168_95_227_replaceme='type=MYSQL:user=root:passwd=mysql:dbname=replaceme:host=192.168.95.227'
@@ -590,7 +444,8 @@ nn <silent> <Leader>s :JavaSearchContext<CR>
 nn <silent> <Leader>i :JavaImport<CR>
 nn <silent> <Leader>p :ProjectsTree<CR>
 nn <silent> <Leader>h :JavaHierarchy<cr>
-xn <silent> <Leader>f :JavaFormat<cr>
+" FIXME: conflict with dmenufm
+"xn <silent> <Leader>f :JavaFormat<cr>
 nn <silent> <Leader>j :JavaDocComment<cr>
 
 let g:EclimJavaSearchSingleResult='edit'
@@ -636,19 +491,14 @@ vm <expr> D DVB_Duplicate()
 " }}}
 " Ack {{{
 nn <silent> <Leader>a :Ack <cword><cr>
+let g:ackprg = 'ag'
+let g:ack_default_options = " -H --nocolor --nogroup --column"
 " }}}
 " utilsnip{{{
 let g:UltiSnipsExpandTrigger="<c-t>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 "let g:UltiSnipsSnippetsDir="~/.vim/bundle/vim-snippets/UltiSnips"
-" }}}
-" autosave {{{
-let g:auto_save = 1
-" }}}
-" ack.vim {{{
-let g:ackprg = 'ag'
-let g:ack_default_options = " -H --nocolor --nogroup --column"
 " }}}
 " YouCompleteMe {{{
 let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
@@ -673,6 +523,7 @@ if has('gui_running')
 endif
 " }}}
 " numbers {{{
-nn <leader>N :call NumbersToggle()<cr>
+nn <leader>N :NumbersToggle<cr>
 let g:enable_numbers = 0
+" }}}
 " }}}

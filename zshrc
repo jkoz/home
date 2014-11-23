@@ -172,6 +172,15 @@ stty -ixon
 
 # functions {{{
 tV() { cd ${XDG_VIDEOS_DIR}; rtorrent "$@"; }
+function exists { which $1 &> /dev/null }
+
+function select_history() {
+    BUFFER=$(([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s | sed 's/ *[0-9]* *//')
+    zle accept-line
+}
+
+    zle -N select_history
+    bindkey '^R' select_history
 #}}}
 
 # alias {{{

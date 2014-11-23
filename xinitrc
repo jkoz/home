@@ -21,13 +21,6 @@ dunst & # desktop notification
 
 xautolock -locker  "xlock -mode blank" -corners 0+00  -cornerdelay 1 & # xautolock
 
-# TV configure if any
-# Samsung TV : Menu / Picture / Picture Options / Size / Screen Fit (instead of 16:9)
-# Sharp Aquos : Menu > System Options > View Option > View Mode > Dot by Dot
-# monitors
-#xrandr --output HDMI1 --auto --primary --left-of LVDS1
-#xrandr --output LVDS1 --off
-#xrandr --output LVDS1 --auto --primary --on
 
 
 # use left pointer cursor in all cases
@@ -64,6 +57,18 @@ idesk &
 #
 # Unclutter - hides the mouse cursor after 5 seconds of idle
 # unclutter -root -jitter 10 &
+#
+
+# Addition monitor
+if test $2; then
+    # TV configure if any
+    # Samsung TV : Menu / Picture / Picture Options / Size / Screen Fit (instead of 16:9)
+    # Sharp Aquos : Menu > System Options > View Option > View Mode > Dot by Dot
+    # monitors
+    xrandr --output HDMI1 --auto --primary --left-of LVDS1
+    xrandr --output LVDS1 --off
+    #xrandr --output LVDS1 --auto --primary --on
+fi
 
 
 # start with startx ~/.xinitrc bspwm
