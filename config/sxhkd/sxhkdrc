@@ -3,16 +3,16 @@ mod4 + Return
     urxvtc
 
 mod4 + i
-    mapunmap --classname "urxvtdd" "urxvtc -name urxvtdd -title 'Urxvt Dropdown' -e $SHELL -c 'tmux has-session && tmux attach || tmux new-session'"
+    mapunmap --instance "urxvtdd" "urxvtc -name urxvtdd -title 'Urxvt Dropdown' -e $SHELL -c 'tmux has-session && tmux attach || tmux new-session'"
 
 mod4 + d
-    ldoce5viewer
+    mapunmap --instance "ldoce5viewer" ldoce5viewer
 
 mod4 + f
-    mapunmap --classname "dfm" "dfm"
+    mapunmap --instance "dfm" "dfm"
 
 mod4 + w
-    mapunmap --classname "dsw" "dsw"
+    mapunmap --instance "dsw" "dsw"
 
 mod4 + Up
     xbacklight -inc 20
@@ -27,10 +27,10 @@ mod4 + Left
     amixer -c 0 set Master 1-
 
 mod4 + p
-    mapunmap --classname "dru" "dru"
+    mapunmap --instance "dru" "dru"
 
 mod4 + u
-    mapunmap --classname "dkl" "dkl"
+    mapunmap --instance "dkl" "dkl"
 
 mod4 + bracketright
     xlock -mod blank
@@ -42,7 +42,7 @@ mod4 + s
     systemctl poweroff
 
 mod4 + b
-    $BROWSER
+    mapunmap --instance Chromium chromium
 
 Print
     scrot -e 'mv $f /tmp/ && gimp /tmp/$f'
@@ -51,7 +51,7 @@ mod4 + Print
     scrot -s -e 'mv $f /tmp/ && gimp /tmp/$f'
 
 mod4 + space
-    mapunmap --classname "dru" "dru"
+    mapunmap --instance "dru" "dru"
 
 #mod4 + 0
     #mpc -h ~/.mpd/socket toggle
@@ -60,10 +60,10 @@ mod4 + space
     #clerk
 
 #mod4 + 1
-    #mapunmap --classname "dfm" "dfm /etc/systemd/ /usr/lib/systemd ~/.config/systemd"
+    #mapunmap --instance "dfm" "dfm /etc/systemd/ /usr/lib/systemd ~/.config/systemd"
 
 #mod4 + 2
-    #mapunmap --classname "dfm" "dfm /opt/github/jkoz/home"
+    #mapunmap --instance "dfm" "dfm /opt/github/jkoz/home"
 
 ############################################
 # bspwm
