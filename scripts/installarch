@@ -118,6 +118,7 @@ pacman -S --noconfirm terminus-font
 yaourt -S chromium-pepper-flash
 yaourt -S dropbox-cli
 yaourt -S archey # status
+yaourt -S ttf-ms-fonts # status
 
 pacman -S  --noconfirm ranger
 yaourt -S gbdfed pcf2bdf # fonts

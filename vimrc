@@ -18,12 +18,10 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'Syntastic'
 Plugin 'altercation/vim-colors-solarized'
-Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'bling/vim-airline'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
-Plugin 'majutsushi/tagbar'
 Plugin 'gavinbeatty/dragvisuals.vim'
 Plugin 'mileszs/ack.vim'
 Plugin 'tpope/vim-dispatch'
@@ -400,7 +398,7 @@ let NERDTreeMouseMode=2
 let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$',
             \ '\.o$', '\.so$', '\.egg$', '^\.git$', '\.svn$', '^target$', '^\.settings$', '^\.classpath$', '^\.project$', '^\.hg', '.pydevproject'  ]
 " }}}
-" Ctrlp, Dmenu {{{
+" Ctrlp {{{
 if system("ps -o tty= -p $$ | grep tty") != ""
     let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
     let g:ctrlp_max_height = 30
@@ -430,7 +428,6 @@ if system("ps -o tty= -p $$ | grep tty") != ""
     nn <silent> <Leader>q :CtrlPCommandline<CR>
     com! CtrlPUnicode call ctrlp#init(ctrlp#unicode#id())
 endif
-
 " }}}
 " dbext {{{
 let g:dbext_default_profile_192_168_95_227_replaceme='type=MYSQL:user=root:passwd=mysql:dbname=replaceme:host=192.168.95.227'
