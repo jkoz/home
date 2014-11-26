@@ -1,119 +1,72 @@
-# call scratchpad urxvt, see xinitrc for definition
+# Urxvt
 mod4 + Return
     urxvtc
-
+# Urxvt Dropdown
 mod4 + i
     mapunmap --instance "urxvtdd" "urxvtc -name urxvtdd -title 'Urxvt Dropdown' -e $SHELL -c 'tmux has-session && tmux attach || tmux new-session'"
-
+# Dictionary
 mod4 + d
     mapunmap --instance "ldoce5viewer" ldoce5viewer
-
+# File Manager
 mod4 + f
-    mapunmap --instance "dfm" "dfm"
-
+    mapunmap --instance "dfm" "dmenu fm"
+# Switch window
 mod4 + w
-    mapunmap --instance "dsw" "dsw"
-
+    mapunmap --instance "dsw" "dmenu sw"
+# Increase Backlight
 mod4 + Up
     xbacklight -inc 20
-
+# Decrease Backlight
 mod4 + Down
     xbacklight -dec 20
-
+# Increase volume
 mod4 + Right
     amixer -c 0 set Master 1+
-
+# Decrease volume
 mod4 + Left
     amixer -c 0 set Master 1-
-
+# Run executable
 mod4 + p
-    mapunmap --instance "dru" "dru"
-
+    mapunmap --instance "dru" "dmenu ru"
+# Kill process
 mod4 + u
-    mapunmap --instance "dkl" "dkl"
-
+    mapunmap --instance "dkl" "dmenu kl"
+# Lock screen
 mod4 + bracketright
     xlock -mod blank
-
+# Reboot
 mod4 + r
     systemctl reboot
-
+# Power off
 mod4 + s
     systemctl poweroff
-
+# Browser
 mod4 + b
     mapunmap --instance Chromium chromium
-
+# Screen print
 Print
     scrot -e 'mv $f /tmp/ && gimp /tmp/$f'
-
+# Screen print (window)
 mod4 + Print
     scrot -s -e 'mv $f /tmp/ && gimp /tmp/$f'
-
+# Run applications (desktop files)
 mod4 + space
-    mapunmap --instance "dru" "dru"
-
-#mod4 + 0
-    #mpc -h ~/.mpd/socket toggle
-
-#mod4 + 8
-    #clerk
-
-#mod4 + 1
-    #mapunmap --instance "dfm" "dfm /etc/systemd/ /usr/lib/systemd ~/.config/systemd"
-
-#mod4 + 2
-    #mapunmap --instance "dfm" "dfm /opt/github/jkoz/home"
-
-############################################
-# bspwm
-
-# exit wm
-#mod4 + q
-    #bspc quit
-
-# reload config file
+    mapunmap --instance "dru" "dmenu ru"
+# Toogle Mpd
+mod4 + n
+    mpc -h ~/.mpd/socket toggle
+# Mpc client
+mod4 + 8
+    clerk
+# Edit systemd files
+mod4 + z
+    mapunmap --instance "dfm" "dmenu open /etc/systemd/ /usr/lib/systemd ~/.config/systemd"
+# Edit dot files
+mod4 + g
+    mapunmap --instance "dfm" "dmenu open /opt/github/jkoz/home"
+# Reload sxhkd
 mod4 + Shift + c
     pkill -USR1 -x sxhkd
-
-# bspwm control
-# change different layout, Tiling (T) and (M)
-#mod4 + m
-    #bspc desktop -l next
-
-# change pre, next window
-#mod4 + {comma,period}
-    #bspc desktop -C {backward,forward}
-
-#mod4 + m
-    #bspc window -s biggest
-
-# close window
-#mod4 + c
-    #bspc window -c
-
-# change work space
-#mod4 + {1,2,3,4,5}
-    #bspc desktop -f "^{1,2,3,4,5}"
-
-#mod4 + shift + {a,o,e,u,i}
-    #bspc window -d "^{1,2,3,4,5}"
-
-#mod4 + {h,j,k,l}
-    #bspc window -f {left,down,up,right}
-
-#mod4 + shift + {h,j,k,l}
-    #bspc window -s {left,down,up,right}
-
-#~button1
-    #bspc pointer -g focus
-
-#mod4 + button{1-3}
-    #bspc pointer -g {move,resize_side,resize_corner}
-
-#mod4 + !button{1-3}
-    #bspc pointer -t %i %i
-
-#mod4 + @button{1-3}
-    #bspc pointer -u
-
+# Menu
+mod4 + bracketleft
+    mapunmap --instance "dmn" "dmenu mn"

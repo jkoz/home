@@ -53,7 +53,7 @@ slang=fi,fin,en,eng,vi
 sub-fuzziness=1
 
 # Set font.
-font="Calibri"
+font="Arial"
 
 # Set font encoding.
 subfont-encoding=unicode
