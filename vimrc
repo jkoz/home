@@ -29,6 +29,7 @@ Plugin 'myusuf3/numbers.vim'
 Plugin 'vimoutliner/vimoutliner'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
+Plugin 'majutsushi/tagbar'
 
 if system("ps -o tty= -p $$ | grep tty") != ""
     Plugin 'kien/ctrlp.vim'
@@ -428,6 +429,9 @@ if system("ps -o tty= -p $$ | grep tty") != ""
     nn <silent> <Leader>q :CtrlPCommandline<CR>
     com! CtrlPUnicode call ctrlp#init(ctrlp#unicode#id())
 endif
+" }}}
+" Dmenu {{{
+let g:dmenu_backend = "dmenu -l 10"
 " }}}
 " dbext {{{
 let g:dbext_default_profile_192_168_95_227_replaceme='type=MYSQL:user=root:passwd=mysql:dbname=replaceme:host=192.168.95.227'

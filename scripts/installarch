@@ -243,6 +243,7 @@ xdg-mime default feh.desktop image/jpeg
 xdg-mime default mupdf.desktop application/pdf
 xdg-mime default vim.desktop text/plain
 xdg-mime default vim.desktop application/octet-stream
+xdg-mime default vim.desktop text/x-c
 
 xdg-mime query default image/jpeg
 xdg-mime query default application/pdf

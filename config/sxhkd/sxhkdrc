@@ -9,10 +9,10 @@ mod4 + d
     mapunmap --instance "ldoce5viewer" ldoce5viewer
 # File Manager
 mod4 + f
-    mapunmap --instance "dfm" "dmenu fm"
+    dm fm
 # Switch window
 mod4 + w
-    mapunmap --instance "dsw" "dmenu sw"
+    dm sw
 # Increase Backlight
 mod4 + Up
     xbacklight -inc 20
@@ -27,10 +27,10 @@ mod4 + Left
     amixer -c 0 set Master 1-
 # Run executable
 mod4 + p
-    mapunmap --instance "dru" "dmenu ru"
+    dm rn
 # Kill process
 mod4 + u
-    mapunmap --instance "dkl" "dmenu kl"
+    dm ps
 # Lock screen
 mod4 + bracketright
     xlock -mod blank
@@ -51,7 +51,7 @@ mod4 + Print
     scrot -s -e 'mv $f /tmp/ && gimp /tmp/$f'
 # Run applications (desktop files)
 mod4 + space
-    mapunmap --instance "dru" "dmenu ru"
+    dm rn
 # Toogle Mpd
 mod4 + n
     mpc -h ~/.mpd/socket toggle
@@ -60,13 +60,13 @@ mod4 + 8
     clerk
 # Edit systemd files
 mod4 + z
-    mapunmap --instance "dfm" "dmenu open /etc/systemd/ /usr/lib/systemd ~/.config/systemd"
+    dm open /etc/systemd/ /usr/lib/systemd ~/.config/systemd
 # Edit dot files
 mod4 + g
-    mapunmap --instance "dfm" "dmenu open /opt/github/jkoz/home"
+    dm open /opt/github/jkoz/home
 # Reload sxhkd
 mod4 + Shift + c
     pkill -USR1 -x sxhkd
 # Menu
 mod4 + bracketleft
-    mapunmap --instance "dmn" "dmenu mn"
+    dm mn

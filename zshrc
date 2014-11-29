@@ -95,19 +95,13 @@ bindkey '^s' history-incremental-pattern-search-forward
 # prompt {{{
 if [ $(tput colors) = 256 ]; then
     local p="%{$FX[reset]$FG[255]%}"
-
     local name="%{$FX[reset]$FG[117]%}%n"
     local host="%{$FX[reset]$FG[177]%}%m"
     local jobs="%1(j.(%{$FX[reset]$FG[197]%}%j job%2(j.s.)${p})-.)"
-    local time="%{$FX[reset]$FG[180]%}%D{%H:%M}"
-    local dir="%{$FX[reset]$FG[199]%}%~"
 
-    local last="%(?..%{$FX[reset]$FG[203]%}%??${p}:)"
-    local hist="%{$FX[reset]$FG[220]%}%!!"
-    local priv="%{$FX[reset]$FG[245]%}%#"
-    #git_status=git_super_status
+    local git="%{$FX[reset]$FG[177]%}\$(git rev-parse --abbrev-ref HEAD &> /dev/null && git rev-parse --abbrev-ref HEAD | xargs printf ' (%s) ')"
 
-    PROMPT="${time}${p} ${name}${p}@${host}${p}${jobs}${p}:${dir}${p}\${git_status}${p} %(!.#.$) "
+    PROMPT="${name}${p}@${host}${p}${jobs}${p}${git}$ "
 else
     autoload colors zsh/terminfo
     [[ "$terminfo[colors]" -ge 8 ]] && colors
@@ -172,15 +166,6 @@ stty -ixon
 
 # functions {{{
 tV() { cd ${XDG_VIDEOS_DIR}; rtorrent "$@"; }
-function exists { which $1 &> /dev/null }
-
-function select_history() {
-    BUFFER=$(([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s | sed 's/ *[0-9]* *//')
-    zle accept-line
-}
-
-    zle -N select_history
-    bindkey '^R' select_history
 #}}}
 
 # alias {{{

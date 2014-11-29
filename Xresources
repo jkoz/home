@@ -1,8 +1,3 @@
-! Solarized color scheme for the X Window System
-!
-! http://ethanschoonover.com/solarized
-
-
 !xft:Inconsolata:style=Regular:size=11
 #define S_font -*-terminus-medium-r-*-*-14-*-*-*-*-*-*-*,-*-xbmicons-medium-r-*-*-12-*-*-*-*-*-*-*
 
