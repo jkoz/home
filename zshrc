@@ -99,9 +99,9 @@ if [ $(tput colors) = 256 ]; then
     local host="%{$FX[reset]$FG[177]%}%m"
     local jobs="%1(j.(%{$FX[reset]$FG[197]%}%j job%2(j.s.)${p})-.)"
 
-    local git="%{$FX[reset]$FG[177]%}\$(git rev-parse --abbrev-ref HEAD &> /dev/null && git rev-parse --abbrev-ref HEAD | xargs printf ' (%s) ')"
+    local git="%{$FX[reset]$FG[177]%}\$(git rev-parse --abbrev-ref HEAD &> /dev/null && git rev-parse --abbrev-ref HEAD | xargs printf ' (%s)')"
 
-    PROMPT="${name}${p}@${host}${p}${jobs}${p}${git}$ "
+    PROMPT="${name}${p}@${host}${p}${jobs}${p}${git} $ "
 else
     autoload colors zsh/terminfo
     [[ "$terminfo[colors]" -ge 8 ]] && colors

@@ -80,7 +80,7 @@ case $session in
     bspwm             ) exec bspwm;;
     catwm             ) exec catwm;;
     cinnamon          ) exec cinnamon-session;;
-    dwm               ) exec dwm;;
+    dwm               ) dwmstatus & exec dwm;;
     enlightenment     ) exec enlightenment_start;;
     ede               ) exec startede;;
     fluxbox           ) exec startfluxbox;;
