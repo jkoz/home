@@ -56,7 +56,7 @@ mod4 + space
 mod4 + n
     mpc -h ~/.mpd/socket toggle
 # Mpc client
-mod4 + 8
+mod4 + e
     clerk
 # Edit systemd files
 mod4 + z
