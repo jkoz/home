@@ -113,12 +113,14 @@ pacman -S  --noconfirm imagemagick
 pacman -S  --noconfirm gimp
 pacman -S  --noconfirm scrot
 pacman -S --noconfirm xorg-xlsfonts
-pacman -S --noconfirm terminus-font
+pacman -S --noconfirm tk # for gitk
 
 yaourt -S chromium-pepper-flash
 yaourt -S dropbox-cli
 yaourt -S archey # status
+
 yaourt -S ttf-ms-fonts # status
+yaourt -S adobe-source-code-pro-fonts
 
 pacman -S  --noconfirm ranger
 yaourt -S gbdfed pcf2bdf # fonts
@@ -179,7 +181,6 @@ yaourt -S makedict
  pacman -S lm_sensors
 
 # xft
-yaourt -S ttf-mac-fonts
 pacman -S libxft
 pacman -S freetype2
 

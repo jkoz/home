@@ -1,9 +1,9 @@
-# Urxvt
+# Terminal
 mod4 + Return
-    urxvtc
-# Urxvt Dropdown
+    st
+# Terminal Dropdown
 mod4 + i
-    mapunmap --instance "urxvtdd" "urxvtc -name urxvtdd -title 'Urxvt Dropdown' -e $SHELL -c 'tmux has-session && tmux attach || tmux new-session'"
+    mapunmap --instance "terminaldropdown" "st -c terminaldropdown -e tmux a"
 # Dictionary
 mod4 + d
     mapunmap --instance "ldoce5viewer" ldoce5viewer

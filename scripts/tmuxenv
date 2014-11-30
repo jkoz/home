@@ -1,7 +1,5 @@
 session_name="${USER}-dropdown"
 
-#urxvtc -title ${terminal_name} -name ${terminal_name} -e $SHELL -c "tmux attach-session -t ${tmux_dropdown}"
-
 if test -z $(pgrep tmux | head -1); then
     tmux new-session -d -s ${session_name}
 

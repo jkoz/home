@@ -1094,6 +1094,9 @@ git checkout master
 # list all releases
 git branch -r
 
+# delete the most unpushed commits
+git reset --soft HEAD~1
+
 # checkout specific release
 git checkout tags/6.0
 
@@ -1102,6 +1105,13 @@ git merge some_feature_branch
 
 # git display merge info
 git branch --merged
+
+# git diff with vim
+git difftool
+
+# view local unpushed git commits
+git log origin/master..HEAD
+git diff origin/master..HEAD
 
 # new git repo
 git init

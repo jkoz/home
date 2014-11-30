@@ -1,0 +1,16 @@
+awk -v shiftsec=$1 '{
+    if(/:..:.*:..:/){
+        split($1,s1,","); split($3,s2,",");
+        split(s1[1],s1t,":"); split(s2[1],s2t,":");
+
+        time1=((s1t[1]*60+s1t[2])*60+s1t[3])+shiftsec;
+        time2=((s2t[1]*60+s2t[2])*60+s2t[3])+shiftsec;
+
+        ss1=time1%60;mm1=((time1-ss1)/60)%60;hh1=(time1-ss1-mm1*60)/60/60;
+        ss2=time2%60;mm2=((time2-ss2)/60)%60;hh2=(time2-ss2-mm2*60)/60/60;
+
+        printf("%02d:%02d:%02d,%03d --> %02d:%02d:%02d,%03d\n", hh1,mm1,ss1,s1[2],hh2,mm2,ss2,s2[2]);
+      }else{
+        print $0
+      }
+    }' $2> $3
