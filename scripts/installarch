@@ -177,8 +177,11 @@ yaourt -S makedict
 
 # extra
  pacman -S lm_sensors
- pacman -S libxft
- pacman -S freetype2
+
+# xft
+yaourt -S ttf-mac-fonts
+pacman -S libxft
+pacman -S freetype2
 
 # for install olad8
 pacman -S lib32-gtk

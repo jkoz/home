@@ -1092,13 +1092,16 @@ git describe --tags
 git checkout master
 
 # list all releases
-git tag -l
+git branch -r
 
 # checkout specific release
 git checkout tags/6.0
 
 # git merge
 git merge some_feature_branch
+
+# git display merge info
+git branch --merged
 
 # new git repo
 git init
