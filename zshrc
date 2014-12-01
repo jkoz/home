@@ -90,13 +90,8 @@ bindkey '^s' history-incremental-pattern-search-forward
 #bindkey '^e' end-of-line
 # }}}
 # prompt {{{
-if [ $(tput colors) = 256 ]; then
-    _promt_git_info() { git rev-parse --abbrev-ref HEAD 2> /dev/null | xargs -r printf '%s '; }
-    _prompt_path() { echo '%{%b%F{yellow}%}%~ '; }
-    _prompt_info() { echo "%{%F{red}%}$(_promt_git_info)"; }
-    _prompt_char() { echo '%{%F{grey}%}%# '; }
-    PROMPT='$(_prompt_path)$(_prompt_info)$(_prompt_char)' RPROMPT=''
-fi
+_promt_git_info() { git rev-parse --abbrev-ref HEAD 2> /dev/null | xargs -r printf '%s '; }
+PS1="%{$fg[red]%}%n%{$reset_color%}@%{$fg[green]%}%m %{$fg[yellow]%}%~ %{$fg[cyan]%}\$(_promt_git_info)%{$reset_color%}%% "
 # }}}
 # completion {{{
 autoload -Uz compinit && compinit
