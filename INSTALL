@@ -19,6 +19,10 @@ install -Dm644 fetchmailrc ~/.fetchmailrc
 install -Dm644 tmux.conf ~/.tmux.conf
 #install -Dm644 screenrc ~/.screenrc
 
+# applications
+install -d ~/.local ~/.local/share ~/.local/share/applications
+install -Dm644 local/share/applications/vim.desktop ~/.local/share/applications/vim.desktop
+
 # shell
 install -Dm644 zshrc ~/.zshrc
 #install -Dm644 bash_profile ~/.bash_profile
@@ -32,6 +36,10 @@ install -Dm644 mpdconf ~/.mpdconf
 
 # git
 install gitconfig ~/.gitconfig
+
+# surf
+install -d ~/.surf
+install -Dm644 surf/script.js ~/.surf
 
 # mail
 install -Dm644 muttrc ~/.muttrc

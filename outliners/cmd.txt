@@ -1085,6 +1085,9 @@ git branch dmenu2_new_keybind
 # cache password for period of time
 git config --global credential.helper 'cache --timeout=3600'
 
+# diff between 2 versions
+git diff 75e2a99be3d82a4ced8ba306db052105d41c8c37..HEAD
+
 # show current revision
 git describe --tags
 
@@ -1095,7 +1098,7 @@ git checkout master
 git branch -r
 
 # delete the most unpushed commits
-git reset --soft HEAD~1
+git reset --soft HEAD~5
 
 # checkout specific release
 git checkout tags/6.0
@@ -2341,16 +2344,6 @@ find /usr/include/ -type f -size +1048576 -printf "%s:%h%f\n"
 #-awk-replace-xml
 awk 'BEGIN { FS = "[<|>]" } {if ($2 == "tag") {sub($3, "replaced")} print}'
 # 1}}}
-
-#-git-ls {{{1
-cd ~/.vim/bundle/ && for e in `ls -d $(pwd)/*/`; do cd $e && pwd && git pull; done
-
-git init
-git add README.md
-git commit -m "first commit"
-git remote add origin https://github.com/jkoz/vim-bundle.git
-git push -u origin master
-#1}}}---------------------------------------------------------------------------
 
 #bash {{{
  This is for redirecting the STDERR & STDOUT:

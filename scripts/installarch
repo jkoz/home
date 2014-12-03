@@ -100,7 +100,7 @@ curl -O https://aur.archlinux.org/packages/ya/yaourt/yaourt.tar.gz && tar xzvf y
 yaourt -S silver-searcher-git
 
 # 14.3 x & wm
-pacman -S  --noconfirm xorg xorg-server xorg-xinit xlockmore xautolock x11vnc
+pacman -S  --noconfirm xorg xorg-server xorg-xinit xautolock x11vnc
 pacman -S  --noconfirm libxcb xcb-util xcb-util-keysyms xcb-util-wm \
 yaourt -S sxhkd-git xtitle-git bar-aint-recursive bspwm-git xdo-git
 pacman -S  --noconfirm xdg-user-dirs

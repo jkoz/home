@@ -19,7 +19,7 @@ sxhkd & # bindkey
 dunst & # desktop notification
 
 
-xautolock -locker  "xlock -mode blank" -corners 0+00  -cornerdelay 1 & # xautolock
+xautolock -locker  "slock" -corners 0+00  -cornerdelay 1 & # xautolock
 
 
 
