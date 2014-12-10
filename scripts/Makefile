@@ -16,10 +16,15 @@ all: $(BIN)
 
 install:
 	mkdir -p $(BINPREFIX)
+
+	cp oauth2.sh oauth2
+
 	cp -p {$(BINLST)} $(BINPREFIX)
 	chmod 755 $(BINPREFIX)/{$(BINLST)}
+	rm oauth2
 
 uninstall:
 	rm $(BINPREFIX)/{$(BINLST)}
-
-.PHONY: all install uninstall
+clean:
+	rm -rf *.sh
+.PHONY: all install uninstall clean

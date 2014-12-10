@@ -18,10 +18,14 @@ sxhkd & # bindkey
 /usr/bin/urxvtd -q -f -o # terminal daemon
 dunst & # desktop notification
 
+# gpg-agent
+gpg-agent --daemon --use-standard-socket
+
 
 xautolock -locker  "slock" -corners 0+00  -cornerdelay 1 & # xautolock
 
-
+# torrent
+transmission-daemon -c ~/Downloads
 
 # use left pointer cursor in all cases
 xsetroot -solid "#002b36" -cursor_name left_ptr -name " "

@@ -1,0 +1,8 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Terminal=true
+Type=Application
+Name=Tranmission Cli
+Exec=transmission-remote -a %u
+MimeType=application/x-bittorrent;x-scheme-handler/magnet;

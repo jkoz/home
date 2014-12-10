@@ -1,5 +1,10 @@
 #!/bin/bash
-echo "INSTALL linux environment"
+echo "Installing personal dotfiles"
+
+test -z "$1" && echo "Please, specify dotfiles directory" && exit 1
+
+cd $1
+
 install -d ~/.config
 
 # bind keys
@@ -42,9 +47,9 @@ install -d ~/.surf
 install -Dm644 surf/script.js ~/.surf
 
 # mail
-install -Dm644 muttrc ~/.muttrc
-#install -Dm644 muttrc.d/* ~/.muttrc.d
-#install -Dm700 procmailrc ~/.procmailrc
+install -d ~/.mutt
+install -Dm644 mutt/* ~/.mutt
+install -Dm644 mbsyncrc ~/.mbsyncrc
 
 # desktop notification
 install -d ~/.config/dunst

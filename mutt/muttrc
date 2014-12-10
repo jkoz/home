@@ -18,16 +18,15 @@ set include = yes #automatically quote message
 set editor = "vim -c 'set ft=mail'"
 set edit_headers = yes #you can add cc, bcc, or change ur from input
 set query_command = "goobook query '%s'" #autocomplete addresses, TODO
-set header_cache = ~/.cache/mutt/headers
+set header_cache = ~/.cache/mutt/headers # Store message headers locally to speed things up.
 set message_cachedir = ~/.cache/mutt/bodies
 set certificate_file = ~/.mutt.d/certificates
 set auto_tag = yes
-
-#set imap_check_subscribed = yes #automatically poll subscribed mailboxes for new mail
-#set mail_check = 90 #how often mutt will query gmail for new email
+set charset = "utf-8"
 set move = no #don't ask to move read messages to mbox on exit
 set pipe_decode # strip headers and eval mimes when piping
 set thorough_search # strip headers and eval mimes before searching
+set mask = * # Gmail have hidden files .All Mail ....
 
 #set alias_file = ~/.muttrc.d/aliases
 #source ~/.muttrc.d/aliases
@@ -74,51 +73,27 @@ bind  pager J           next-undeleted
 bind editor \t          complete-query
 #bind editor           complete
 # }}}
-
-set realname = "Tai Tran"
-set from = "tai.t@hotmail.com"
+# account {{{
 set use_from = yes
 set envelope_from = yes
 set sendmail = msmtp
 
-set mbox_type=Maildir
-set mbox = "~/.fetchmail/tai.t@hotmail.com"
-set spoolfile="~/.fetchmail/tai.t@hotmail.com"
-set folder="~/.fetchmail/tai.t@hotmail.com"
-set record="+sent"
-set postponed="+drafts"
-mailboxes +inbox
-mailboxes +sent
+set folder    = '~/Mail'
+set spoolfile = '~/Mail/phuoctaitp@gmail.com/Inbox'
+set record    = '~/Mail/phuoctaitp@gmail.com/[Gmail]/.Sent Mail'
+set postponed = '~/Mail/phuoctaitp@gmail.com/[Gmail]/.Drafts'
+mailboxes `find ~/Mail -maxdepth 1 -type d -printf "+'%f' "`
 
-#mailboxes `echo -n "+ "; find ~/.fetchmail/tai.t@hotmail.com -maxdepth 2 -type d -printf "+'%f' "`
+macro index c "<change-folder>?<toggle-mailboxes>" "open a different folder"
+macro pager c "<change-folder>?<toggle-mailboxes>" "open a different folder"
 
+#}}}
+# hooks {{{
+folder-hook ~/Mail/phuoctaitp@gmail.com/* source ~/.mutt/phuoctaitp@gmail.com
+folder-hook ~/Mail/thunderchief3000@yahoo.com/* source ~/.mutt/thunderchief3000@gmail.com
+#}}}
 # Color {{{
-#                   fore    back
-#color   attachment  color61 color234
-#color   header      color33 color234 "^(From|Subject|cc|date|To|X-Spam-Level|User-Agent|X-Mailer):"
-#color   header      color27 color234 "^(Subject):"
-#color   signature   color63 color234
-#color   tree        color63 color234
-#color   message     color37 color234
-#color   status      color247 color235
 # normal color/body/
-#color   normal      color244 color234
-#color   error       color231 color196
-#color   indicator   color254 color237
-#color   markers     color37 color234
-#color   index       color75 color234 ~O
-#color   index       color75 color234 ~N
-#color   index       color196 color23 ~D
-#color   index       color196 color234 ~F
-#color   index       color49 color234 ~T
-#color   tilde       color63 color234
-#color   quoted      color130 color234
-#color   quoted1     color25 color234
-#color   quoted2     color207 color234
-#color   body        color33 color234 "(http|https|ftp|news|telnet|finger|irc)://[^ \">\t\r\n]*"
-#color   body        color99 color234 "mailto:[-a-z_0-9.]+@[-a-z_0-9.]+"
-#color   body        color37 color234 "[;:=][-][)/(|]"
-
 color hdrdefault cyan default
 color attachment yellow default
 

@@ -7,8 +7,16 @@ export PICVIEW="feh"
 export SNDPLAY="mplayer"
 export TERMINAL="st"
 
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;38;5;74m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[38;33;246m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[04;38;5;146m'
+
 export DROPBOX_HOME="$HOME/Dropbox"
-export ARCH_HOME="/opt/github/jkoz/home"
+export ARCH_HOME="$HOME/github/jkoz/home"
 export PROJECT="$HOME/data/projects"
 export CATALINA_HOME="${PROJECT}/apache-tomcat-8.0.5/"
 export AXS_HOME="${PROJECT}/axs"
@@ -90,8 +98,9 @@ bindkey '^s' history-incremental-pattern-search-forward
 #bindkey '^e' end-of-line
 # }}}
 # prompt {{{
-_promt_git_info() { git rev-parse --abbrev-ref HEAD 2> /dev/null | xargs -r printf '%s '; }
-PS1="%{$fg[red]%}%n%{$reset_color%}@%{$fg[green]%}%m %{$fg[yellow]%}%~ %{$fg[cyan]%}\$(_promt_git_info)%{$reset_color%}%% "
+_promt_git_info() { echo -n %{$fg[cyan]%}; git rev-parse --abbrev-ref HEAD 2> /dev/null | xargs -r printf '%s ';  }
+_prompt_hg_info() { echo -n %{$fg[blue]%}; hg branch 2> /dev/null | xargs -r printf '%s '; }
+PS1="%{$fg[red]%}%n%{$reset_color%}@%{$fg[green]%}%m %{$fg[yellow]%}%~ \$(_promt_git_info)\$(_prompt_hg_info)%{$reset_color%}%% "
 # }}}
 # completion {{{
 autoload -Uz compinit && compinit
@@ -141,6 +150,7 @@ stty -ixon
 tV() { cd ${XDG_VIDEOS_DIR}; rtorrent "$@"; }
 #}}}
 # alias {{{
+alias bt="transmission-remote"
 alias extract='dtrx'
 alias gz='tar -xzf'
 alias xz='tar -xJf'

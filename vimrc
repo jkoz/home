@@ -19,24 +19,22 @@ call vundle#begin()
 Plugin 'Syntastic'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'bling/vim-airline'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
 Plugin 'gavinbeatty/dragvisuals.vim'
 Plugin 'mileszs/ack.vim'
 Plugin 'tpope/vim-dispatch'
 Plugin 'myusuf3/numbers.vim'
-Plugin 'vimoutliner/vimoutliner'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'majutsushi/tagbar'
+Plugin 'kien/ctrlp.vim'
+Plugin 'suy/vim-ctrlp-commandline'
+"Plugin 'jkoz/dmenu.vim'
 
-if system("ps -o tty= -p $$ | grep tty") != ""
-    Plugin 'kien/ctrlp.vim'
-    Plugin 'suy/vim-ctrlp-commandline'
-else
-    Plugin 'jkoz/dmenu.vim'
-endif
+"Plugin 'vimoutliner/vimoutliner'
+"Plugin 'bling/vim-airline'
+
 
 "Plugin 'vim-scripts/vcscommand.vim'
 "Plugin 'vim-scripts/dbext.vim'
@@ -233,8 +231,6 @@ se nowrap
 se textwidth=79
 se formatoptions=qrn1
 
-highlight ColorColumn ctermbg=magenta
-call matchadd('ColorColumn', '\%141v', 100)
 
 se makeprg=make
 
@@ -278,24 +274,27 @@ set completeopt=menu,preview
 hi Pmenu ctermbg=238 gui=bold
 
 " color
-let g:solarized_termcolors=256
+"let g:solarized_termcolors=8
 set background=dark
 colo solarized
 "colo smyck
 
 " cursorline, cursorcolumn
-hi CursorLine cterm=underline ctermbg=NONE guibg=#404040 gui=NONE
+"hi CursorLine cterm=underline ctermbg=NONE guibg=#404040 gui=NONE
+
+"highlight ColorColumn ctermbg=magenta
+"call matchadd('ColorColumn', '\%141v', 100)
 
 set cursorcolumn
-hi CursorColumn cterm=NONE ctermbg=237  guibg=#404040 gui=NONE
+"hi CursorColumn cterm=NONE ctermbg=237  guibg=#404040 gui=NONE
+"hi SignColumn cterm=NONE ctermbg=237  guibg=#404040 gui=NONE
+
 
 hi StatusLine cterm=NONE ctermbg=NONE ctermfg=226  guibg=#404040 guifg=#ffff00
 
-hi SignColumn cterm=NONE ctermbg=237  guibg=#404040 gui=NONE
-"
 " enable transparent
-hi Normal	ctermbg=NONE	cterm=NONE
-hi NonText	ctermbg=NONE	cterm=NONE
+"hi Normal	ctermbg=NONE	cterm=NONE
+"hi NonText	ctermbg=NONE	cterm=NONE
 " }}}
 " Functions {{{
 " toggle between number and relativenumber
@@ -392,7 +391,7 @@ let NERDTreeShowHidden=1
 " let NERDTreeQuitOnOpen=2
 let NERDTreeWinSize = 40
 " Highlight the selected entry in the tree
-let NERDTreeHighlightCursorline=1
+"let NERDTreeHighlightCursorline=1
 " Use a single click to fold/unfold directories and a double click to open files
 let NERDTreeMouseMode=2
 " Don't display these kinds of files
@@ -400,35 +399,33 @@ let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$',
             \ '\.o$', '\.so$', '\.egg$', '^\.git$', '\.svn$', '^target$', '^\.settings$', '^\.classpath$', '^\.project$', '^\.hg', '.pydevproject'  ]
 " }}}
 " Ctrlp {{{
-if system("ps -o tty= -p $$ | grep tty") != ""
-    let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
-    let g:ctrlp_max_height = 30
-    let g:ctrlp_max_files=100000
-    let g:ctrlp_clear_cache_on_exit=0
-    let g:ctrlp_use_caching = 0
-    nn <silent> <Leader>o :CtrlPBufTag<CR>
-    "nn <silent> <Leader>i :CtrlPTag<CR>
-    nn <silent> <Leader>b :CtrlPBookmarkDir<CR>
-    nn <silent> <Leader>z :CtrlPBuffer<CR>
-    nn <silent> <Leader>m :CtrlPMRUFiles<CR>
-    " conflict with eclim
-    "nn <silent> <Leader>j :CtrlPRTS<CR>
-    "nn <silent> <Leader>l :CtrlPLine<CR>
-    " filter base on wildignore
-    let pats = ['\**\([\/?_.0-9A-Za-z]\+\)\([\/]*\)\**\(\\\@<!,\|$\)', '\.', '\\\@<!,']
-    let subs = ['\1\2\3', '\\.', '.*|.*']
-    let expr = substitute(&wildignore, pats[0], subs[0], 'g')
-    let expr = substitute(expr, pats[1], subs[1], 'g')
-    let expr = substitute(expr, pats[2], subs[2], 'g')
-    let expr = substitute(expr, '\\,', ',', 'g')
-    let expr = substitute(expr, '^', '.*', '')
-    let expr = substitute(expr, '$', '.*', '')
-    "let g:ctrlp_user_command='find %s -type f -regextype posix-extended -not -regex "'.expr .'"'
-    let g:ctrlp_extensions = ['commandline']
-    com! CtrlPCommandline cal ctrlp#init(ctrlp#commandline#id())
-    nn <silent> <Leader>q :CtrlPCommandline<CR>
-    com! CtrlPUnicode call ctrlp#init(ctrlp#unicode#id())
-endif
+let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
+let g:ctrlp_max_height = 30
+let g:ctrlp_max_files=100000
+let g:ctrlp_clear_cache_on_exit=0
+let g:ctrlp_use_caching = 0
+nn <silent> <Leader>o :CtrlPBufTag<CR>
+"nn <silent> <Leader>i :CtrlPTag<CR>
+nn <silent> <Leader>b :CtrlPBookmarkDir<CR>
+nn <silent> <Leader>z :CtrlPBuffer<CR>
+nn <silent> <Leader>m :CtrlPMRUFiles<CR>
+" conflict with eclim
+"nn <silent> <Leader>j :CtrlPRTS<CR>
+"nn <silent> <Leader>l :CtrlPLine<CR>
+" filter base on wildignore
+let pats = ['\**\([\/?_.0-9A-Za-z]\+\)\([\/]*\)\**\(\\\@<!,\|$\)', '\.', '\\\@<!,']
+let subs = ['\1\2\3', '\\.', '.*|.*']
+let expr = substitute(&wildignore, pats[0], subs[0], 'g')
+let expr = substitute(expr, pats[1], subs[1], 'g')
+let expr = substitute(expr, pats[2], subs[2], 'g')
+let expr = substitute(expr, '\\,', ',', 'g')
+let expr = substitute(expr, '^', '.*', '')
+let expr = substitute(expr, '$', '.*', '')
+"let g:ctrlp_user_command='find %s -type f -regextype posix-extended -not -regex "'.expr .'"'
+let g:ctrlp_extensions = ['commandline']
+com! CtrlPCommandline cal ctrlp#init(ctrlp#commandline#id())
+nn <silent> <Leader>q :CtrlPCommandline<CR>
+com! CtrlPUnicode call ctrlp#init(ctrlp#unicode#id())
 " }}}
 " Dmenu {{{
 let g:dmenu_backend = "dmenu -l 10"

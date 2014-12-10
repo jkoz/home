@@ -2,6 +2,12 @@
 	a->b : address, pointer
 	a.b : address, value
 
+#fetchmail
+fetchmail -v --keep --all --ssl --user phuoctaitp --auth=oauth2 imap.gmail.com --mda "/usr/bin/procmail -d %T"
+
+#cpan
+sudo cpan Date:Parse
+
 #xdotool
 xdotool getwindowgeometry --shell $(xdotool search --classname quake_urxvt)
 
@@ -96,6 +102,9 @@ curl -u nbi:nbi -H "Content-Type: text/xml; charset=utf-8" -d @- -H "SOAPAction:
 xmllint --format -
 #-curl-json
 curl http://something/json | python -mjson.tool
+# curl oauth2+pop3 or imap
+curl -v -s -u "$user" --oauth2-bearer ${access_token} pop3s://pop.gmail.com --request "UIDL"
+curl -v -s -u "$user" --oauth2-bearer ${access_token} imaps://imap.gmail.com
 #1}}}---------------------------------------------------------------------------
 #-sed {{{1
 #-sed-xml-tag
@@ -559,7 +568,7 @@ cd /usr/local/share/fonts
 sudo mkdir microsoftfonts
 
 
-# view library dependency of built file
+# view library dependency of built file, find dynamic linked libraries
 ldd /opt/oald8/oald8-bin
 
 
@@ -1115,6 +1124,9 @@ git difftool
 # view local unpushed git commits
 git log origin/master..HEAD
 git diff origin/master..HEAD
+
+# git delete remote branch
+git push origin --delete xft-config
 
 # new git repo
 git init
@@ -2690,6 +2702,21 @@ iqkea
 #-ffmpeg {{{1
 ffmpeg -f x11grab -r 25 -s 1024x768 -i :0.0+100,200 output.flv
 #1}}}
+
+# openssl
+    IN=/tmp/smtpin; OUT=/tmp/smtpout;
+    rm -rf $IN $OUT; mkfifo $IN $OUT;
+    #(while : ; do cat $IN 2> /dev/null | tee -a $OUT; done) \
+    (while : ; do cat $IN 2> /dev/null; done) \
+        | openssl s_client -starttls smtp -connect smtp.gmail.com:587 -crlf -ign_eof -quiet 2>/dev/null >$OUT &
+    echo ">>>"
+
+    (while : ; do cat $OUT; done) &
+
+    # XOAUTH2
+    printf "user=%s\1auth=Bearer %s\1\1" username $(cat $xoauth_file | grep access_token | sed -r 's/access_token=(.*)/\1/g' ) \
+        | base64 -w0 | xargs -r0 printf "AUTH XOAUTH2 %s\n" > $IN
+
 
 #axs {
 cd $ROOT && ./scripts/runjboss --debug basic.isam.5.0/axs-*-mobject-plugin basic.isam.5.0/axs-*-bidm-plugin

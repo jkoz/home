@@ -24,17 +24,15 @@
 # mount /dev/sda8 /mnt/home
 
 # 3. install system base
-# pacstrap /mnt base openssh vim tmux sudo git zsh grub elinks net-tools wireless_tools wpa_actiond ifplugd rfkill axel alsa-utils || exit 1
+# pacstrap /mnt base openssh vim tmux sudo git zsh grub net-tools wireless_tools wpa_actiond ifplugd rfkill axel alsa-utils samba make ctags bc || exit 1
 
 # 4. generate fstab
 # genfstab -p /mnt >> /mnt/etc/fstab || exit 1
 
-# 5. change root new env
+# 5. change root new env (NOTE: use arch-chroot, not chroot)
 #arch-chroot /mnt || { echo fail chroot; exit 1; }
 
 #########################################################
-# 5.1 clang + vim
-# pacman -S clang && vim && cd ~/.vim/bundle/YouCompleteMe && ./install.sh --clang-completer --system-libclang
 
 git clone https://github.com/jkoz/home github/jkoz /opt/github/jkoz/home || { echo fail to get dotfiles; exit 1; }
 
@@ -74,76 +72,89 @@ systemctl enable netctl-ifplugd@enp3s0 || { exit 1; }
 # 13. add new user
 useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power -d/home/tait -s /usr/bin/zsh tait || { exit 1; }
 usermod -s /usr/bin/zsh root || { exit 1; }
+passwd tait
 
 # 14. enable for wheel groups, uncomment %wheel ALL=(ALL) ALL
 sudoedit /etc/sudoers || { exit 1; }
 
-
-# 14.1
-#pacman -S ctags bc fish fbterm hg subversion cvs xclip axel zip unzip unrar rtorrent alsa-utils samba
-#pacman -S cdrkit growisofs
-#pacman -S cabextract cmake mutt ntfs-3g fetchmail procmail bitlbee irssi mpd mpc ncmpcpp gdb
-#pacman -S perl-cpanplus-dist-arch python-pip
-
-#pacman -S acpid # battery info
-
-# 14.1.1 ntpd
-pacman -S ntp && systemctl enable ntpd || { exit 1; }
-
-# 14.2 yaourt
-pacman -S base-devel || { exit 1; }
+# 15 yaourt
+pacman -S --noconfirm base-devel || { exit 1; }
 cd /tmp || { exit 1; }
 curl -O https://aur.archlinux.org/packages/pa/package-query/package-query.tar.gz && tar xzvf package-query.tar.gz && cd package-query && makepkg -si --asroot || { exit 1; }
 curl -O https://aur.archlinux.org/packages/ya/yaourt/yaourt.tar.gz && tar xzvf yaourt.tar.gz && cd yaourt && makepkg -si --asroot || { exit 1; }
 
-# ack
-yaourt -S silver-searcher-git
-
-# 14.3 x & wm
-pacman -S  --noconfirm xorg xorg-server xorg-xinit xautolock x11vnc
-pacman -S  --noconfirm libxcb xcb-util xcb-util-keysyms xcb-util-wm \
-yaourt -S sxhkd-git xtitle-git bar-aint-recursive bspwm-git xdo-git
-pacman -S  --noconfirm xdg-user-dirs
-pacman -S  --noconfirm chromium
-pacman -S  --noconfirm libnotify dunst
-pacman -S  --noconfirm mplayer
-pacman -S  --noconfirm mupdf
-pacman -S  --noconfirm feh
-pacman -S  --noconfirm imagemagick
-pacman -S  --noconfirm gimp
-pacman -S  --noconfirm scrot
+# 16 packages
+pacman -S --noconfirm pass
+pacman -S --noconfirm acpi # battery info
+pacman -S --noconfirm ntp && systemctl enable ntpd || { exit 1; } # sync time
+yaourt -S --noconfirm ntfs-3g simple-mtpfs # mount camera and ntfs
+pacman -S --noconfirm zip unzip unrar
+pacman -S --noconfirm xorg xorg-server xorg-xinit
+pacman -S --noconfirm xautolock x11vnc
+pacman -S --noconfirm xdg-user-dirs && xdg-user-dirs-update
+pacman -S --noconfirm xclip
+pacman -S --noconfirm libxcb xcb-util xcb-util-keysyms xcb-util-wm # xcb tools
+yaourt -S --noconfirm xdo-git # like xdotool
+yaourt -S --noconfirm sxhkd-git # bindkeys in x
+pacman -S --noconfirm chromium
+yaourt -S --noconfirm chromium-pepper-flash
+pacman -S --noconfirm transmission-cli # torrent
+pacman -S --noconfirm libnotify dunst
+pacman -S --noconfirm mplayer
+pacman -S --noconfirm ffmpeg # streaming & screencast
+pacman -S --noconfirm mupdf
+yaourt -S --noconfirm cabaretstage # pdf
+pacman -S --noconfirm cups # print
+pacman -S --noconfirm feh
+pacman -S --noconfirm imagemagick
+pacman -S --noconfirm gimp
+pacman -S --noconfirm scrot
 pacman -S --noconfirm xorg-xlsfonts
 pacman -S --noconfirm tk # for gitk
-
-# dwm, dmenu, st with xft
-pacman -S --noconfirm libxft
+yaourt -S --noconfirm silver-searcher-git
+pacman -S --noconfirm libxft  # dwm, dmenu, st with xft 
 pacman -S --noconfirm freetype2
+pacman -S --noconfirm webkitgtk2 # surf
+yaourt -S --noconfirm dropbox-cli # cloud dropbox
+yaourt -S --noconfirm googlecl
+yaourt -S --noconfirm archey # status
+yaourt -S --noconfirm ttf-ms-fonts # status
+yaourt -S --noconfirm adobe-source-code-pro-fonts # current used font
+pacman -S --noconfirm mercurial subversion cvs
+pacman -S --noconfirm cdrkit growisofs # cd kit
+pacman -S --noconfirm bitlbee irssi # irc, chat
+pacman -S --noconfirm mpd mpc ncmpcpp # mp3 player
+pacman -S --noconfirm mutt fetchmail procmail # mail
+pacman -S --noconfirm fish fbterm # some terminals
+pacman -S --noconfirm cabextract cmake gdb # debug cmake
 
-# surf
-pacman -S --noconfirm webkitgtk2
+cd ~ && pkg=~/github/jkoz/PKGBUILDs && rm -rf $pkg && git clone https://github.com/jkoz/PKGBUILDs $pkg && \
+    cd $pkg && for dir in `ls $pkg`; do cd $dir; ls | grep -v PKGBUID | xargs ;  makepkg --noconfirm -si --asroot; cd .. ; done
 
-yaourt -S chromium-pepper-flash
-yaourt -S dropbox-cli
-yaourt -S archey # status
+#pacman -S --noconfirm android-tools android-udev # android
+#yaourt -S shrew-vpn-client # vpn
+#yaourt -S --noconfirm compton # 14.8 composite
+#pacman -S --noconfirm perl-cpanplus-dist-arch python-pip # pip and cpan
+#pacman -S --noconfirm ranger # file manager
+#yaourt -S --noconfirm gbdfed pcf2bdf # font editors
+#yaourt -S --noconfirm xtitle-git bar-aint-recursive bspwm-git
+#yaourt -S --noconfirm stardict-tools dictconv stardict makedict # dict tools
+#pacman -S --noconfirm lm_sensors # WTF this thing?
 
-yaourt -S ttf-ms-fonts # status
-yaourt -S adobe-source-code-pro-fonts
+# 17. mine files
+xdg-mime default feh.desktop image/jpeg
+xdg-mime default mupdf.desktop application/pdf
+xdg-mime default vim.desktop text/plain
+xdg-mime default vim.desktop application/octet-stream
+xdg-mime default vim.desktop text/x-c
+xdg-mime default vim.desktop text/x-c
+xdg-mime default transmission-cli.desktop x-scheme-handler/magnet
+xdg-mime default transmission-cli.desktop application/x-bittorrent
 
-pacman -S  --noconfirm ranger
-yaourt -S gbdfed pcf2bdf # fonts
-yaourt -S cabaret # pdf
-yaourt -S grive
+#----------------------------------------------------------------------------------
 
-# 16 mines
-cd ~ && pkg=/opt/github/jkoz/PKGBUILDs && rm -rf $pkg && git clone https://github.com/jkoz/PKGBUILDs $pkg && cd $pkg && for dir in `ls $pkg`; do cd $dir; ls | grep -v PKGBUID | xargs ;  makepkg -si --asroot; cd .. ; done
-
-yaourt -S dropbox-cli grive
-yaourt -S simple-mtpfs # mount camera, android, etc.
-yaourt -S compton # 14.8 composite
-
-
-cpan Net:DBus # cpan
-
+# clang
+#pacman -S clang && vim && cd ~/.vim/bundle/YouCompleteMe && ./install.sh --clang-completer --system-libclang
 
 #####################################################################
 # IF WE USE netctl-auto@wlan0 service, please don't touch wpa_supplicant low
@@ -171,24 +182,6 @@ systemctl start wpa_supplicant@wlp0s29u1u2
 systemctl stop wpa_supplicant@wlp0s29u1u2
 wpa_cli terminate
 
-
-yaourt -S shrew-vpn-client
-
-# xdg
-xdg-user-dirs-update
-
-# dict
-yaourt -S stardict-tools
-yaourt -S dictconv
-yaourt -Ss golden
-yaourt -Ss stardict
-yaourt -S makedict
-
-# extra
- pacman -S lm_sensors
-
-# xft
-
 # for install olad8
 pacman -S lib32-gtk
 pacman -S lib32-alsa-lib
@@ -211,23 +204,17 @@ pacman -Q -m # list all installed packages founded elsewhere, aur
 pacman -Q -g base base-devel # list all installed package belongs to group base or base devel
 pacman -Ql # list where files are stored
 
-
 expac -HM "%011m\t%-20n\t%10d" $(comm -23 <(pacman -Qqen | sort) <(pacman -Qqg base base-devel | sort) ) | sort -n # list all installed package that no base or base-devel
 
 # handle image & partition
 yaourt -S multipath-tools-git
 
 #bspc
-#
-# INSTALL ARCH ON NEXUS
-# as root
-pacman -S android-tools
-pacman -S android-udev
 
-# archieve
+# zip
 zip -R file.txt folder1/ folder2/
 
-# unblock bootloader
+# unblock bootloader android
 adb reboot bootloader
 fastboot oem unlock
 fastboot getvar all
@@ -248,14 +235,24 @@ readcd -v dev=/dev/cdrom -f abc.iso
 growisofs -dvd-compat -Z /dev/sr0=/home/tait/Dropbox/os/window/xp_pro_sp2.iso
 
 # xdg
-xdg-mime default feh.desktop image/jpeg
-xdg-mime default mupdf.desktop application/pdf
-xdg-mime default vim.desktop text/plain
-xdg-mime default vim.desktop application/octet-stream
-xdg-mime default vim.desktop text/x-c
-
 xdg-mime query default image/jpeg
 xdg-mime query default application/pdf
 xdg-mime query default text/plain
 
+# keychain and pass
+gpg --gen-key
+gpg -e -r 'your-name' ~/.my-pwds
+shred -xu ~/.my-pwds
+gpg2 -dq $HOME/.my-pwds.gpg
+pass insert abc/ddd.com
+pass abc/ddd.com
+
+#isync
+mbsync --verbose gmail-phuoctaitp
+mbsync --verbose yahoo-thunderchief3000
+
+# torrent alias bt='transmission-remote'; $BROWSER http://localhost:9091/
+bt -l # list
+bt -t 2 -s # start
+bt -t 2 -S # stop
 
