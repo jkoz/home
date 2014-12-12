@@ -2703,6 +2703,10 @@ iqkea
 ffmpeg -f x11grab -r 25 -s 1024x768 -i :0.0+100,200 output.flv
 #1}}}
 
+# msmtp
+# check server info
+msmtp --host=smtp.gmail.com --port=587 --serverinfo
+
 # openssl
     IN=/tmp/smtpin; OUT=/tmp/smtpout;
     rm -rf $IN $OUT; mkfifo $IN $OUT;

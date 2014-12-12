@@ -1,3 +1,10 @@
+" Commands {{{
+" zM - close all folds
+" zR - open all folds
+" ]c - next diff change
+" do - get changes from other window into the current window.
+" dp - put the changes from current window into the other window.
+" }}}
 " Bundles {{{
 let iCanHazVundle=1
 let vundle_readme=expand('~/.vim/bundle/vundle/README.md')
@@ -138,8 +145,6 @@ nn <leader>0 :GenerateTagsJ "%:p:h"<cr>
 
 " }}}
 " Options {{{
-"-------------------------------------------------------------------------------
-
 if v:version >= 600
     se autoread
     se foldmethod=marker
@@ -297,7 +302,6 @@ hi StatusLine cterm=NONE ctermbg=NONE ctermfg=226  guibg=#404040 guifg=#ffff00
 "hi NonText	ctermbg=NONE	cterm=NONE
 " }}}
 " Functions {{{
-" toggle between number and relativenumber
 fu! MvnTest()
    exe "Mvn test -Dtest=" . expand("%:t:r")
 endf
@@ -400,31 +404,22 @@ let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$',
 " }}}
 " Ctrlp {{{
 let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
-let g:ctrlp_max_height = 30
+let g:ctrlp_max_height = 5
 let g:ctrlp_max_files=100000
 let g:ctrlp_clear_cache_on_exit=0
 let g:ctrlp_use_caching = 0
+
 nn <silent> <Leader>o :CtrlPBufTag<CR>
-"nn <silent> <Leader>i :CtrlPTag<CR>
 nn <silent> <Leader>b :CtrlPBookmarkDir<CR>
 nn <silent> <Leader>z :CtrlPBuffer<CR>
 nn <silent> <Leader>m :CtrlPMRUFiles<CR>
-" conflict with eclim
-"nn <silent> <Leader>j :CtrlPRTS<CR>
-"nn <silent> <Leader>l :CtrlPLine<CR>
-" filter base on wildignore
-let pats = ['\**\([\/?_.0-9A-Za-z]\+\)\([\/]*\)\**\(\\\@<!,\|$\)', '\.', '\\\@<!,']
-let subs = ['\1\2\3', '\\.', '.*|.*']
-let expr = substitute(&wildignore, pats[0], subs[0], 'g')
-let expr = substitute(expr, pats[1], subs[1], 'g')
-let expr = substitute(expr, pats[2], subs[2], 'g')
-let expr = substitute(expr, '\\,', ',', 'g')
-let expr = substitute(expr, '^', '.*', '')
-let expr = substitute(expr, '$', '.*', '')
-"let g:ctrlp_user_command='find %s -type f -regextype posix-extended -not -regex "'.expr .'"'
-let g:ctrlp_extensions = ['commandline']
+
+let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir', 'rtscript', 'commandline',
+                          \ 'undo', 'line', 'changes', 'mixed', 'bookmarkdir']
+" CtrlPCommandline
 com! CtrlPCommandline cal ctrlp#init(ctrlp#commandline#id())
 nn <silent> <Leader>q :CtrlPCommandline<CR>
+" CtrlPUnicode
 com! CtrlPUnicode call ctrlp#init(ctrlp#unicode#id())
 " }}}
 " Dmenu {{{

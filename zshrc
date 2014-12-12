@@ -191,7 +191,6 @@ alias cdTrash='cd ~/.local/share/Trash/files/'
 alias lD='ls ~/Downloads'
 alias D='cd ~/Downloads'
 alias uD="cd ${ARCH_HOME} && ./INSTALL"
-alias mutt='TERM=screen-256color mutt -y'
 alias irssi='TERM=screen-256color irssi'
 alias b='mvn clean install -Dtest'
 alias e='mvn eclipse:clean eclipse:eclipse'

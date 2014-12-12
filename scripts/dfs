@@ -16,10 +16,6 @@ install -d ~/.vim ~/.vim/bundle
 install -Dm644 vimrc ~/.vimrc
 install -Dm644 vim/ycm_extra_conf.py ~/.vim/.ycm_extra_conf.py
 
-# fetchmail
-install -d ~/.fetchmail/tai.t@hotmail.com
-install -Dm644 fetchmailrc ~/.fetchmailrc
-
 # terminal
 install -Dm644 tmux.conf ~/.tmux.conf
 #install -Dm644 screenrc ~/.screenrc
@@ -50,6 +46,7 @@ install -Dm644 surf/script.js ~/.surf
 install -d ~/.mutt
 install -Dm644 mutt/* ~/.mutt
 install -Dm644 mbsyncrc ~/.mbsyncrc
+install -Dm600 msmtprc ~/.msmtprc
 
 # desktop notification
 install -d ~/.config/dunst

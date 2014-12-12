@@ -1,4 +1,10 @@
-# General settings {{{
+# Commands {{{
+# z - move down (including delete msg)
+# Z - move up
+# 123 - jump to msg 123
+# $ - commit changes (deleted messages)
+# }}}
+# General {{{
 push <show-version> #show version
 set nomark_old #avoid marking unread msgs as old ones
 set nobeep #plz dont be noisy
@@ -15,7 +21,7 @@ set pager_stop # don't go to the next message automatically
 set menu_scroll
 set menu_context = 5
 set include = yes #automatically quote message
-set editor = "vim -c 'set ft=mail'"
+set editor = "vim -c 'set ft=mail spell spelllang=en'"
 set edit_headers = yes #you can add cc, bcc, or change ur from input
 set query_command = "goobook query '%s'" #autocomplete addresses, TODO
 set header_cache = ~/.cache/mutt/headers # Store message headers locally to speed things up.
@@ -73,39 +79,65 @@ bind  pager J           next-undeleted
 bind editor \t          complete-query
 #bind editor           complete
 # }}}
-# account {{{
+# Accounts {{{
 set use_from = yes
 set envelope_from = yes
-set sendmail = msmtp
 
-set folder    = '~/Mail'
-set spoolfile = '~/Mail/phuoctaitp@gmail.com/Inbox'
-set record    = '~/Mail/phuoctaitp@gmail.com/[Gmail]/.Sent Mail'
-set postponed = '~/Mail/phuoctaitp@gmail.com/[Gmail]/.Drafts'
-mailboxes `find ~/Mail -maxdepth 1 -type d -printf "+'%f' "`
+# default
+mailboxes `find ~/Mail -maxdepth 1 -mindepth 1 -type d -printf "'%h/%f/Inbox' "`
+folder-hook *Mail \
+        'set folder = '~/Mail'; \
+         mailboxes `find ~/Mail -maxdepth 1 -mindepth 1 -type d -printf "'%h/%f/Inbox' "`'
 
-macro index c "<change-folder>?<toggle-mailboxes>" "open a different folder"
-macro pager c "<change-folder>?<toggle-mailboxes>" "open a different folder"
+# phuoctaitp@gmail.com {{{
+folder-hook 'phuoctaitp@gmail.com' \
+        'set folder = '~/Mail/phuoctaitp@gmail.com'; \
+         set spoolfile = '~/Mail/phuoctaitp@gmail.com/Inbox'; \
+         set mbox = '~/Mail/phuoctaitp@gmail.com/Inbox'; \
+         set record = '+[Gmail]/.Sent\\ Mail'; \
+         set postponed = '+[Gmail]/.Drafts'; \
+         set realname = "Tai Tran"; \
+         set from = "phuoctaitp@gmail.com"; \
+         set sendmail = "msmtp -a gmail-phuoctaitp"; \
+         macro index F "!tmux split-window -v -l 3 \"mbsync gmail-phuoctaitp\"<enter>"; \
+         macro index d '<save-message>=[Gmail]/.Trash<enter>'; \
+         unmailboxes *; \
+         mailboxes `find ~/Mail/phuoctaitp@gmail.com -maxdepth 5 -mindepth 1 -type d ! -regex ".*\[Gmail\]$\|.*/cur$\|.*/new$\|.*/tmp$" | sed "s/ /\\\\ /g" | awk 1 ORS=" "`; \
+         color status yellow default;'
+
+# }}}
+# thunderchief3000@yahoo.com {{{
+folder-hook 'phuoctaitp@gmail.com/[Gmail]/.Trash' 'macro index d "<delete-message><enter>"'
+folder-hook 'thunderchief3000@yahoo.com' \
+        'set folder='~/Mail/thunderchief3000@yahoo.com'; \
+         set spoolfile = '~/Mail/thunderchief3000@yahoo.com/Inbox'; \
+         set mbox = '~/Mail/thunderchief3000@yahoo.com/Inbox'; \
+         set record = '+Sent'; \
+         set postponed = '+Draft'; \
+         set realname = "Tai Tran"; \
+         set from = "thunderchief3000@yahoo.com"; \
+         set sendmail = "msmtp -a yahoo-thunderchief3000"; \
+         macro index F "!tmux split-window -v -l 3 \"mbsync yahoo-thunderchief3000\"<enter>"; \
+         macro index d '<save-message>=Trash<enter>'; \
+         unmailboxes *; \
+         mailboxes `find ~/Mail/thunderchief3000@yahoo.com -maxdepth 5 -mindepth 1 -type d ! -regex ".*/cur$\|.*/new$\|.*/tmp$" | sed "s/ /\\\\ /g" | awk 1 ORS=" "`; \
+         color status blue default;'
+# }}}
+
+macro index,pager c "<change-folder>?<toggle-mailboxes>" "open a different folder"
+
 
 #}}}
-# hooks {{{
-folder-hook ~/Mail/phuoctaitp@gmail.com/* source ~/.mutt/phuoctaitp@gmail.com
-folder-hook ~/Mail/thunderchief3000@yahoo.com/* source ~/.mutt/thunderchief3000@gmail.com
-#}}}
-# Color {{{
-# normal color/body/
+# Colors {{{
 color hdrdefault cyan default
 color attachment yellow default
-
 color header brightyellow default "From: "
 color header brightyellow default "Subject: "
 color header brightyellow default "Date: "
-
 color quoted green default
 color quoted1 cyan default
 color quoted2 green default
 color quoted3 cyan default
-
 color error     red             default         # error messages
 color message   white           default         # message  informational messages
 color indicator white           red             # indicator for the "current message"
@@ -113,7 +145,6 @@ color status    white           blue            # status lines in the folder ind
 color tree      red             default         # the "tree" display of threads within the folder index
 color search    white           blue            # search matches found with search within the internal pager
 color markers   red             default         # The markers indicate a wrapped line hen showing messages with looong lines
-
 color index     yellow default  '~O'
 color index     yellow default  '~N'
 color index     brightred       default '~F'    # Flagged Messages are important!
