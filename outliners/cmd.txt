@@ -201,6 +201,12 @@ vim -D -c "breakadd file *commandline.vim"
 ^w+
 sp horizontal
 vsp vertical
+# diff
+zM - close all folds
+zR - open all folds
+]c - next diff change
+do - get changes from other window into the current window.
+dp - put the changes from current window into the other window.
 
 #-eclim
 cd ~/projects/eclim/ && git checkout indigo && \
@@ -795,9 +801,6 @@ select * from Tracking where agentId=1;
 # sort & uniq
 cat file | dos2unix | sort -u
 
-# tmux
-set -g status-right '#(echo /home/tptai/collectors/branches/9.0.10)'
-
 # bc
 echo $(echo "scale=5;35112/60000" | bc)
 
@@ -976,13 +979,6 @@ basic.app/automation -> gui.platform -> gui.automation.drivers -> np
 # sort & uniq
 cat file | dos2unix | sort -u
 
-# tmux
-set -g status-right '#(echo /home/tptai/collectors/branches/9.0.10)'
-#>tmux install
-sudo yum install libevent-devel ncurses-devel
-./configure
-make
-sudo make install
 
 #1}}}---------------------------------------------------------------------------
 # ubuntu {{{
@@ -1285,6 +1281,16 @@ tmux new -s root
 tmux ls
 tmux kill-session -t tptai
 split-window -h -l 20 'cat ~/.irssi/nicklistfifo'
+
+set -g status-right '#(echo /home/tptai/collectors/branches/9.0.10)'
+
+tmux list-sessions
+tmux select-window -t :0-9 (prefix + 0-9)
+tmux rename-window (prefix + ,)
+tmux list-keys
+tmux list-keys -t vi-copy
+tmux list-commands
+tmux info
 }}}
 #-bitlbee {{{
 account phuoctptai@gmail.com del
@@ -2749,3 +2755,17 @@ xdg-mime default feh.desktop image/jpeg
 xdg-mime default mupdf.desktop application/pdf
 xdg-mime default vim.desktop text/plain
 xdg-mime default vim.desktop text/x-shellscript
+
+" Commands {{{
+" zM - close all folds
+" zR - open all folds
+" ]c - next diff change
+" do - get changes from other window into the current window.
+" dp - put the changes from current window into the other window.
+" }}}
+
+#pyglossary
+~/github/ilius/pyglossary/pyglossary master % python2 -i readmdict.py
+mdx = MDX('/home/tait/Downloads/LDOCE5-mdict/LDOCE5.mdx')
+items = mdx.items()
+items.next()

@@ -1,10 +1,3 @@
-" Commands {{{
-" zM - close all folds
-" zR - open all folds
-" ]c - next diff change
-" do - get changes from other window into the current window.
-" dp - put the changes from current window into the other window.
-" }}}
 " Bundles {{{
 let iCanHazVundle=1
 let vundle_readme=expand('~/.vim/bundle/vundle/README.md')
@@ -37,6 +30,7 @@ Plugin 'honza/vim-snippets'
 Plugin 'majutsushi/tagbar'
 Plugin 'kien/ctrlp.vim'
 Plugin 'suy/vim-ctrlp-commandline'
+Plugin 'christoomey/vim-tmux-navigator' " http://robots.thoughtbot.com/seamlessly-navigate-vim-and-tmux-splits
 "Plugin 'jkoz/dmenu.vim'
 
 "Plugin 'vimoutliner/vimoutliner'
@@ -175,9 +169,7 @@ set listchars=tab:\|\ ,extends:>,precedes:<,nbsp:~,trail:.
 se ttyfast
 se ttyscroll=3
 se lazyredraw
-se foldlevelstart=10   " open most folds by default
-" space open/closes folds
-nnoremap <space> za
+
 
 se synmaxcol=174
 
@@ -239,8 +231,12 @@ se formatoptions=qrn1
 
 se makeprg=make
 
+" fold {{{
 se foldenable
-se foldmethod=indent
+se foldmethod=marker
+se foldlevelstart=0   " close all fold by default
+nnoremap <space> za  " space open/closes folds
+"}}}
 
 se sidescroll=1
 se sidescrolloff=10
@@ -368,11 +364,11 @@ endf
 aug configgroup
     au!
     au BufRead,BufNewFile *.html,*.xhtml,*.xml setl foldmethod=indent foldlevel=0
-    autocmd BufRead,BufNewFile *.vim setl shiftwidth=2 tabstop=2 foldmethod=marker foldlevel=0
-    "au BufRead,BufNewFile *.c,*.h,*.cpp for each in split(expand('~/.tags/usr-include*'), "\n") | exe "se tags+=" . each | endfo
-    au BufRead,BufNewFile *.c,*.h,*.cpp setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
-    au BufEnter *.txt,vimrc,zshrc,muttrc setl foldmethod=marker|setl foldlevel=0
+    au BufRead,BufNewFile *.vim setl shiftwidth=2 tabstop=2 foldmethod=marker foldlevel=0
     au BufNewFile,BufRead *.otl setl listchars=tab:\|\ ,extends:>,precedes:<,nbsp:~,trail:.
+
+    " for each in split(expand('~/.tags/usr-include*'), "\n") | exe "se tags+=" . each | endfo
+    au BufRead,BufNewFile *.c,*.h,*.hh,*.cc,*.cpp setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=indent foldlevel=0
 augroup END
 " }}}
 " Plugins {{{
