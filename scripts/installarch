@@ -88,6 +88,7 @@ pacman -S --noconfirm pass
 pacman -S --noconfirm acpi # battery info
 pacman -S --noconfirm ntp && systemctl enable ntpd || { exit 1; } # sync time
 yaourt -S --noconfirm ntfs-3g simple-mtpfs # mount camera and ntfs
+pacman -S --noconfirm android-tools android-udev # android
 pacman -S --noconfirm zip unzip unrar
 pacman -S --noconfirm xorg xorg-server xorg-xinit
 pacman -S --noconfirm xautolock x11vnc
@@ -131,10 +132,9 @@ pacman -S --noconfirm cabextract cmake gdb # debug cmake
 cd ~ && pkg=~/github/jkoz/PKGBUILDs && rm -rf $pkg && git clone https://github.com/jkoz/PKGBUILDs $pkg && \
     cd $pkg && for dir in `ls $pkg`; do cd $dir; ls | grep -v PKGBUID | xargs ;  makepkg --noconfirm -si --asroot; cd .. ; done
 
-#pacman -S --noconfirm android-tools android-udev # android
 #yaourt -S shrew-vpn-client # vpn
 #yaourt -S --noconfirm compton # 14.8 composite
-#pacman -S --noconfirm perl-cpanplus-dist-arch python-pip # pip and cpan
+#pacman -S --noconfirm perl-cpanplus-dist-arch python-pip python2-pip # pip and cpan
 #pacman -S --noconfirm ranger # file manager
 #yaourt -S --noconfirm gbdfed pcf2bdf # font editors
 #yaourt -S --noconfirm xtitle-git bar-aint-recursive bspwm-git
