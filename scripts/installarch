@@ -122,7 +122,7 @@ yaourt -S --noconfirm archey # status
 yaourt -S --noconfirm ttf-ms-fonts # status
 yaourt -S --noconfirm adobe-source-code-pro-fonts # current used font
 pacman -S --noconfirm mercurial subversion cvs
-pacman -S --noconfirm cdrkit growisofs # cd kit
+pacman -S --noconfirm cdrkit dvd+rw-tools # cd kit
 pacman -S --noconfirm bitlbee irssi # irc, chat
 pacman -S --noconfirm mpd mpc ncmpcpp # mp3 player
 pacman -S --noconfirm mutt fetchmail procmail # mail
