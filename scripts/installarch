@@ -215,7 +215,9 @@ yaourt -S multipath-tools-git
 zip -R file.txt folder1/ folder2/
 
 # unblock bootloader android
-adb reboot bootloader
+# 1. Settings -> About tablet -> Build number (tap 7 times)
+# 2. setting -> developer options -> enable enable USB debugging
+adb reboot bootloader # can enter bootloader by power off the device then back on with 'vol up' + power button.
 fastboot oem unlock
 fastboot getvar all
 
