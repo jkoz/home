@@ -85,6 +85,7 @@ curl -O https://aur.archlinux.org/packages/ya/yaourt/yaourt.tar.gz && tar xzvf y
 
 # 16 packages
 pacman -S --noconfirm pass
+pacman -S --noconfirm parted
 pacman -S --noconfirm acpi # battery info
 pacman -S --noconfirm ntp && systemctl enable ntpd || { exit 1; } # sync time
 yaourt -S --noconfirm ntfs-3g simple-mtpfs # mount camera and ntfs
@@ -257,4 +258,25 @@ mbsync --verbose yahoo-thunderchief3000
 bt -l # list
 bt -t 2 -s # start
 bt -t 2 -S # stop
+
+# dual boot
+# check partition table
+sudo parted /dev/sda print | grep "Partition Table"
+# msdos
+# 1. find uuid of window boot partition
+% mount /dev/sda3 /mnt                                                                                                                                  ~
+% ls /mnt                                                                                                                                               ~
+Boot  bootmgr  BOOTNXT  BOOTSECT.BAK  Recovery  System Volume Information
+% grub-probe --target=fs_uuid /mnt/bootmgr                                                                                                              ~
+F49209269208EEC4
+# 2. Add following to /etc/grub.d/40_custom (after tail line)
+# (hd0,msdos3) -> /dev/sda3  (a=0; 3=3)
+menuentry "Windows 8" {
+    insmod part_msdos
+    insmod ntfs
+    insmod search_fs_uuid
+    insmod ntldr
+    search --fs-uuid --no-floppy --set=root --hint-bios=hd0,msdos3 --hint-efi=hd0,msdos3 --hint-baremetal=ahci0,msdos3 F49209269208EEC4
+    ntldr /bootmgr
+}
 
