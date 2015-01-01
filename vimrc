@@ -16,7 +16,8 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 
 call vundle#begin()
-Plugin 'Syntastic'
+"Plugin 'scrooloose/Syntastic'
+
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'tpope/vim-surround'
@@ -31,10 +32,10 @@ Plugin 'majutsushi/tagbar'
 Plugin 'kien/ctrlp.vim'
 Plugin 'suy/vim-ctrlp-commandline'
 Plugin 'christoomey/vim-tmux-navigator' " http://robots.thoughtbot.com/seamlessly-navigate-vim-and-tmux-splits
+Plugin 'bling/vim-airline'
 "Plugin 'jkoz/dmenu.vim'
 
 "Plugin 'vimoutliner/vimoutliner'
-"Plugin 'bling/vim-airline'
 
 
 "Plugin 'vim-scripts/vcscommand.vim'
@@ -46,7 +47,7 @@ Plugin 'christoomey/vim-tmux-navigator' " http://robots.thoughtbot.com/seamlessl
 "Plugin 'atweiden/vim-betterdigraphs'
 "Plugin 'chrisbra/unicode.vim'
 "Plugin 'vim-scripts/vim-auto-save'
-"Plugin 'Valloric/YouCompleteMe'
+Plugin 'Valloric/YouCompleteMe'
 "Plugin 'ervandew/eclim'
 "Plugin 'airblade/vim-rooter'
 
@@ -135,8 +136,6 @@ nma Q gqap
 " clear trailing space
 nn <leader>y :%s/\s\+$//<cr>
 
-nn <leader>0 :GenerateTagsJ "%:p:h"<cr>
-
 " }}}
 " Options {{{
 if v:version >= 600
@@ -169,10 +168,7 @@ set listchars=tab:\|\ ,extends:>,precedes:<,nbsp:~,trail:.
 se ttyfast
 se ttyscroll=3
 se lazyredraw
-
-
 se synmaxcol=174
-
 
 " No swap files
 se nobackup
@@ -221,19 +217,18 @@ se shiftround " use multiple of shiftwidth when indenting with '<' and '>'
 "se number " turn on number
 "se nonumber " turn on number
 se cursorline " highlight current light
-" se cursorcolumn
+se cursorcolumn
 
 " handle long line correctly
 se nowrap
 se textwidth=79
 se formatoptions=qrn1
 
-
 se makeprg=make
 
 " fold {{{
 se foldenable
-se foldmethod=marker
+se foldmethod=manual
 se foldlevelstart=0   " close all fold by default
 nnoremap <space> za  " space open/closes folds
 "}}}
@@ -244,59 +239,18 @@ se sidescrolloff=10
 se wildignore+=*.so,*.swp,*.zip,*.class,*.jar,*.gz,*pom.xml.org,*pyc,*.xls,*.svn
 se wildignore+=*_build/*,*/coverage/*,*/target/*,*/tmp/*,*/lib/*,*/.settings/*,*/.git/*
 
-" status line
-se stl=
-"buffer number
-se stl+=%-10n
-"filename
-se stl+=\|\ %f
-" status flags
-se stl+=%m%r%h
-" file type
-se stl+=\ \|\ %{strlen(&ft)?&ft:'none'}|
-" right align remainder
-se stl+=%=
-" character hex value
-se stl+=0x%-8B
-" line, character
-se stl+=\|\ %-14(%l,%c%V%)
-" file position
-se stl+=\|\ %<%P
-
-"se stl=\ %F%m%r%h\ %w\ \ \ %r%{getcwd()}%h\ \ \ %=%-33.(Line\ %l\ of\ %L\ \|\ Column\ %c%V\ \|\ (%P)%)
-
-" completeopt
-"set cot=menuone,menu,longest
+" completeopt {{{
 "se dict=/usr/share/dict/words
 set complete=.,b,u,]
 set wildmode=longest,list:longest
-set completeopt=menu,preview
-
-hi Pmenu ctermbg=238 gui=bold
-
-" color
-"let g:solarized_termcolors=8
-set background=dark
-colo solarized
-"colo smyck
-
-" cursorline, cursorcolumn
-"hi CursorLine cterm=underline ctermbg=NONE guibg=#404040 gui=NONE
-
-"highlight ColorColumn ctermbg=magenta
-"call matchadd('ColorColumn', '\%141v', 100)
-
-set cursorcolumn
-"hi CursorColumn cterm=NONE ctermbg=237  guibg=#404040 gui=NONE
-"hi SignColumn cterm=NONE ctermbg=237  guibg=#404040 gui=NONE
-
-
-hi StatusLine cterm=NONE ctermbg=NONE ctermfg=226  guibg=#404040 guifg=#ffff00
-
-" enable transparent
-"hi Normal	ctermbg=NONE	cterm=NONE
-"hi NonText	ctermbg=NONE	cterm=NONE
+"set completeopt=menu,preview
+set completeopt=menuone,menu,longest
 " }}}
+" color {{{
+colo solarized
+set background=dark
+"}}}
+"}}}
 " Functions {{{
 fu! MvnTest()
    exe "Mvn test -Dtest=" . expand("%:t:r")
@@ -311,54 +265,6 @@ fu! MvnTestDebug()
 endf
 com! DoMvnTestDebug cal MvnTestDebug()
 
-" strips trailing whitespace at the end of files. this
-" is called on buffer write in the autogroup above.
-fu! <SID>StripTrailingWhitespaces()
-    " save last search & cursor position
-    let _s=@/
-    let l = line(".")
-    let c = col(".")
-    %s/\s\+$//e
-    let @/=_s
-    call cursor(l, c)
-endf
-
-fu! Format()
-    exe "%s/\s\+$//"
-    exe "%s/\t/  /"
-endf
-
-fu! FormatURL(url)
-    let l:ret = substitute(a:url, '/$', '', '')
-    let l:ret = substitute(l:ret, '^/', '', '')
-    let l:ret = substitute(l:ret, '/', '-', 'g')
-    retu l:ret
-endf
-
-fu! GenerateTags(url, ctags_opts)
-    echom "Generate tags for project '" . a:url . "'"
-    let l:ctags_files = $HOME . "/.tags/" . FormatURL(a:url)
-    echom system("ctags " . a:ctags_opts . " -f '" . l:ctags_files . "' \"" . a:url . "\"")
-    exe "se tags+=" . l:ctags_files
-    exe 'cd ' . a:url
-endf
-
-fu! AppendToFile(file, lines)
-    call writefile(readfile(a:file)+a:lines, a:file)
-endf
-
-com! -n=1 -com=file GenerateTagsC cal GenerateTags(<q-args>,"-R --c++-kinds=+p --fields=+iaS --extra=+q --sort=foldcase --language-force=C++")
-com! -n=1 -com=file GenerateTagsJ cal GenerateTags(<q-args>,"-R --java-kinds=+p --fields=+iaS --extra=+q")
-
-fu! GenerateTagsForCLibs()
-    let l:global_include = '/usr/include/'
-    let l:global_headers = system('find ' . l:global_include . ' -maxdepth 1 -type f | xargs')
-    let l:ctags_files = $HOME . "/.tags/" . FormatURL(l:global_include)
-    echom system("ctags " . "-R --c++-kinds=+p --fields=+iaS --extra=+q --sort=foldcase --language-force=C++" . " -f '"
-                \. l:ctags_files . "' " . l:global_headers . "")
-    exe "se tags+=" . l:ctags_files
-endf
-
 " }}}
 " Auto Groups {{{
 aug configgroup
@@ -366,9 +272,14 @@ aug configgroup
     au BufRead,BufNewFile *.html,*.xhtml,*.xml setl foldmethod=indent foldlevel=0
     au BufRead,BufNewFile *.vim setl shiftwidth=2 tabstop=2 foldmethod=marker foldlevel=0
     au BufNewFile,BufRead *.otl setl listchars=tab:\|\ ,extends:>,precedes:<,nbsp:~,trail:.
+    au BufRead,BufNewFile *rc setl foldmethod=marker
 
-    " for each in split(expand('~/.tags/usr-include*'), "\n") | exe "se tags+=" . each | endfo
-    au BufRead,BufNewFile *.c,*.h,*.hh,*.cc,*.cpp setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=indent foldlevel=0
+    au BufRead,BufNewFile *.c,*.h,*.hh setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=manual foldlevel=0 | let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf_c.py"
+    au BufRead,BufNewFile *.h,*.hpp,*.cc,*.cpp setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=manual foldlevel=0 | let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf_cpp.py"
+
+"se tags+=~/.ctags/usr/include/ctags
+"se tags+=~/.ctags/usr/include/SDL2/ctags
+
 augroup END
 " }}}
 " Plugins {{{
@@ -441,7 +352,6 @@ let g:EclimJavaSearchSingleResult='edit'
 let g:EclimLocateFileDefaultAction='edit'
 let g:EclimLocateFileScope = 'workspace'
 let g:EclimCompletionMethod = 'omnifunc'
-
 fu! CopyBreakPoint()
     let @+ = GetBreakPoint()
 endf
@@ -490,9 +400,9 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 "let g:UltiSnipsSnippetsDir="~/.vim/bundle/vim-snippets/UltiSnips"
 " }}}
 " YouCompleteMe {{{
-let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
 nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
 nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
+
 "Do not ask when starting vim
 let g:ycm_confirm_extra_conf = 0
 let g:syntastic_always_populate_loc_list = 1
@@ -500,7 +410,6 @@ let g:ycm_collect_identifiers_from_tags_files = 1
 
 let g:ycm_server_use_vim_stdout = 1
 let g:ycm_server_log_level = 'debug'
-set tags+=./.tags
 " }}}
 " gui {{{
 if has('gui_running')

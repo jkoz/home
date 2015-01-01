@@ -105,7 +105,7 @@ pacman -S --noconfirm libnotify dunst
 pacman -S --noconfirm mplayer
 pacman -S --noconfirm ffmpeg # streaming & screencast
 pacman -S --noconfirm mupdf
-yaourt -S --noconfirm cabaretstage # pdf
+yaourt -S --noconfirm cabaretstage pdftk # pdf
 pacman -S --noconfirm cups # print
 pacman -S --noconfirm feh
 pacman -S --noconfirm imagemagick
@@ -114,7 +114,7 @@ pacman -S --noconfirm scrot
 pacman -S --noconfirm xorg-xlsfonts
 pacman -S --noconfirm tk # for gitk
 yaourt -S --noconfirm silver-searcher-git
-pacman -S --noconfirm libxft  # dwm, dmenu, st with xft 
+pacman -S --noconfirm libxft  # dwm, dmenu, st with xft
 pacman -S --noconfirm freetype2
 pacman -S --noconfirm webkitgtk2 # surf
 yaourt -S --noconfirm dropbox-cli # cloud dropbox
@@ -126,9 +126,14 @@ pacman -S --noconfirm mercurial subversion cvs
 pacman -S --noconfirm cdrkit dvd+rw-tools # cd kit
 pacman -S --noconfirm bitlbee irssi # irc, chat
 pacman -S --noconfirm mpd mpc ncmpcpp # mp3 player
+pacman -S --noconfirm gnuplot # plotting tool
 pacman -S --noconfirm mutt fetchmail procmail # mail
 pacman -S --noconfirm fish fbterm # some terminals
-pacman -S --noconfirm cabextract cmake gdb # debug cmake
+pacman -S --noconfirm cabextract # extract .cab file
+pacman -S --noconfirm cmake gdb  graphviz doxygen valgrind # developer tools for c
+yaourt -S --noconfirm scanmem # game hacking program, scanmem and change value
+pacman -S --noconfirm ecm # convert ecm to bin - unecm *bin.ecm *bin
+
 
 cd ~ && pkg=~/github/jkoz/PKGBUILDs && rm -rf $pkg && git clone https://github.com/jkoz/PKGBUILDs $pkg && \
     cd $pkg && for dir in `ls $pkg`; do cd $dir; ls | grep -v PKGBUID | xargs ;  makepkg --noconfirm -si --asroot; cd .. ; done
@@ -280,3 +285,27 @@ menuentry "Windows 8" {
     ntldr /bootmgr
 }
 
+# mount
+sudo mount -o gid=users,fmask=113,dmask=002 /dev/sdb1 /mnt/usb
+
+# ctags
+# linux header - vim -c "set tags+=$HOME/.ctags/usr/include/ctags"
+pat=/usr/include && mkdir -p ~/.ctags${pat} && ctags -f ~/.ctags${pat}/ctags $(find $pat -type f)
+# OpenGL
+pat=/usr/include/GL && mkdir -p ~/.ctags${pat} &&
+    ctags -f ~/.ctags${pat}/ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q --language-force=C++ $pat
+# Sys
+pat=/usr/include/sys && mkdir -p ~/.ctags${pat} && ctags -f ~/.ctags${pat}/ctags -R $pat
+
+# SDL
+pat=/usr/include/SDL && mkdir -p ~/.ctags${pat} && ctags -f ~/.ctags${pat}/ctags -R $pat
+
+# CPP
+pat=/usr/include/c++/4.9.2 && mkdir -p ~/.ctags${pat} && ctags --language-force=C++ -f ~/.ctags${pat}/ctags -R $pat
+
+
+# scanmem
+scanmem $pid
+123
+129
+set 4000

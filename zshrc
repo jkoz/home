@@ -148,6 +148,8 @@ stty -ixon
 # }}}
 # functions {{{
 tV() { cd ${XDG_VIDEOS_DIR}; rtorrent "$@"; }
+# echo "int main() { printf(\"Hello from cmd\"); }" | goc
+goc() { c99 -xc - -g -O2 -Wall -I/usr/include -lm -include math.h -include stdio.h -include stdlib.h -o /tmp/a.out; }
 #}}}
 # alias {{{
 alias bt="transmission-remote"
@@ -170,7 +172,7 @@ alias bub='say en beau is a bunkace'
 alias unblock-wireless='rfkill unblock all && ifconfig set wlp3s0 up'
 alias space='ncdu'
 alias space-color='cdu'
-alias ll='ls -la --color=auto'
+alias ll='ls -lah --color=auto'
 alias la='ls -ltra'
 alias l='ls --color=auto'
 alias C='clear'

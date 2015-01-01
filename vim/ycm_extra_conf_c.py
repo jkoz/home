@@ -12,7 +12,7 @@ flags = [
     '-fexceptions',
     '-DNDEBUG',
     '-DUSE_CLANG_COMPLETER',
-    '-std=C99',
+    '-std=c99',
     '-x',
     'c'
 ]

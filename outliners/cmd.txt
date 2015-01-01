@@ -1,6 +1,15 @@
-#c
-	a->b : address, pointer
-	a.b : address, value
+#scanmem
+sudo scanmem `pidof pcsxr`
+123
+321
+set 999
+# find cheats on http://wescastro.com/codetwink/cheats.codetwink.com/psx/view/1031/61/default.htm
+# roms: http://www.freeroms.com/psx_roms_F.htm
+#       http://www.emuparadise.me/
+
+#-ps-
+# show parent pid, pid, command
+ps -e -o pid,ppid,command,user
 
 #fetchmail
 fetchmail -v --keep --all --ssl --user phuoctaitp --auth=oauth2 imap.gmail.com --mda "/usr/bin/procmail -d %T"
@@ -183,6 +192,8 @@ history
 #-vim {{{1
 # debug scripts, then run action to hit breakpoint
 
+# K - search man page current word
+
 vim -D -c "breakadd file *commandline.vim"
 #-autocomplete
 ^x ^l line
@@ -247,6 +258,13 @@ n. -> repeat to replace new match
 
 #-vim-suround
 ve
+
+#-vim-fold
+set fdm=manual
+enter visual mode, select text
+zf - create fold
+za - del fold
+
 
 #1}}}---------------------------------------------------------------------------
 #-openbox{{{
@@ -446,7 +464,7 @@ pdftotext
 # rotate 270 left
 pdftk _stdin_.pdf cat 1-endW output out.pdf
 
-# resive pdf
+# resize pdf
 pdf2ps _stdin_.pdf large.pdf && ps2pdf large.pdf smal.pdf && rm large.pdf
 gs -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/screen -sOutputFile=new_file.pdf original_file.pdf
 
@@ -904,11 +922,6 @@ snoop -o /tmp/snoop.txt -d e1000g1 | grep 70.1.3.235
 # modify mysql-ds.xml
 sed -i s/95.47/95.43/g $JBOSS_SERVER_HOME/deploy/mysql-ds.xml
 
-# ctags
-mkdir -p ${HOME}/.tags/${VERSION} && ctags -R --language-force=java -f${HOME}/.tags/${VERSION}/np.app_server $ROOT/np.app/server
-mkdir -p ${HOME}/.tags/${VERSION} && ctags -R --language-force=java -f${HOME}/.tags/${VERSION}/basic.app_template $ROOT/basic.app/template
-for e in `ls -d $ROOT/basic.app/*`; do echo ctags -R --language-force=java -f${HOME}/.tags/${VERSION}$(echo $e | sed -e 's!/!.!g; s!^.!_!') $e; done
-
 # date
 date 080612412012
 Mon Aug  6 12:41:00 IST 2012
@@ -1086,6 +1099,9 @@ git checkout indigo
 
 # create new branch
 git branch dmenu2_new_keybind
+
+# create new branch & checkout it
+git checkout -b new_leaf
 
 # cache password for period of time
 git config --global credential.helper 'cache --timeout=3600'
@@ -2566,16 +2582,6 @@ printf "%x\n" 4095
 printf "%d\n" 4095
 #1}}}---------------------------------------------------------------------------
 
-#-pdf-text-convert-poppler {{{1
-pdftotext
-# rotate 270 left
-pdftk _stdin_.pdf cat 1-endW output out.pdf
-# resive pdf
-pdf2ps _stdin_.pdf large.pdf && ps2pdf large.pdf smal.pdf && rm large.pdf
-gs -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/screen -sOutputFile=new_file.pdf original_file.pdf
-# fill pdf forms and save
-#1}}}---------------------------------------------------------------------------
-
 # check terminal color 256, 88, 32.. {{{1
 tput colors
 #1}}}---------------------------------------------------------------------------
@@ -2732,6 +2738,9 @@ msmtp --host=smtp.gmail.com --port=587 --serverinfo
 cd $ROOT && ./scripts/runjboss --debug basic.isam.5.0/axs-*-mobject-plugin basic.isam.5.0/axs-*-bidm-plugin
 }
 
+#source-highlight
+source-highlight -s java -o STDOUT -f esc256 <HelloWorld.java 
+
 #-create bootable window
 
 # create partition type 7 & bootable flag
@@ -2746,6 +2755,22 @@ ms-sys -m /dev/sdb
 mount -o loop win7.iso /mnt/iso
 mount /dev/sdb1 /mnt/usb
 cp -av /mnt/iso/* /mnt/usb/ && sync
+
+# gnuplot
+cat << "------" | gnuplot --persist
+set xlabel "Year"
+set ylabel "U.S. Presidential elections"
+set yrange [0:5]
+set key off
+plot '-' with boxes
+2000, 1
+2001, 0
+2002, 0
+2003, 0
+2004, 1
+2005, 0
+e
+------
 
 # backup work on sdb
 dd if=/dev/sdb of=winxp.img && sync
@@ -2769,3 +2794,424 @@ xdg-mime default vim.desktop text/x-shellscript
 mdx = MDX('/home/tait/Downloads/LDOCE5-mdict/LDOCE5.mdx')
 items = mdx.items()
 items.next()
+
+
+
+# practical-c
+# preprocessor
+gcc -E
+pkg-config --cflags --libs sdl2
+gcc -g -ohello hello.c # turn debug
+
+gcc -g -Wall -ansi -pedantic # is equals to cc -g
+
+# gdb-
+gdb a.out
+q - exit
+r arg1 arg2 - run program with arg1 and arg2
+br main - set a breakpoint at main()
+br 15 - set a breakpoint at line 15
+br 65 if high = 410 - break at 65 if high == 410
+inf br - list all of breakpoints
+inf ar - list all input variables of func
+ret - force returning func right away
+dis 3 - disable breakpoint 3
+en 3 - enable breakpoint 3
+del 3 - delete breakpoint 3
+inf lo - list all local variables in current frame
+ptype var - print type of var
+set $var1 = 3 - set value of gdb var1 to 3
+set var1 = 3 - set program var1 to 3 (directly update value in the running program)
+l - list source
+n - next line
+s - step on line or entering a func
+l 10 - list source context arround line 10
+l 10, 30 - list src from line 10 -> 30
+q - quit
+c - continue next breakpoint or the end of the program
+p &var - print value of var (here it prints address of var)
+x/s &data - print value of address '&data'
+wh - winheight -> ncurse debugging (EXTREMELY USEFUL)
+whe - print stack
+clear - clear breakpoints
+disp var - print var for each run step (n)
+undis var - undisplay
+
+# print stack trace of segmentation fault (core dumped)
+gcc -g file
+gdb a.out
+r - run
+where
+break 26 - break at line 26
+r - rerun the program
+
+# c snippets
+gcc -xc - -g -O2 -Wall $(pkg-config --cflags --libs glib-2.0) -include stdio.h<<EOF
+#include <stdio.h>
+#include <glib.h>
+GList *list;
+int main(){
+    list = g_list_append(list, "a");
+    list = g_list_append(list, "b");
+    list = g_list_append(list, "c");
+    for ( ; list!= NULL; list=list->next)
+        printf("%s\n", (char*)list->data);
+}
+EOF
+./a.out && rm -f a.out
+
+# Boolean
+# FALSE: sth is false if sth is zero/null <=> if (sth == NULL) <=> if (!sth)
+# TRUE: sth is true if sth is NOT zero (anything else) <=> if (sth != NULL) <=> if (sth)
+
+# optimize performance in c
+# 1. put frequently used local variable to in fast registers by using 'register int a, b'
+# 2. loops should be ordered so that the innermost is the most complex and the outermost loop is the simplest 10 x 20 x 30 x 40
+# 3. multiply of 2 is always fast
+#   3.1 m[x][y] = 1 <=> *(m + (x*Y_ZISE) + y) = 1;
+#   3.2 if Y_SIZE is a mutiplfier of 2 e.g. 32 , then x * 32 <=> x << 5 which is very fast;
+
+# FINAL SOLUTION to optimize initializing a matrix (in fact it's consecutive memory locations)
+for (register int *ptr = &m[0][0]; ptr <= &m[X_SIZE][Y_SIZE]; ptr++) *ptr=1;
+
+man -k printf # search doc
+
+cc -E # cpp
+
+# const is better than define
+# 1. c check syntax
+# 2. const use c syntax
+# 3. const follow scope rules
+
+# Memory types
+# 1.automatic - without static keyword, any vars inside/outside a func is automatic
+#               It is removed when it goes out of scope
+#               don't set zero on startup
+#               automatic memory is allocated on the stack of func frames which may be restricted to few MB
+#
+# 2.static -    data is initilized before main start.
+#               Vars defined inside func or outside func (file scope) with static keyword are static
+#               automatically set zero on startup
+#               can't set nonconstant values on init
+#               persists across func calls
+#               because a static var never moves, a pointer to a static var will remain valid after func exit
+#
+# 3.manual -    involves malloc and free
+#               can be resized after declaration
+
+# Stack and Heap
+# 1. every func has a space in memory, a frame, holding inf about the func
+# 2. when a func call func2, func2 is added to a stack of frame.
+#    when func complete, its frame is popped off, all vars in that frame disappear in the process
+# 3. memory allocated by malloc is on heap (not on stack)
+
+# IMPORTANT: whenever we have set A to B , ask: is this asking for a copy or an alias ?
+# Structure get copied and array get alias
+gcc -xc - -g -O2 -Wall -include stdio.h -o/tmp/a.out<<EOF
+#include <stdio.h>
+typedef struct{ int b; int *efg; } demo_s;
+int main(){
+    demo_s d1 = {.b=1, .efg=(int[]){4,5,6}};
+    demo_s d2 = d1; /* all int variables are copied */
+    d1.b=14; d1.efg[0]=7; /* array is just aliasing */
+    printf("d1.b=%d\n", d1.b); printf("d2.b=%d\n", d2.b);
+    printf("d1.efg=%d\n", d1.efg[0]); printf("d2.efg=%d\n", d2.efg[0]);
+    return 0;
+}
+EOF
+/tmp/a.out
+
+gcc -xc - -g -O2 -Wall -include stdio.h -o/tmp/a.out<<EOF
+#include <stdio.h>
+typedef struct powers { double base, square, cube; } powers;
+/* this is OK because struct is automatically copied after func exit (only for copiable members I think) */
+powers get_power(double in){ powers out = {.base = in, .square = in*in, .cube = in*in*in}; return out; }
+/*array is a pointer to a automatic allocated value, so after func exit, this pointer point to bad values*/
+int *get_even(int count){ int out[count]; int i; for (i=0; i< count; i++) out[i] = 2*i; return out; }
+int main(){
+    powers threes = get_power(3);
+    int *evens = get_even(3);
+    printf("threes: %g\t%g\t%g\n", threes.base, threes.square, threes.cube);
+    printf("evens: %i\t%i\t%i\n", evens[0], evens[1], evens[2]); /* bad values are displayed */
+    return 0;
+}
+EOF
+
+# # in macros
+gcc -xc - -g -O2 -Wall -include stdio.h -o/tmp/a.out<<EOF
+#include <stdio.h>
+#define Peval(cmd) printf(#cmd ": %g\n", cmd);
+int main(){
+    double *plist = (double[]){1, 2, 3};
+    double list[] = {1, 2, 3};
+    Peval(sizeof(plist)/(sizeof(double)+0.0));
+    Peval(sizeof(list)/(sizeof(double)+0.0));
+}
+EOF
+
+# strings
+char *s1 = "Thread"
+free(s1) // segfault
+s1[0] = t; // segfault
+char *s2; asprintf(&s2, "floss");
+free(s2) // ok
+s2[0] = F; // ok
+
+# ASCII defines 128 characters
+# 1 bytes = 8 bits = char = UTF-8
+
+# multiple language - gettex fwk for organizing the translation
+# replace "Human message" to _("Human message") : underscore is a macro expanding to a func call selecting the right string in .po file
+# AM_GNU_GETTEXT
+
+# documents
+# generate config file: doxygen -g
+# generate doc: doxygen
+
+
+# compilation process chain
+1.source -> 2.preprocessing -> 3.compilation -> 4.assembler -> 5.obj files -> 6.linker -> executable
+
+1. Source
+cd /tmp && cat <<EOF > hello.c
+#include <stdio.h>
+#define ten 10
+int add(int v1, int v2) { return v1+v2; }
+int main(int argc, char* argv[]) { int a = ten; int b = 20; int z = add(10,20); printf("asd"); return 0; }
+EOF
+
+2. Preprocessing: Include header files and expand macros
+   gcc -E hello.c -o hello.i
+
+3. Compilation: compile preprocessed files to assembly code
+   gcc -S hello.i -o hello.asm
+
+4. Assembler: convert assembly code to object code
+   as hello.asm -o hello.o
+
+5. Linking: resolve all external func's addresses and output an executable in ELF LSB format (Linux)
+ld -dynamic-linker \
+/lib/ld-linux-x86-64.so.2 \
+/usr/lib/crt1.o /usr/lib/crti.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.2/crtbegin.o \
+/usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.2/crtend.o /usr/lib/crtn.o hello.o \
+-L/usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.2/ -lgcc -lgcc_eh -lc \
+-o hello
+
+# segmentation
+1. code segment:
+   - static linked libraries increase the footprints of executable and eventually the code segment size
+     static linked libraries execute faster than dynamically-linked libraries
+   - dynamically-linked libraries reduce segment size, but it spend time in loading desired library during runtime
+2. data segment
+   - global and initialized with nonzero values vars
+   - statically allocated and initialized with nonzero values vars
+   - static var can be initialized before a program starts
+
+static int staticglobal = 1; // data seg
+int initglobal = 10; //data seg
+int uninitglobal; // not in data seg
+void main() { return; }
+
+3. Uninitialized segment (bss segment)
+   - uninitilized global vars
+   - uninitilized static local vars
+   - all vars are initialized to zero by default
+
+4. Stack segment
+  - local vars (defined inside a opening lef curly brace of a func, including main)
+  - func paras
+  - return address
+
+5. Heap segment: is allocated by the OS when the process is created
+  - dynamic mem obtain via heap (malloc, calloc, and realloc)
+  - can access only via pointers
+  - mem give back to heap by using free()
+
+                      Runtime memory organization
+
+                |====================================== =
+                | Avaiable for heap growth            | |
+                |  |                                  | |
+                |-------------------------------------- |
+dynamic-linked  | math.o (lib*.so)                    | | Heap segment
+libraries       | malloc.o (lib*.so)                  | |
+                |-------------------------------------- |
+                | Heap(malloc(), calloc(), new)       | |
+                |====================================== =
+                | Uninitialized variables             | |
+                | static int i;                       | | BSS segment
+                | int global;                         | |
+                |====================================== =
+                | Initialized global/static variables | |
+                |-------------------------------------- |
+read/wirte area | int glb = 10; static long l = 1l;   | | Data segment
+                |-------------------------------------- |
+read only area  | void data(const char*)              | | those declarations (RO) is persistent throughout the
+                | char* str = "hello" (constant)      | | life cycle of program execution
+                |====================================== =
+static-linked   | math.o (lib*.a)                     | |
+libraries       | malloc.o (lib*.a)                   | | Code/text segment
+                |-------------------------------------- | (Compiled code, a.exe)
+                | main.o, file.o                      | |
+                |====================================== =
+                | Auto variables for main()           | |
+                |-------------------------------------- |
+                | Auto variable for func()            | | Stack
+                |-------------------------------------- |
+                |                       |             | |
+                | Avaiable for stack growth           | |
+                |====================================== =
+                | Reserved for OS                     |
+                |--------------------------------------
+
+ebp/rbp: point to current frame
+esp/rsp: point to last element on the stack
+eip: point to address of the next CPU instruction to be executed
+
+# libraries
+# glib: (std++)
+# thread: pthread.h, semaphore.h
+# mmap:persit structs, objects
+# scientifics stuff: GSL (gnu scientific library)
+
+# scope
+cat > /tmp/sharedinfo.h <<EOF
+typedef struct { double a, b, c; int d; } alphabet; extern alphabet abcd; int pain(const alphabet);
+EOF
+cat > /tmp/file1.c <<EOF
+#include "sharedinfo.h"
+alphabet abcd = {.a=1.2, .b=2.3, .c=3.4, .d=4 }; int pain(alphabet alpha){ return alpha.d; }
+EOF
+cat > /tmp/file2.c <<EOF
+#include "sharedinfo.h"
+#include <stdio.h>
+alphabet another_alpha = {.a=1.2, .b=2.3, .c=3.4, .d=12 }; int main() { abcd.d = pain(another_alpha); printf("%d\n", abcd.d); return 0; }
+EOF
+cd /tmp && gcc -g -O2 -Wall /tmp/sharedinfo.h /tmp/file1.c /tmp/file2.c -o/tmp/a.out
+
+# prepare sources
+cat <<EOF > /tmp/test.c
+int f2() {return 3;}
+EOF
+cat <<EOF > /tmp/test2.c
+int f() {return 4;}
+EOF
+cat <<EOF > /tmp/app.c
+#include<stdio.h>
+int main() { printf("%d\n", f()); }
+EOF
+
+# compile prog first
+cd /tmp
+gcc -c test.c test2.c app.c # compile and assemble but do not link -> generate test.o
+
+# create and use static libraries
+# if test.c and test2.c has same func, ar can not regconize
+ar cr libtest.a test.o test2.o # create libtest.a
+
+# linking with static libraries
+gcc -o app app.o -L. -ltest # gcc -o app -L. -ltest app.o # error because app.o use f(), it should come first
+
+############################################################
+# create and use dynamic libraries
+# if test.c and test2.c has same func, compile fail
+gcc -shared -fPIC -o libtest.so test.o test2.o
+
+# linking with dynamic libraries is same with static libraries
+gcc -o app app.o -L. -ltest
+
+# use ldd app to list which libraries are neede to execute
+ldd app
+
+# run - use LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=. && ./app
+
+# run - cp libtest.so to /usr/lib
+
+# we can copy libtest.so to any path like /usr/local/lib or /opt/lib if the executable is compile as following
+sudo cp libtest.so /usr/local/lib
+gcc -o app app.o -L. -ltest -Wl,-rpath,/usr/local/lib
+ldd app
+
+# if theres is libtest.a & libtest.so, linker choose *.so, UNLESS
+gcc -static -o app app.o -L. -ltest
+
+# nested dynamic libraries
+cat <<EOF > /tmp/tifftest.c
+#include <stdio.h>
+#include <tiffio.h>
+int main (int argc, char** argv) {
+    TIFF* tiff;
+    tiff = TIFFOpen (argv[1], "r");
+    TIFFClose (tiff);
+    return 0;
+}
+EOF
+gcc tifftest.c -ltiff
+ldd a.out
+ldd /usr/lib/libtiff.so
+vimdiff <(ldd a.out | sort) <(ldd /usr/lib/libtiff.so | sort)
+
+# static libraries can not trace nested libraries
+
+# Static vs Dynamic libraries
+# Pros:
+# 1. multiple progs share shared libraries
+# 2. update libraries easily without update depended progs
+# Cons
+# 1. update libraries may cause break the progs, it is sometimes better to deploy static libr for mission-critical software
+
+# dynamic load shared libraries
+cat <<EOF > /tmp/app2.c
+#include <stdio.h>
+#include <dlfcn.h>
+int main() {
+    /* need absolute path */
+    void *handler = dlopen("/tmp/libtest.so", RTLD_LAZY);
+    if (handler == NULL) { printf("can't find libtest.so"); return 1; }
+    int (*f2func)() = dlsym(handler, "f2");
+    if (handler == NULL) { printf("can't find func f2"); return 1; }
+    printf("%d\n", (*f2func)());
+    dlclose(handler);
+}
+EOF
+
+# compile with
+gcc -g app2.c -ldl
+
+# creating processes
+# system(): calling shell which depends on the availability of sh
+# fork and exec: 
+
+#C++
+# types
+types           Meaning                 Size(bits)    Byte(s)   Prefix
+char            utf-8                    8             1        u8
+wchar_t         wide char               16             2        L
+char16_t        Unicode Char            16                      u
+char32_t        Unicode char            32                      U
+int                                     16             2
+short                                   16             2
+long                                    32             4
+long long                               64             8        ll/LL
+float                                   6digits
+double                                  10digits
+long double                             10digits
+
+# Compound type: references and pointers
+# A reference is another name (an alias, not an Object) for an already existing object (need to be initialized right away)
+int val = 13; int &refVal = val; // assign reference dirrectly with OBJECT
+# A pointer dont need to be initialized right away, it is an object holding other address
+
+int i = 2;
+int &r = i;   // & follows a type and is a part of declaration -> r is a REFERENCE
+int *p;       // * follows a type and is part of declaration -> p is a POINTER
+p = &i;       // & used in an expression as the address-of operator
+*p = i;       // * used in an expression as the dereference operator
+int &r2 = *p; // & is a part of declaration and * is the dereference operator
+
+# const, to shared const var bettwen multiple files, define extern
+# pointer itself const -> top-level const
+# value pointed by pointer is const -> low-level const
+
+# using namespace: should not be defined in header file to avoid conflict
