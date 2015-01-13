@@ -40,7 +40,7 @@ idesk &
 #x11vnc -shared -rfbport 5900 -forever -usepw -display :0.0 -bg
 
 # following services are now managed by systemd
-# dropboxd &   # TODO: need test
+dropboxd &
 # fetchmail
 
 # auto mount usb

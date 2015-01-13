@@ -16,7 +16,8 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 
 call vundle#begin()
-"Plugin 'scrooloose/Syntastic'
+Plugin 'ervandew/supertab'
+Plugin 'Valloric/YouCompleteMe'
 
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'scrooloose/nerdcommenter'
@@ -33,21 +34,20 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'suy/vim-ctrlp-commandline'
 Plugin 'christoomey/vim-tmux-navigator' " http://robots.thoughtbot.com/seamlessly-navigate-vim-and-tmux-splits
 Plugin 'bling/vim-airline'
+
+Plugin 'klen/python-mode'
+Plugin 'scrooloose/Syntastic'
+
 "Plugin 'jkoz/dmenu.vim'
-
 "Plugin 'vimoutliner/vimoutliner'
-
-
 "Plugin 'vim-scripts/vcscommand.vim'
 "Plugin 'vim-scripts/dbext.vim'
 "Plugin 'Lokaltog/vim-easymotion'
 "Plugin 'sjl/gundo.vim'
-"Plugin 'klen/python-mode'
 "Plugin 'naquad/ctrlp-digraphs.vim'
 "Plugin 'atweiden/vim-betterdigraphs'
 "Plugin 'chrisbra/unicode.vim'
 "Plugin 'vim-scripts/vim-auto-save'
-Plugin 'Valloric/YouCompleteMe'
 "Plugin 'ervandew/eclim'
 "Plugin 'airblade/vim-rooter'
 
@@ -123,13 +123,8 @@ nmap cpd :let @+ = expand("%:p:h")<CR>
 " copy full file path of opened file to clipboard
 nmap cpf :let @+ = expand("%:p")<CR>
 
-" dos2unix
-nm d2u :%s/\r//g<CR>
 
-" strip \r (^M)
-nmap stm :%s/\r//g<CR>
-
-" format paragrath
+" format paragrath, see textwidth
 vm Q gq
 nma Q gqap
 
@@ -219,10 +214,12 @@ se shiftround " use multiple of shiftwidth when indenting with '<' and '>'
 se cursorline " highlight current light
 se cursorcolumn
 
-" handle long line correctly
+" paragraph {{{
 se nowrap
-se textwidth=79
-se formatoptions=qrn1
+se textwidth=80 " for coding
+se wrapmargin=0
+se formatoptions=vt " t: automatetic text wrapping
+"}}}
 
 se makeprg=make
 
@@ -252,6 +249,12 @@ set background=dark
 "}}}
 "}}}
 " Functions {{{
+" strip \r (^M)
+fu! DoStripCM()
+    exe ":silent %s/\r//g"
+endf
+com! StripCM cal DoStripCM()
+
 fu! MvnTest()
    exe "Mvn test -Dtest=" . expand("%:t:r")
 endf
@@ -274,12 +277,11 @@ aug configgroup
     au BufNewFile,BufRead *.otl setl listchars=tab:\|\ ,extends:>,precedes:<,nbsp:~,trail:.
     au BufRead,BufNewFile *rc setl foldmethod=marker
 
-    au BufRead,BufNewFile *.c,*.h,*.hh setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=manual foldlevel=0 | let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf_c.py"
-    au BufRead,BufNewFile *.h,*.hpp,*.cc,*.cpp setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=manual foldlevel=0 | let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf_cpp.py"
+    " handle for note taking files
+    au BufRead,BufNewFile notes setl textwidth=139 " for coding
 
-"se tags+=~/.ctags/usr/include/ctags
-"se tags+=~/.ctags/usr/include/SDL2/ctags
-
+    au BufRead,BufNewFile *.c,*.h,*.hh setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=manual foldlevel=0
+    au BufRead,BufNewFile *.h,*.hpp,*.cc,*.cpp setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=manual foldlevel=0
 augroup END
 " }}}
 " Plugins {{{
@@ -394,13 +396,13 @@ let g:ackprg = 'ag'
 let g:ack_default_options = " -H --nocolor --nogroup --column"
 " }}}
 " utilsnip{{{
-let g:UltiSnipsExpandTrigger="<c-t>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+"let g:UltiSnipsExpandTrigger="<c-g>"
+"let g:UltiSnipsJumpForwardTrigger="<c-b>"
+"let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 "let g:UltiSnipsSnippetsDir="~/.vim/bundle/vim-snippets/UltiSnips"
 " }}}
 " YouCompleteMe {{{
-nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
 nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
 
 "Do not ask when starting vim
@@ -408,8 +410,25 @@ let g:ycm_confirm_extra_conf = 0
 let g:syntastic_always_populate_loc_list = 1
 let g:ycm_collect_identifiers_from_tags_files = 1
 
+" default search for current directory for ycm_extra_conf
+let g:ycm_global_ycm_extra_conf = "./.ycm_extra_conf.py"
+
+" avoid conflict with other plugins use tab (snippets)
+"let g:ycm_key_list_previous_completion=['<Up>']
+"let g:ycm_key_list_select_completion=['<Down']
+let g:ycm_key_list_select_completion = ['<C-TAB>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-S-TAB>', '<Up>']
+
+
+" auto close preview
+let g:ycm_autoclose_preview_window_after_completion=1
+
+" debug
 let g:ycm_server_use_vim_stdout = 1
 let g:ycm_server_log_level = 'debug'
+" }}}
+" SuperTab {{{
+let g:SuperTabDefaultCompletionType = '<C-Tab>'
 " }}}
 " gui {{{
 if has('gui_running')
@@ -417,11 +436,29 @@ if has('gui_running')
     set guioptions-=T  "remove toolbar
     set guioptions-=r  "remove right-hand scroll bar
     set guioptions-=L  "remove left-hand scroll bar
-    set guifont=Consolas\ 12
+    "set guifont=Consolas\ 12
 endif
 " }}}
 " numbers {{{
 nn <leader>N :NumbersToggle<cr>
 let g:enable_numbers = 0
+" }}}
+" notes {{{
+"let g:year = system('echo -n "$YEAR"')
+"let g:module = system('echo -n "$MODULE"')
+
+"command! -nargs=1 Nack Ack -i --text --nohtml "<args>" $NOTES_DIR/*/*/*.txt
+"command! -nargs=1 Note exe "e! " . fnameescape($NOTES_DIR . "/MS". g:year . "/mod" . g:module . "/<args>.txt")
+
+"nnoremap <leader>[ :Nack
+"nnoremap <leader>] :Note
+
+"augroup markdown
+    "au!
+    "au BufNewFile,BufRead,BufWrite *.txt,*.md,*.mkd,*.markdown,*.mdwn setl ft=markdown
+    "au BufRead,BufNewFile,BufEnter   */mod*/*.txt let &complete="k$NOTES_DIR/**/*.txt"
+    "au BufRead,BufNewFile,BufEnter   */mod*/*.txt lcd %:h
+    "au BufRead,BufWrite,InsertChange */mod*/*.txt syn match ErrorMsg '\%>77v.\+'
+"augroup end
 " }}}
 " }}}

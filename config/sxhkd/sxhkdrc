@@ -61,9 +61,9 @@ mod4 + e
 # Edit systemd files
 mod4 + z
     dm open /etc/systemd/ /usr/lib/systemd ~/.config/systemd
-# Edit dot files
-mod4 + g
-    dm open /opt/github/jkoz/home
+# Edit clouds file
+mod4 + c
+    dm open $CLOUD_HOME
 # Reload sxhkd
 mod4 + Shift + c
     pkill -USR1 -x sxhkd
