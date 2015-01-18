@@ -64,6 +64,9 @@ mod4 + z
 # Edit clouds file
 mod4 + c
     dm open $CLOUD_HOME
+# Notes TODO: move to dm
+mod4 + m
+    cd $CLOUD_HOME/Documents && xdg-open "$(ag --silent -l -g "Note.md$" Notes CS | dmenu -l 5)" &
 # Reload sxhkd
 mod4 + Shift + c
     pkill -USR1 -x sxhkd

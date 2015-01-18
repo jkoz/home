@@ -92,6 +92,14 @@ bindkey '^d' delete-char
 bindkey '^r' history-incremental-pattern-search-backward
 bindkey '^s' history-incremental-pattern-search-forward
 
+zle-fd() {
+    zle kill-whole-line
+    fd
+    zle accept-line
+}
+zle -N zle-fd
+bindkey '^e' zle-fd
+
 #bindkey '^b' backward-word
 #bindkey '^w' forward-word
 #bindkey '^h' backward-char
@@ -154,6 +162,26 @@ tV() { cd ${XDG_VIDEOS_DIR}; rtorrent "$@"; }
 # echo "int main() { printf(\"Hello from cmd\"); }" | goc
 goc() { c99 -xc - -g -O2 -Wall -I/usr/include -lm -include math.h -include stdio.h -include stdlib.h -o /tmp/a.out; }
 #}}}
+# quick open file in terminal
+fd () {
+    f="$(pwd)"
+    comm=""
+    while test -n "$f"; do
+        val=$(ls -1la --group-directories-first | tail -n +3 | dmenu -i -l 5)
+        if [ $? != 0 ]; then
+            unset f
+        else
+            val=$(echo $val | awk '{$1=$2=$3=$4=$5=$6=$7=$8=""; gsub(/^[ \t]+|[ \t]+$/,""); print}')
+            test -d "$val" && { cd $val; f="$(pwd)"; }|| {
+                echo "Open $f/$val with: "
+                comm="$(dmenu_path | dmenu -l 5) \"$f/$val\""
+                unset f
+            }
+        fi
+    done
+
+    test ! -z $comm && tmux new-window "$comm"
+}
 # alias {{{
 alias bt="transmission-remote"
 alias extract='dtrx'

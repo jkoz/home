@@ -20,6 +20,8 @@ Plugin 'ervandew/supertab'
 Plugin 'Valloric/YouCompleteMe'
 
 Plugin 'altercation/vim-colors-solarized'
+Plugin 'vim-scripts/peaksea'
+
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
@@ -37,6 +39,13 @@ Plugin 'bling/vim-airline'
 
 Plugin 'klen/python-mode'
 Plugin 'scrooloose/Syntastic'
+
+
+" pandoc
+Plugin 'vim-pandoc/vim-pandoc'
+Plugin 'vim-pandoc/vim-pandoc-syntax'
+"Plugin 'vim-pandoc/vim-pandoc-after'
+Plugin 'junegunn/goyo.vim'
 
 "Plugin 'jkoz/dmenu.vim'
 "Plugin 'vimoutliner/vimoutliner'
@@ -443,22 +452,39 @@ endif
 nn <leader>N :NumbersToggle<cr>
 let g:enable_numbers = 0
 " }}}
-" notes {{{
-"let g:year = system('echo -n "$YEAR"')
-"let g:module = system('echo -n "$MODULE"')
+" pandoc {{{
+let g:pandoc#after#modules#enabled = ["supertab", "ultisnips", "goyo"]
 
-"command! -nargs=1 Nack Ack -i --text --nohtml "<args>" $NOTES_DIR/*/*/*.txt
-"command! -nargs=1 Note exe "e! " . fnameescape($NOTES_DIR . "/MS". g:year . "/mod" . g:module . "/<args>.txt")
+"Markdown to HTML
+"nmap <leader>md :%!/usr/local/bin/markdown --html4tags <cr>
 
-"nnoremap <leader>[ :Nack
-"nnoremap <leader>] :Note
+function! Vim_Markdown_Preview()
+  let curr_file = expand('%:p')
+  call system('markdown ' . curr_file . ' > /tmp/vim-markdown-preview.html')
+  let chrome_wid = system("xdotool search --name 'vim-markdown-preview.html - Chromium'")
+  if !chrome_wid
+    "sleep 300m
+    call system('chromium /tmp/vim-markdown-preview.html &> /dev/null &')
+    let chrome_wid = system("xdotool search --name 'vim-markdown-preview.html - Chromium'")
+    call system('xdotool windowactivate ' . chrome_wid)
+  else
+    let curr_wid = system('xdotool getwindowfocus')
+    call system('xdotool windowmap ' . chrome_wid)
+    call system('xdotool windowactivate ' . chrome_wid)
+    call system("xdotool key 'ctrl+r'")
+    "call system('xdotool windowactivate ' . curr_wid)
+  endif
+  "sleep 700m
+  "call system('rm /tmp/vim-markdown-preview.html')
+endfunction
 
-"augroup markdown
-    "au!
-    "au BufNewFile,BufRead,BufWrite *.txt,*.md,*.mkd,*.markdown,*.mdwn setl ft=markdown
-    "au BufRead,BufNewFile,BufEnter   */mod*/*.txt let &complete="k$NOTES_DIR/**/*.txt"
-    "au BufRead,BufNewFile,BufEnter   */mod*/*.txt lcd %:h
-    "au BufRead,BufWrite,InsertChange */mod*/*.txt syn match ErrorMsg '\%>77v.\+'
-"augroup end
+"autocmd Filetype markdown,md map <buffer> <C-p> :call Vim_Markdown_Preview()<CR>
+"autocmd BufWritePost *.markdown,*.md :call Vim_Markdown_Preview()
 " }}}
+" Goyo {{{
+let g:goyo_width = 140
+let g:goyo_margin_top = 2
+let g:goyo_margin_bottom = 2
+let g:goyo_linenr = 0
 " }}}
+"

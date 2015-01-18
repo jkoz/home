@@ -39,8 +39,12 @@ idesk &
 # vnc TODO: this block start at the first time, should run as service
 #x11vnc -shared -rfbport 5900 -forever -usepw -display :0.0 -bg
 
+# Network manager front-end
+nm-applet &
+
 # following services are now managed by systemd
 dropboxd &
+
 # fetchmail
 
 # auto mount usb
