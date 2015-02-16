@@ -1,0 +1,7 @@
+filename=$1
+
+pdf2ps ${filename}.pdf /tmp/${filename}.ps
+
+ps2pdf /tmp/${filename}.ps ${filename}.out.pdf
+
+gs -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/screen -sOutputFile=new_file.pdf original_file.pdf

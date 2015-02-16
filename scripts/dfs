@@ -11,6 +11,11 @@ install -d ~/.config
 install -d ~/.config/sxhkd
 install -m755 config/sxhkd/* ~/.config/sxhkd
 
+# rss feed
+install -d ~/.newsbeuter
+install -m644 newsbeuter/config ~/.newsbeuter
+install -m644 newsbeuter/urls ~/.newsbeuter
+
 # editor
 install -d ~/.vim ~/.vim/bundle
 install -Dm644 vimrc ~/.vimrc
@@ -61,6 +66,8 @@ install -d ~/.config/systemd  ~/.config/systemd/user
 install -Dm644 config/systemd/user/fetchmail.service ~/.config/systemd/user
 install -Dm644 config/systemd/user/mpd.service ~/.config/systemd/user
 install -Dm644 config/systemd/user/mpd.socket ~/.config/systemd/user
+install -Dm644 config/systemd/user/sxhkd.service ~/.config/systemd/user
+install -Dm644 config/systemd/user/dropbox.service ~/.config/systemd/user
 
 # x session
 install -Dm644 xinitrc ~/.xinitrc

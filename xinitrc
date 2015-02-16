@@ -2,56 +2,55 @@
 #dnscrypt-proxy &
 
 xrdb ~/.Xresources # load x resources
+
 xset r rate 300 50 # use faster typing
-
 xset b off # no beep
-
 xset +fp ~/.fonts
 xset +fp /usr/share/fonts/local
 xset +fp /usr/share/fonts/misc
-
-
 setxkbmap -option ctrl:swapcaps # swap caplocks and left ctrl
-sxhkd & # bindkey
+xautolock -locker  "slock" -corners 0+00  -cornerdelay 1 & # xautolock
+xsetroot -solid "#002b36" -cursor_name left_ptr -name " " # use left pointer cursor in all cases
 
+# replace by st
+#/usr/bin/urxvtd -q -f -o # terminal daemon
+# idesk
+#idesk &
+# composite
+#compton -b
+# vnc TODO: this block start at the first time, should run as service
+#x11vnc -shared -rfbport 5900 -forever -usepw -display :0.0 -bg
+# Network manager front-end
+#nm-applet &
 
-/usr/bin/urxvtd -q -f -o # terminal daemon
-dunst & # desktop notification
+# desktop notification
+#dunst &
 
 # gpg-agent
 gpg-agent --daemon --use-standard-socket
 
-
-xautolock -locker  "slock" -corners 0+00  -cornerdelay 1 & # xautolock
-
 # torrent
 transmission-daemon -c ~/Downloads
 
-# use left pointer cursor in all cases
-xsetroot -solid "#002b36" -cursor_name left_ptr -name " "
-
-# idesk
-idesk &
-
-# composite
-#compton -b
-
-# vnc TODO: this block start at the first time, should run as service
-#x11vnc -shared -rfbport 5900 -forever -usepw -display :0.0 -bg
-
-# Network manager front-end
-nm-applet &
-
 # following services are now managed by systemd
 dropboxd &
+sxhkd & # bindkey
+
+# web browser deamon
+chromium --no-startup-window &
+
+# Redshift - changed screen colour temp
+redshift-gtk &
+
+# Hides the mouse cursor after 5 seconds of idle
+# this causes bug in dwm, not able to move to other windows! FUCK
+#unclutter -root -jitter 10 &
 
 # fetchmail
 
 # auto mount usb
 #udiskie &
-#
-# Redshift - changed screen colour temp
-# redshift-gtk -l 55.978301:-3.228586 -t 6000:4500 &
+
 #
 # Volume system tray
 # pa-applet &
@@ -63,8 +62,6 @@ dropboxd &
 # copy /past handler
 # autocutsel -fork &
 #
-# Unclutter - hides the mouse cursor after 5 seconds of idle
-# unclutter -root -jitter 10 &
 #
 
 # Addition monitor

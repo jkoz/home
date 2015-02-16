@@ -40,12 +40,14 @@ Plugin 'bling/vim-airline'
 Plugin 'klen/python-mode'
 Plugin 'scrooloose/Syntastic'
 
+Plugin 'tpope/vim-markdown'
 
-" pandoc
-Plugin 'vim-pandoc/vim-pandoc'
-Plugin 'vim-pandoc/vim-pandoc-syntax'
-"Plugin 'vim-pandoc/vim-pandoc-after'
-Plugin 'junegunn/goyo.vim'
+Plugin 'nelstrom/vim-markdown-folding'
+Plugin 'reedes/vim-colors-pencil'
+Plugin 'reedes/vim-pencil'
+Plugin 'reedes/vim-litecorrect'
+
+Plugin 'lervag/vim-latex'
 
 "Plugin 'jkoz/dmenu.vim'
 "Plugin 'vimoutliner/vimoutliner'
@@ -132,6 +134,8 @@ nmap cpd :let @+ = expand("%:p:h")<CR>
 " copy full file path of opened file to clipboard
 nmap cpf :let @+ = expand("%:p")<CR>
 
+" conceal
+"let g:tex_conceal="adgm"
 
 " format paragrath, see textwidth
 vm Q gq
@@ -253,8 +257,8 @@ set wildmode=longest,list:longest
 set completeopt=menuone,menu,longest
 " }}}
 " color {{{
-colo solarized
 set background=dark
+colo solarized
 "}}}
 "}}}
 " Functions {{{
@@ -277,6 +281,41 @@ fu! MvnTestDebug()
 endf
 com! DoMvnTestDebug cal MvnTestDebug()
 
+" markdown {{{
+function! DoMarkdownPreview()
+  call system('pandoc --template=/home/tait/Dropbox/Dotfiles/pandoc-templates/default.tex -s ' . expand('%:p') . ' -o /tmp/vim-markdown-preview.pdf')
+  let chrome_wid = system("xdotool search --name 'vim-markdown-preview.pdf - Chromium'")
+  if !chrome_wid
+    call system('chromium /tmp/vim-markdown-preview.pdf &> /dev/null &')
+    let chrome_wid = system("xdotool search --name 'vim-markdown-preview.pdf - Chromium'")
+    call system('xdotool windowactivate ' . chrome_wid)
+  else
+    let curr_wid = system('xdotool getwindowfocus')
+    call system('xdotool windowmap ' . chrome_wid)
+    call system('xdotool windowactivate ' . chrome_wid)
+    call system("xdotool key 'ctrl+r'")
+  endif
+endfunction
+
+com! MarkdownPreview cal DoMarkdownPreview()
+" }}}
+" latex {{{
+function! DoLatexPreview()
+  call system('pdflatex -output-directory /tmp ' . expand('%:p' ))
+  let chrome_wid = system("xdotool search --name '" . expand('%:t:r') . ".pdf - Chromium'")
+  if !chrome_wid
+    call system('chromium /tmp/' . expand('%:t:r') . '.pdf &> /dev/null &')
+    let chrome_wid = system("xdotool search --name '" . expand('%:t:r') . ".pdf - Chromium'")
+    call system('xdotool windowactivate ' . chrome_wid)
+  else
+    let curr_wid = system('xdotool getwindowfocus')
+    call system('xdotool windowmap ' . chrome_wid)
+    call system('xdotool windowactivate ' . chrome_wid)
+    call system("xdotool key 'ctrl+r'")
+  endif
+endfunction
+com! LatexPreview cal DoLatexPreview()
+" }}}
 " }}}
 " Auto Groups {{{
 aug configgroup
@@ -285,13 +324,10 @@ aug configgroup
     au BufRead,BufNewFile *.vim setl shiftwidth=2 tabstop=2 foldmethod=marker foldlevel=0
     au BufNewFile,BufRead *.otl setl listchars=tab:\|\ ,extends:>,precedes:<,nbsp:~,trail:.
     au BufRead,BufNewFile *rc setl foldmethod=marker
-
-    " handle for note taking files
-    au BufRead,BufNewFile notes setl textwidth=139 " for coding
-
     au BufRead,BufNewFile *.c,*.h,*.hh setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=manual foldlevel=0
     au BufRead,BufNewFile *.h,*.hpp,*.cc,*.cpp setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=manual foldlevel=0
-augroup END
+
+aug END
 " }}}
 " Plugins {{{
 " Tag bar {{{
@@ -439,52 +475,52 @@ let g:ycm_server_log_level = 'debug'
 " SuperTab {{{
 let g:SuperTabDefaultCompletionType = '<C-Tab>'
 " }}}
+" Pencil {{{
+" soft mode use 1 line even if it is long line
+let g:pencil#mode_indicators = {'hard': 'PH', 'soft': 'PS', 'off': ''}
+aug pencil
+    autocmd!
+    autocmd FileType markdown,mkd
+                \   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
+                \ | call litecorrect#init()
+                \ | setl spell spl=en_us noru nonu nornu
+                \ | setl fdo+=search
+    autocmd Filetype git,gitsendemail,*commit*,*COMMIT*
+                \   call pencil#init({'wrap': 'soft', 'textwidth': 72})
+                \ | call litecorrect#init()
+                \ | setl spell spl=en_us et sw=2 ts=2 noai
+    autocmd Filetype mail
+                \   call pencil#init({'wrap': 'soft', 'textwidth': 60})
+                \ | call litecorrect#init()
+                \ | setl spell spl=en_us et sw=2 ts=2 noai nonu nornu
+aug END
+" }}}
+" air line {{{
+
+let g:airline_section_x = '%{PencilMode()}'
+" }}}
 " gui {{{
 if has('gui_running')
-    set guioptions-=m  "remove menu bar
-    set guioptions-=T  "remove toolbar
-    set guioptions-=r  "remove right-hand scroll bar
-    set guioptions-=L  "remove left-hand scroll bar
-    "set guifont=Consolas\ 12
+    se guioptions-=m  "remove menu bar
+    se guioptions-=T  "remove toolbar
+    se guioptions-=r  "remove right-hand scroll bar
+    se guioptions-=L  "remove left-hand scroll bar
+    "set guifont=Cousine\ 10
+    se guifont="Times New Roman 12"
+    se nocursorcolumn
+
+    se background=light
+    colo solarized
 endif
 " }}}
 " numbers {{{
 nn <leader>N :NumbersToggle<cr>
 let g:enable_numbers = 0
 " }}}
-" pandoc {{{
-let g:pandoc#after#modules#enabled = ["supertab", "ultisnips", "goyo"]
-
-"Markdown to HTML
-"nmap <leader>md :%!/usr/local/bin/markdown --html4tags <cr>
-
-function! Vim_Markdown_Preview()
-  let curr_file = expand('%:p')
-  call system('markdown ' . curr_file . ' > /tmp/vim-markdown-preview.html')
-  let chrome_wid = system("xdotool search --name 'vim-markdown-preview.html - Chromium'")
-  if !chrome_wid
-    "sleep 300m
-    call system('chromium /tmp/vim-markdown-preview.html &> /dev/null &')
-    let chrome_wid = system("xdotool search --name 'vim-markdown-preview.html - Chromium'")
-    call system('xdotool windowactivate ' . chrome_wid)
-  else
-    let curr_wid = system('xdotool getwindowfocus')
-    call system('xdotool windowmap ' . chrome_wid)
-    call system('xdotool windowactivate ' . chrome_wid)
-    call system("xdotool key 'ctrl+r'")
-    "call system('xdotool windowactivate ' . curr_wid)
-  endif
-  "sleep 700m
-  "call system('rm /tmp/vim-markdown-preview.html')
-endfunction
-
-"autocmd Filetype markdown,md map <buffer> <C-p> :call Vim_Markdown_Preview()<CR>
-"autocmd BufWritePost *.markdown,*.md :call Vim_Markdown_Preview()
-" }}}
 " Goyo {{{
-let g:goyo_width = 140
-let g:goyo_margin_top = 2
-let g:goyo_margin_bottom = 2
-let g:goyo_linenr = 0
+"let g:goyo_width = 150
+"let g:goyo_margin_top = 2
+"let g:goyo_margin_bottom = 2
+"let g:goyo_linenr = 0
 " }}}
 "

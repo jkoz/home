@@ -33,7 +33,7 @@ mod4 + u
     dm ps
 # Lock screen
 mod4 + bracketright
-    xlock -mod blank
+    slock
 # Reboot
 mod4 + r
     systemctl reboot
@@ -61,6 +61,9 @@ mod4 + e
 # Edit systemd files
 mod4 + z
     dm open /etc/systemd/ /usr/lib/systemd ~/.config/systemd
+# Google launcher
+mod4 + g
+    chromium --show-app-list
 # Edit clouds file
 mod4 + c
     dm open $CLOUD_HOME
@@ -68,7 +71,7 @@ mod4 + c
 mod4 + m
     cd $CLOUD_HOME/Documents && xdg-open "$(ag --silent -l -g "Note.md$" Notes CS | dmenu -l 5)" &
 # Reload sxhkd
-mod4 + Shift + c
+mod4 + shift + r
     pkill -USR1 -x sxhkd
 # Menu
 mod4 + bracketleft

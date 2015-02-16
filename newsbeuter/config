@@ -1,0 +1,19 @@
+bind-key j down
+bind-key k up
+bind-key h left
+bind-key l right
+browser $BROWSER
+auto-reload yes
+reload-time 30
+#confirm-exit yes
+
+# header color
+color info color136 default
+# article's content color
+color article default default
+# focus color for rss(s)
+color listfocus color166 default
+# unread color for each rss
+color listnormal_unread color178 default
+# unread-focus color for each rss
+color listfocus_unread  color166 default
