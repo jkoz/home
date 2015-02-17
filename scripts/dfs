@@ -29,6 +29,7 @@ install -Dm644 tmux.conf ~/.tmux.conf
 # applications
 install -d ~/.local ~/.local/share ~/.local/share/applications
 install -Dm644 local/share/applications/vim.desktop ~/.local/share/applications/vim.desktop
+install -Dm644 local/share/applications/zathura-tabbed.desktop ~/.local/share/applications/zathura-tabbed.desktop
 
 # shell
 install -Dm644 zshrc ~/.zshrc
