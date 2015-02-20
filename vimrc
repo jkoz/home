@@ -302,16 +302,16 @@ com! MarkdownPreview cal DoMarkdownPreview()
 " latex {{{
 function! DoLatexPreview()
   call system('pdflatex -output-directory /tmp ' . expand('%:p' ))
-  let chrome_wid = system("xdotool search --name '" . expand('%:t:r') . ".pdf - Chromium'")
+  let chrome_wid = system("xdotool search --name '" . expand('%:t:r') . ".pdf'")
   if !chrome_wid
-    call system('chromium /tmp/' . expand('%:t:r') . '.pdf &> /dev/null &')
-    let chrome_wid = system("xdotool search --name '" . expand('%:t:r') . ".pdf - Chromium'")
+    call system('zathura-tabbed /tmp/' . expand('%:t:r') . '.pdf &> /dev/null &')
+    let chrome_wid = system("xdotool search --name '" . expand('%:t:r') . ".pdf'")
     call system('xdotool windowactivate ' . chrome_wid)
   else
     let curr_wid = system('xdotool getwindowfocus')
     call system('xdotool windowmap ' . chrome_wid)
     call system('xdotool windowactivate ' . chrome_wid)
-    call system("xdotool key 'ctrl+r'")
+    call system("xdotool key 'R'")
   endif
 endfunction
 com! LatexPreview cal DoLatexPreview()
@@ -480,6 +480,13 @@ let g:SuperTabDefaultCompletionType = '<C-Tab>'
 let g:pencil#mode_indicators = {'hard': 'PH', 'soft': 'PS', 'off': ''}
 aug pencil
     autocmd!
+    autocmd FileType tex,latex
+                \   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
+                \ | call litecorrect#init()
+                \ | setl spell spl=en_us noru nonu nornu
+                \ | setl fdo+=search
+                \ | setl background=light
+                \ | setl nocursorcolumn
     autocmd FileType markdown,mkd
                 \   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
                 \ | call litecorrect#init()
@@ -495,11 +502,10 @@ aug pencil
                 \ | setl spell spl=en_us et sw=2 ts=2 noai nonu nornu
 aug END
 " }}}
-" air line {{{
-
+" Airline {{{
 let g:airline_section_x = '%{PencilMode()}'
 " }}}
-" gui {{{
+" Gui {{{
 if has('gui_running')
     se guioptions-=m  "remove menu bar
     se guioptions-=T  "remove toolbar

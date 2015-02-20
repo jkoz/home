@@ -3,10 +3,10 @@ mod4 + Return
     st
 # Terminal Dropdown
 mod4 + i
-    mapunmap --instance "terminaldropdown" "st -c terminaldropdown -e tmux a"
+    xdotool search --maxdept 1 --onlyvisible "terminaldropdown" windowunmap || xdotool search --maxdept 1 "terminaldropdown" windowmap || st -c terminaldropdown -e tmux a &
 # Dictionary
 mod4 + d
-    mapunmap --instance "ldoce5viewer" ldoce5viewer
+    xdotool search --maxdept 1 --onlyvisible "ldoce5viewer" windowunmap || xdotool search --maxdept 1 "ldoce5viewer" windowmap || ldoce5viewer &
 # File Manager
 mod4 + f
     dm fm
@@ -42,7 +42,7 @@ mod4 + s
     systemctl poweroff
 # Browser
 mod4 + b
-    mapunmap --instance Chromium chromium
+    xdotool search --maxdept 1 --onlyvisible --name "\- Chromium" windowunmap || xdotool search --maxdept 1 "\- Chromium" windowmap || chromium &
 # Screen print
 Print
     scrot -e 'mv $f /tmp/ && gimp /tmp/$f'
