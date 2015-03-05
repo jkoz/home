@@ -37,7 +37,7 @@ dropboxd &
 sxhkd & # bindkey
 
 # web browser deamon
-chromium --no-startup-window &
+#chromium --no-startup-window &
 
 # Redshift - changed screen colour temp
 redshift-gtk &

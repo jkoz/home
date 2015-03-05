@@ -1,7 +1,7 @@
 # environment {{{
 export EDITOR="vim"
 export PAGER="less"
-export BROWSER="chromium"
+export BROWSER="google-chrome-stable"
 export MOVPLAY="mplayer"
 export PICVIEW="feh"
 export SNDPLAY="mplayer"
@@ -159,10 +159,15 @@ unsetopt HUP
 stty -ixon
 # }}}
 # functions {{{
+
 tV() { cd ${XDG_VIDEOS_DIR}; rtorrent "$@"; }
-# echo "int main() { printf(\"Hello from cmd\"); }" | goc
-goc() { c99 -xc - -g -O2 -Wall -I/usr/include -lm -include math.h -include stdio.h -include stdlib.h -o /tmp/a.out; }
-# quick open file in terminal
+# goc() - quickly build c & run it {{{
+goc() {
+    # echo "int main() { printf(\"Hello from cmd\"); }" | goc
+    c99 -xc - -g -O2 -Wall -I/usr/include -lm -include math.h -include stdio.h -include stdlib.h -o /tmp/a.out;
+}
+# }}}
+# fd() - quick open file in terminal {{{
 fd () {
     f="$(pwd)"
     comm=""
@@ -183,7 +188,10 @@ fd () {
     test ! -z $comm && tmux new-window "$comm"
 }
 #}}}
+
+#}}}
 # alias {{{
+alias pdf="zathura-tabbed"
 alias bt="transmission-remote"
 alias extract='dtrx'
 alias gz='tar -xzf'
@@ -208,8 +216,6 @@ alias ll='ls -lah --color=auto'
 alias la='ls -ltra'
 alias l='ls --color=auto'
 alias C='clear'
-alias se='sudo vim'
-alias e='vim'
 alias home='cd ~'
 alias ..='cd ..'
 alias ...='cd ...'
@@ -228,6 +234,7 @@ alias irssi='TERM=screen-256color irssi'
 alias b='mvn clean install -Dtest'
 alias e='mvn eclipse:clean eclipse:eclipse'
 alias XTR='xrdb -merge ~/.Xresources'
+alias se='sudo vim'
 alias e='vim'
 alias eX='vim ${DOTFILES_HOME}/.Xresources; uD'
 alias eZ='vim ${DOTFILES_HOME}/zshrc; uD'

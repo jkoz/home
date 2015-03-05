@@ -42,7 +42,7 @@ mod4 + s
     systemctl poweroff
 # Browser
 mod4 + b
-    xdotool search --maxdept 1 --onlyvisible --name "\- Chromium" windowunmap || xdotool search --maxdept 1 "\- Chromium" windowmap || chromium &
+    xdotool search --maxdept 1 --onlyvisible --name "\- Google Chrome" windowunmap || xdotool search --maxdept 1 "\- Google Chrome" windowmap || google-chrome-stable &
 # Screen print
 Print
     scrot -e 'mv $f /tmp/ && gimp /tmp/$f'

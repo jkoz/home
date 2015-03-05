@@ -18,10 +18,8 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'ervandew/supertab'
 Plugin 'Valloric/YouCompleteMe'
-
 Plugin 'altercation/vim-colors-solarized'
-Plugin 'vim-scripts/peaksea'
-
+Plugin 'edsono/vim-matchit'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
@@ -34,21 +32,18 @@ Plugin 'honza/vim-snippets'
 Plugin 'majutsushi/tagbar'
 Plugin 'kien/ctrlp.vim'
 Plugin 'suy/vim-ctrlp-commandline'
-Plugin 'christoomey/vim-tmux-navigator' " http://robots.thoughtbot.com/seamlessly-navigate-vim-and-tmux-splits
 Plugin 'bling/vim-airline'
-
-Plugin 'klen/python-mode'
 Plugin 'scrooloose/Syntastic'
-
 Plugin 'tpope/vim-markdown'
-
 Plugin 'nelstrom/vim-markdown-folding'
 Plugin 'reedes/vim-colors-pencil'
 Plugin 'reedes/vim-pencil'
 Plugin 'reedes/vim-litecorrect'
+Plugin 'gerw/vim-latex-suite'
 
-Plugin 'lervag/vim-latex'
-
+"Plugin 'klen/python-mode'
+"Plugin 'christoomey/vim-tmux-navigator' " http://robots.thoughtbot.com/seamlessly-navigate-vim-and-tmux-splits
+"Plugin 'vim-scripts/peaksea'
 "Plugin 'jkoz/dmenu.vim'
 "Plugin 'vimoutliner/vimoutliner'
 "Plugin 'vim-scripts/vcscommand.vim'
@@ -119,8 +114,7 @@ nn / /\v
 vn / /\v
 
 " match bracket pairs with tab is a hell of a lot easier than %
-nn <tab> %
-vn <tab> %
+map <tab> %
 
 " clear search match
 nn <silent> <leader><space> :nohl<cr>
@@ -282,7 +276,7 @@ endf
 com! DoMvnTestDebug cal MvnTestDebug()
 
 " markdown {{{
-function! DoMarkdownPreview()
+fu! DoMarkdownPreview()
   call system('pandoc --template=/home/tait/Dropbox/Dotfiles/pandoc-templates/default.tex -s ' . expand('%:p') . ' -o /tmp/vim-markdown-preview.pdf')
   let chrome_wid = system("xdotool search --name 'vim-markdown-preview.pdf - Chromium'")
   if !chrome_wid
@@ -295,12 +289,12 @@ function! DoMarkdownPreview()
     call system('xdotool windowactivate ' . chrome_wid)
     call system("xdotool key 'ctrl+r'")
   endif
-endfunction
+endf
 
 com! MarkdownPreview cal DoMarkdownPreview()
 " }}}
 " latex {{{
-function! DoLatexPreview()
+fu! DoLatexPreview()
   call system('pdflatex -output-directory /tmp ' . expand('%:p' ))
   let chrome_wid = system("xdotool search --name '" . expand('%:t:r') . ".pdf'")
   if !chrome_wid
@@ -310,10 +304,10 @@ function! DoLatexPreview()
   else
     let curr_wid = system('xdotool getwindowfocus')
     call system('xdotool windowmap ' . chrome_wid)
-    call system('xdotool windowactivate ' . chrome_wid)
-    call system("xdotool key 'R'")
+    "call system('xdotool windowactivate ' . chrome_wid)
+    call system("xdotool key --window " . chrome_wid . " 'R'")
   endif
-endfunction
+endf
 com! LatexPreview cal DoLatexPreview()
 " }}}
 " }}}
@@ -486,12 +480,15 @@ aug pencil
                 \ | setl spell spl=en_us noru nonu nornu
                 \ | setl fdo+=search
                 \ | setl background=light
+                \ | color pencil
                 \ | setl nocursorcolumn
-    autocmd FileType markdown,mkd
+    autocmd FileType markdown,mkd,md
                 \   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
                 \ | call litecorrect#init()
                 \ | setl spell spl=en_us noru nonu nornu
+                \ | setl background=light
                 \ | setl fdo+=search
+                \ | color pencil
     autocmd Filetype git,gitsendemail,*commit*,*COMMIT*
                 \   call pencil#init({'wrap': 'soft', 'textwidth': 72})
                 \ | call litecorrect#init()
@@ -529,4 +526,4 @@ let g:enable_numbers = 0
 "let g:goyo_margin_bottom = 2
 "let g:goyo_linenr = 0
 " }}}
-"
+" }}}
