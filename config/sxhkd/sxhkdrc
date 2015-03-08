@@ -25,9 +25,9 @@ mod4 + Right
 # Decrease volume
 mod4 + Left
     amixer -c 0 set Master 1-
-# Run executable
+# Zathura pdf
 mod4 + p
-    dm rn
+    xdotool search --maxdept 1 --onlyvisible --classname "tabbed-zathura" windowunmap || xdotool search --maxdept 1 --classname "tabbed-zathura" windowmap || zathura-tabbed &
 # Kill process
 mod4 + u
     dm ps

@@ -13,11 +13,15 @@ install -m755 config/sxhkd/* ~/.config/sxhkd
 
 # rss feed
 install -d ~/.newsbeuter
-install -m644 newsbeuter/config ~/.newsbeuter
-install -m644 newsbeuter/urls ~/.newsbeuter
+install -Dm644 newsbeuter/config ~/.newsbeuter
+install -Dm644 newsbeuter/urls ~/.newsbeuter
+
+# pdf
+install -d ~/.config/zathura
+install -Dm644 config/zathura/zathurarc ~/.config/zathura/zathurarc
 
 # editor
-install -d ~/.vim ~/.vim/bundle
+install -Dd ~/.vim ~/.vim/bundle
 install -Dm644 vimrc ~/.vimrc
 install -Dm644 vim/ycm_extra_conf_c.py ~/.vim/.ycm_extra_conf_c.py
 install -Dm644 vim/ycm_extra_conf_cpp.py ~/.vim/.ycm_extra_conf_cpp.py

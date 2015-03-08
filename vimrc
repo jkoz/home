@@ -244,7 +244,7 @@ se wildignore+=*.so,*.swp,*.zip,*.class,*.jar,*.gz,*pom.xml.org,*pyc,*.xls,*.svn
 se wildignore+=*_build/*,*/coverage/*,*/target/*,*/tmp/*,*/lib/*,*/.settings/*,*/.git/*
 
 " completeopt {{{
-"se dict=/usr/share/dict/words
+se dict=/usr/share/dict/words
 set complete=.,b,u,]
 set wildmode=longest,list:longest
 "set completeopt=menu,preview
@@ -277,38 +277,31 @@ com! DoMvnTestDebug cal MvnTestDebug()
 
 " markdown {{{
 fu! DoMarkdownPreview()
-  call system('pandoc --template=/home/tait/Dropbox/Dotfiles/pandoc-templates/default.tex -s ' . expand('%:p') . ' -o /tmp/vim-markdown-preview.pdf')
-  let chrome_wid = system("xdotool search --name 'vim-markdown-preview.pdf - Chromium'")
-  if !chrome_wid
-    call system('chromium /tmp/vim-markdown-preview.pdf &> /dev/null &')
-    let chrome_wid = system("xdotool search --name 'vim-markdown-preview.pdf - Chromium'")
-    call system('xdotool windowactivate ' . chrome_wid)
-  else
-    let curr_wid = system('xdotool getwindowfocus')
-    call system('xdotool windowmap ' . chrome_wid)
-    call system('xdotool windowactivate ' . chrome_wid)
-    call system("xdotool key 'ctrl+r'")
-  endif
+  cal system('pandoc --template=/home/tait/Dropbox/Dotfiles/pandoc-templates/default.latex -s ' . expand('%:p') . ' -o /tmp/'. expand('%:t:r') . '.pdf')
+  cal PreviewPdf()
 endf
 
 com! MarkdownPreview cal DoMarkdownPreview()
 " }}}
 " latex {{{
 fu! DoLatexPreview()
-  call system('pdflatex -output-directory /tmp ' . expand('%:p' ))
-  let chrome_wid = system("xdotool search --name '" . expand('%:t:r') . ".pdf'")
-  if !chrome_wid
-    call system('zathura-tabbed /tmp/' . expand('%:t:r') . '.pdf &> /dev/null &')
-    let chrome_wid = system("xdotool search --name '" . expand('%:t:r') . ".pdf'")
-    call system('xdotool windowactivate ' . chrome_wid)
-  else
-    let curr_wid = system('xdotool getwindowfocus')
-    call system('xdotool windowmap ' . chrome_wid)
-    "call system('xdotool windowactivate ' . chrome_wid)
-    call system("xdotool key --window " . chrome_wid . " 'R'")
-  endif
+  cal system('pdflatex -output-directory /tmp ' . expand('%:p' ))
+  cal PreviewPdf()
 endf
 com! LatexPreview cal DoLatexPreview()
+
+fu! PreviewPdf()
+  let wid = system("xdotool search --name '" . expand('%:t:r') . ".pdf'")
+  if !wid
+    call system('zathura-tabbed /tmp/' . expand('%:t:r') . '.pdf &> /dev/null &')
+    let wid = system("xdotool search --name '" . expand('%:t:r') . ".pdf'")
+    call system('xdotool windowactivate ' . wid)
+  else
+    let curr_wid = system('xdotool getwindowfocus')
+    call system('xdotool windowmap ' . wid)
+    call system("xdotool key --window " . wid . " 'R'")
+  endif
+endf
 " }}}
 " }}}
 " Auto Groups {{{
