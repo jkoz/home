@@ -38,6 +38,7 @@ sxhkd & # bindkey
 
 # web browser deamon
 #chromium --no-startup-window &
+google-chrome-stable --no-startup-window &
 
 # Redshift - changed screen colour temp
 redshift-gtk &
@@ -85,7 +86,7 @@ case $session in
     bspwm             ) exec bspwm;;
     catwm             ) exec catwm;;
     cinnamon          ) exec cinnamon-session;;
-    dwm               ) dwmstatus & exec dwm;;
+    dwm               ) dwmstatus & wmname LG3D & exec dwm;; # compatiple with java program
     enlightenment     ) exec enlightenment_start;;
     ede               ) exec startede;;
     fluxbox           ) exec startfluxbox;;

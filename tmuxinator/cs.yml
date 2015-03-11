@@ -1,0 +1,6 @@
+name: CS
+root: ~/Dropbox/Documents/CS/Winter_2015
+
+windows:
+    - CS:
+        - vim

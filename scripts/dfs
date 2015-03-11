@@ -30,6 +30,9 @@ install -Dm644 vim/ycm_extra_conf_cpp.py ~/.vim/.ycm_extra_conf_cpp.py
 install -Dm644 tmux.conf ~/.tmux.conf
 #install -Dm644 screenrc ~/.screenrc
 
+install -d ~/.tmuxinator
+install -Dm644 tmuxinator/cs.yml ~/.tmuxinator
+
 # applications
 install -d ~/.local ~/.local/share ~/.local/share/applications
 install -Dm644 local/share/applications/vim.desktop ~/.local/share/applications/vim.desktop

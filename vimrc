@@ -472,16 +472,12 @@ aug pencil
                 \ | call litecorrect#init()
                 \ | setl spell spl=en_us noru nonu nornu
                 \ | setl fdo+=search
-                \ | setl background=light
-                \ | color pencil
                 \ | setl nocursorcolumn
     autocmd FileType markdown,mkd,md
                 \   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
                 \ | call litecorrect#init()
                 \ | setl spell spl=en_us noru nonu nornu
-                \ | setl background=light
                 \ | setl fdo+=search
-                \ | color pencil
     autocmd Filetype git,gitsendemail,*commit*,*COMMIT*
                 \   call pencil#init({'wrap': 'soft', 'textwidth': 72})
                 \ | call litecorrect#init()

@@ -7,6 +7,9 @@ export PICVIEW="feh"
 export SNDPLAY="mplayer"
 export TERMINAL="st"
 
+# fix java problem in dwm, used with wmname LG3D set in xinitrc
+export _JAVA_AWT_WM_NONREPARENTING=1
+
 export LESS_TERMCAP_mb=$'\E[01;31m'
 export LESS_TERMCAP_md=$'\E[01;38;5;74m'
 export LESS_TERMCAP_me=$'\E[0m'
@@ -191,6 +194,15 @@ fd () {
 
 #}}}
 # alias {{{
+if which exa >/dev/null; then
+    alias ls=exa
+    alias l='exa -lh'
+    alias ll='exa -abghHliS'
+else
+    alias ll='ls -lah --color=auto'
+    alias l='ls --color=auto'
+fi
+
 alias pdf="zathura-tabbed"
 alias bt="transmission-remote"
 alias extract='dtrx'
@@ -212,9 +224,6 @@ alias bub='say en beau is a bunkace'
 alias unblock-wireless='rfkill unblock all && ifconfig set wlp3s0 up'
 alias space='ncdu'
 alias space-color='cdu'
-alias ll='ls -lah --color=auto'
-alias la='ls -ltra'
-alias l='ls --color=auto'
 alias C='clear'
 alias home='cd ~'
 alias ..='cd ..'
@@ -225,11 +234,6 @@ alias k='exit'
 alias te='trash-empty'
 alias tl='trash-list'
 alias del='trash-put'
-alias tr='trash-rm'
-alias lsTrash='ls ~/.local/share/Trash/files/'
-alias cdTrash='cd ~/.local/share/Trash/files/'
-alias lD='ls ~/Downloads'
-alias D='cd ~/Downloads'
 alias irssi='TERM=screen-256color irssi'
 alias b='mvn clean install -Dtest'
 alias e='mvn eclipse:clean eclipse:eclipse'
