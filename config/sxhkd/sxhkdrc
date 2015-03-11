@@ -3,7 +3,11 @@ mod4 + Return
     st
 # Terminal Dropdown
 mod4 + i
-    xdotool search --maxdept 1 --onlyvisible "terminaldropdown" windowunmap || xdotool search --maxdept 1 "terminaldropdown" windowmap || st -c terminaldropdown -e tmux a &
+    xdotool search --maxdept 1 --onlyvisible --classname "terminaldropdown" windowunmap || xdotool search --maxdept 1 --classname "terminaldropdown" windowmap || st -c terminaldropdown -e tmux a &
+# Terminal
+mod4 + t
+    xdotool search --maxdept 1 --onlyvisible --classname "st-256color" windowunmap || xdotool search --maxdept 1 --classname "st-256color" windowmap || st &
+
 # Dictionary
 mod4 + d
     xdotool search --maxdept 1 --onlyvisible "ldoce5viewer" windowunmap || xdotool search --maxdept 1 "ldoce5viewer" windowmap || ldoce5viewer &
