@@ -21,6 +21,7 @@ Plugin 'Valloric/YouCompleteMe'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'edsono/vim-matchit'
 Plugin 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/nerdtree'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
 Plugin 'gavinbeatty/dragvisuals.vim'
@@ -101,10 +102,10 @@ vm <C-c> "+y
 nn <C-v> "+p
 
 " resize vim
-nn <silent> <F11> :exe "vert res -2" <cr>
-nn <silent> <F12> :exe "vert res +2" <cr>
-nn <silent> <F9>  :exe "res -2" <cr>
-nn <silent> <F10> :exe "res +2" <cr>
+"nn <silent> <F11> :exe "vert res -2" <cr>
+"nn <silent> <F12> :exe "vert res +2" <cr>
+"nn <silent> <F9>  :exe "res -2" <cr>
+"nn <silent> <F10> :exe "res +2" <cr>
 
 " Toggle wrap
 nn <Leader>W :setl nowrap! <CR>
@@ -275,34 +276,6 @@ fu! MvnTestDebug()
 endf
 com! DoMvnTestDebug cal MvnTestDebug()
 
-" markdown {{{
-fu! DoMarkdownPreview()
-  cal system('pandoc --template=/home/tait/Dropbox/Dotfiles/pandoc-templates/default.latex -s ' . expand('%:p') . ' -o /tmp/'. expand('%:t:r') . '.pdf')
-  cal PreviewPdf()
-endf
-
-com! MarkdownPreview cal DoMarkdownPreview()
-" }}}
-" latex {{{
-fu! DoLatexPreview()
-  cal system('pdflatex -output-directory /tmp ' . expand('%:p' ))
-  cal PreviewPdf()
-endf
-com! LatexPreview cal DoLatexPreview()
-
-fu! PreviewPdf()
-  let wid = system("xdotool search --name '" . expand('%:t:r') . ".pdf'")
-  if !wid
-    call system('zathura-tabbed /tmp/' . expand('%:t:r') . '.pdf &> /dev/null &')
-    let wid = system("xdotool search --name '" . expand('%:t:r') . ".pdf'")
-    call system('xdotool windowactivate ' . wid)
-  else
-    let curr_wid = system('xdotool getwindowfocus')
-    call system('xdotool windowmap ' . wid)
-    call system("xdotool key --window " . wid . " 'R'")
-  endif
-endf
-" }}}
 " }}}
 " Auto Groups {{{
 aug configgroup
@@ -321,25 +294,19 @@ aug END
 let g:tagbar_autofocus = 1
 nn <silent> <leader>t :TagbarToggle<cr>
 " }}}
-" Nerd tree {{{
-nn <leader>n :NERDTreeToggle<CR>
+" Nerd Tree {{{
+nn <leader>no :NERDTreeToggle<CR>
 nn <leader>nf :NERDTreeFind<CR>
-" Store the bookmarks file
-let NERDTreeBookmarksFile=expand("$HOME/.vim/NERDTreeBookmarks")
+
 let g:NERDTreeDirArrows=0
-" Show the bookmarks table on startup
-let NERDTreeShowBookmarks=1
-" Show hidden files, too
-let NERDTreeShowFiles=1
+let NERDTreeBookmarksFile=expand("$HOME/.vim/NERDTreeBookmarks") " Store the bookmarks file
+let NERDTreeShowBookmarks=1 " Show the bookmarks table on startup
+let NERDTreeShowFiles=1 " Show hidden files, too
 let NERDTreeShowHidden=1
-" Quit on opening files from the tree
-" let NERDTreeQuitOnOpen=2
+let NERDTreeQuitOnOpen=2 " Quit on opening files from the tree
 let NERDTreeWinSize = 40
-" Highlight the selected entry in the tree
-"let NERDTreeHighlightCursorline=1
-" Use a single click to fold/unfold directories and a double click to open files
-let NERDTreeMouseMode=2
-" Don't display these kinds of files
+let NERDTreeHighlightCursorline=1 " Highlight the selected entry in the tree
+let NERDTreeMouseMode=2 " Use a single click to fold/unfold directories and a double click to open files
 let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$',
             \ '\.o$', '\.so$', '\.egg$', '^\.git$', '\.svn$', '^target$', '^\.settings$', '^\.classpath$', '^\.project$', '^\.hg', '.pydevproject'  ]
 " }}}
@@ -366,7 +333,7 @@ com! CtrlPUnicode call ctrlp#init(ctrlp#unicode#id())
 " Dmenu {{{
 let g:dmenu_backend = "dmenu -l 10"
 " }}}
-" dbext {{{
+" Databse {{{
 let g:dbext_default_profile_192_168_95_227_replaceme='type=MYSQL:user=root:passwd=mysql:dbname=replaceme:host=192.168.95.227'
 let g:dbext_default_profile_192_168_95_228_replaceme='type=MYSQL:user=root:passwd=mysql:dbname=replaceme:host=192.168.95.228'
 let g:dbext_default_profile_192_168_95_111_NI='type=MYSQL:user=root:passwd=mysql:dbname=NI:host=192.168.95.111:port=3307'
@@ -412,14 +379,14 @@ fu! GetQualiedName()
     return l:bp
 endf
 " }}}
-" dragvisuals {{{
+" Drag visuals {{{
 vm <expr> H DVB_Drag('left')
 vm <expr> L DVB_Drag('right')
 vm <expr> J DVB_Drag('down')
 vm <expr> K DVB_Drag('up')
 vm <expr> D DVB_Duplicate()
 " }}}
-" betterdigraphs {{{
+" Better Digraphs {{{
 "inoremap <expr>  <C-K>  BDG_GetDigraph()
 " }}}
 " Ack {{{
@@ -427,7 +394,7 @@ nn <silent> <Leader>a :Ack <cword><cr>
 let g:ackprg = 'ag'
 let g:ack_default_options = " -H --nocolor --nogroup --column"
 " }}}
-" utilsnip{{{
+" Util snippet {{{
 "let g:UltiSnipsExpandTrigger="<c-g>"
 "let g:UltiSnipsJumpForwardTrigger="<c-b>"
 "let g:UltiSnipsJumpBackwardTrigger="<c-z>"
@@ -473,11 +440,13 @@ aug pencil
                 \ | setl spell spl=en_us noru nonu nornu
                 \ | setl fdo+=search
                 \ | setl nocursorcolumn
+                \ | let b:dispatch = 'sh /usr/local/bin/preview %:p'
     autocmd FileType markdown,mkd,md
                 \   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
                 \ | call litecorrect#init()
                 \ | setl spell spl=en_us noru nonu nornu
                 \ | setl fdo+=search
+                \ | let b:dispatch = 'sh /usr/local/bin/preview %:p'
     autocmd Filetype git,gitsendemail,*commit*,*COMMIT*
                 \   call pencil#init({'wrap': 'soft', 'textwidth': 72})
                 \ | call litecorrect#init()
@@ -501,11 +470,11 @@ if has('gui_running')
     se guifont="Times New Roman 12"
     se nocursorcolumn
 
-    se background=light
+    se background=dark
     colo solarized
 endif
 " }}}
-" numbers {{{
+" Numbers {{{
 nn <leader>N :NumbersToggle<cr>
 let g:enable_numbers = 0
 " }}}
@@ -514,5 +483,11 @@ let g:enable_numbers = 0
 "let g:goyo_margin_top = 2
 "let g:goyo_margin_bottom = 2
 "let g:goyo_linenr = 0
+" }}}
+" Latex {{{
+let g:tex_conceal= 'admgS' " do not conceal 'textit' as there is a bug conceal 2 textit on the same line, only first match is conceal
+" }}}
+" Dispatch {{{
+nn <F9> :silent Dispatch!<CR>
 " }}}
 " }}}
