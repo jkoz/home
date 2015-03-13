@@ -113,9 +113,10 @@ bindkey '^e' zle-fd
 #bindkey '^e' end-of-line
 # }}}
 # prompt {{{
-_promt_git_info() { echo -n %{$fg[cyan]%}; git rev-parse --abbrev-ref HEAD 2> /dev/null | xargs -r printf '%s ';  }
-_prompt_hg_info() { echo -n %{$fg[blue]%}; hg branch 2> /dev/null | xargs -r printf '%s '; }
-PS1="%{$fg[red]%}%n%{$reset_color%}@%{$fg[green]%}%m %{$fg[yellow]%}%~ \$(_promt_git_info)\$(_prompt_hg_info)%{$reset_color%}%% "
+_promt_git_info() { git rev-parse --abbrev-ref HEAD 2> /dev/null | xargs -r printf '%%F{cyan}(%s) ';  }
+_prompt_hg_info() { hg branch 2> /dev/null | xargs -r printf '%%F{blue}(%s) '; }
+PROMPT="%{$fg[green]%}> %{$reset_color%}"
+RPROMPT="\$(_promt_git_info)\$(_prompt_hg_info)%{$reset_color%}"
 # }}}
 # completion {{{
 autoload -Uz compinit && compinit
