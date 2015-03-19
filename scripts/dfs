@@ -11,6 +11,11 @@ install -d ~/.config
 install -d ~/.config/sxhkd
 install -m755 config/sxhkd/* ~/.config/sxhkd
 
+# gtk
+install -d ~/.config/gtk-2.0/
+install -Dm755 config/gtk-2.0/gtkfilechooser.ini ~/.config/gtk-2.0
+install -Dm755 gtkrc-2.0 ~/.gtkrc-2.0
+
 # rss feed
 install -d ~/.newsbeuter
 install -Dm644 newsbeuter/config ~/.newsbeuter

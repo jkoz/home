@@ -16,7 +16,7 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 
 call vundle#begin()
-Plugin 'ervandew/supertab'
+"Plugin 'ervandew/supertab'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'edsono/vim-matchit'
@@ -30,9 +30,12 @@ Plugin 'tpope/vim-dispatch'
 Plugin 'myusuf3/numbers.vim'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
+Plugin 'mattn/emmet-vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'kien/ctrlp.vim'
 Plugin 'suy/vim-ctrlp-commandline'
+Plugin 'JazzCore/ctrlp-cmatcher'
+Plugin 'airblade/vim-gitgutter'
 Plugin 'bling/vim-airline'
 Plugin 'scrooloose/Syntastic'
 Plugin 'tpope/vim-markdown'
@@ -289,7 +292,6 @@ aug configgroup
 
 aug END
 " }}}
-" Plugins {{{
 " Tag bar {{{
 let g:tagbar_autofocus = 1
 nn <silent> <leader>t :TagbarToggle<cr>
@@ -316,6 +318,7 @@ let g:ctrlp_max_height = 5
 let g:ctrlp_max_files=100000
 let g:ctrlp_clear_cache_on_exit=0
 let g:ctrlp_use_caching = 0
+let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
 
 nn <silent> <Leader>o :CtrlPBufTag<CR>
 nn <silent> <Leader>b :CtrlPBookmarkDir<CR>
@@ -340,19 +343,20 @@ let g:dbext_default_profile_192_168_95_111_NI='type=MYSQL:user=root:passwd=mysql
 let g:dbext_default_profile_192_168_99_246_NI='type=MYSQL:user=root:passwd=mysql:dbname=NI:host=192.168.99.246'
 " }}}
 " Eclim {{{
-nn <silent> <Leader>l :LocateFile<CR>
-nn <silent> <Leader>s :JavaSearchContext<CR>
-nn <silent> <Leader>i :JavaImport<CR>
-nn <silent> <Leader>p :ProjectsTree<CR>
-nn <silent> <Leader>h :JavaHierarchy<cr>
-" FIXME: conflict with dmenufm
-"xn <silent> <Leader>f :JavaFormat<cr>
-nn <silent> <Leader>j :JavaDocComment<cr>
+
+nn <silent> <Leader>el :LocateFile<CR>
+nn <silent> <Leader>es :JavaSearchContext<CR>
+nn <silent> <Leader>ei :JavaImport<CR>
+nn <silent> <Leader>ep :ProjectsTree<CR>
+nn <silent> <Leader>eh :JavaHierarchy<cr>
+xn <silent> <Leader>ef :JavaFormat<cr>
+nn <silent> <Leader>ej :JavaDocComment<cr>
 
 let g:EclimJavaSearchSingleResult='edit'
 let g:EclimLocateFileDefaultAction='edit'
 let g:EclimLocateFileScope = 'workspace'
 let g:EclimCompletionMethod = 'omnifunc'
+
 fu! CopyBreakPoint()
     let @+ = GetBreakPoint()
 endf
@@ -378,6 +382,7 @@ fu! GetQualiedName()
     let l:bp = l:bp . substitute(expand('%:t'), '.java', '', '')
     return l:bp
 endf
+
 " }}}
 " Drag visuals {{{
 vm <expr> H DVB_Drag('left')
@@ -391,18 +396,28 @@ vm <expr> D DVB_Duplicate()
 " }}}
 " Ack {{{
 nn <silent> <Leader>a :Ack <cword><cr>
-let g:ackprg = 'ag'
-let g:ack_default_options = " -H --nocolor --nogroup --column"
+if executable('ag')
+    let g:ackprg = "ag --nocolor --nogroup --column"
+elseif executable('ack-grep')
+    let g:ackprg = "ack-grep --nocolor --nogroup --column"
+elseif executable('ack')
+    let g:ackprg = "ack --nocolor --nogroup --column"
+endif
 " }}}
 " Util snippet {{{
-"let g:UltiSnipsExpandTrigger="<c-g>"
-"let g:UltiSnipsJumpForwardTrigger="<c-b>"
-"let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-"let g:UltiSnipsSnippetsDir="~/.vim/bundle/vim-snippets/UltiSnips"
+" - latex: only type key words, not the forwards slash
+let g:UltiSnipsSnippetsDir="~/.vim/bundle/vim-snippets/UltiSnips"
+let g:UltiSnipsExpandTrigger = "<c-g>i" " a little bit slow to trigger!
+let g:UltiSnipsJumpForwardTrigger="<c-j>"
+let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+let g:UltiSnipsListSnippets = "<c-s-s>"
 " }}}
 " YouCompleteMe {{{
 nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
 nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
+nnoremap <leader>pg :YcmCompleter GoTo<CR>
+nnoremap <leader>pd :YcmCompleter GoToDefinition<CR>
+nnoremap <leader>pc :YcmCompleter GoToDeclaration<CR>
 
 "Do not ask when starting vim
 let g:ycm_confirm_extra_conf = 0
@@ -413,8 +428,6 @@ let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_global_ycm_extra_conf = "./.ycm_extra_conf.py"
 
 " avoid conflict with other plugins use tab (snippets)
-"let g:ycm_key_list_previous_completion=['<Up>']
-"let g:ycm_key_list_select_completion=['<Down']
 let g:ycm_key_list_select_completion = ['<C-TAB>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-S-TAB>', '<Up>']
 
@@ -426,8 +439,12 @@ let g:ycm_autoclose_preview_window_after_completion=1
 let g:ycm_server_use_vim_stdout = 1
 let g:ycm_server_log_level = 'debug'
 " }}}
+" Syntastic {{{
+let g:syntastic_error_symbol = '✗'
+let g:syntastic_warning_symbol = '⚠'
+" }}}
 " SuperTab {{{
-let g:SuperTabDefaultCompletionType = '<C-Tab>'
+"let g:SuperTabDefaultCompletionType = '<C-Tab>'
 " }}}
 " Pencil {{{
 " soft mode use 1 line even if it is long line
@@ -489,5 +506,4 @@ let g:tex_conceal= 'admgS' " do not conceal 'textit' as there is a bug conceal 2
 " }}}
 " Dispatch {{{
 nn <F9> :silent Dispatch!<CR>
-" }}}
 " }}}
