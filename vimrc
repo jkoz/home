@@ -457,13 +457,13 @@ aug pencil
                 \ | setl spell spl=en_us noru nonu nornu
                 \ | setl fdo+=search
                 \ | setl nocursorcolumn
-                \ | let b:dispatch = 'sh /usr/local/bin/preview %:p'
+                \ | let b:dispatch = "sh /usr/local/bin/preview '%:p'"
     autocmd FileType markdown,mkd,md
                 \   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
                 \ | call litecorrect#init()
                 \ | setl spell spl=en_us noru nonu nornu
                 \ | setl fdo+=search
-                \ | let b:dispatch = 'sh /usr/local/bin/preview %:p'
+                \ | let b:dispatch = "sh /usr/local/bin/preview '%:p'"
     autocmd Filetype git,gitsendemail,*commit*,*COMMIT*
                 \   call pencil#init({'wrap': 'soft', 'textwidth': 72})
                 \ | call litecorrect#init()

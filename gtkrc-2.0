@@ -1,14 +1,21 @@
 # use solarize scheme
 include "/usr/share/themes/Numix Solarized/gtk-2.0/gtkrc"
 
+# font
+style "user-font" {
+	font_name = "Cousine 10"
+}
+widget_class "*" style "user-font"
+gtk-font-name="Cousine 10"
+
 binding "gtk-vi-text-view"
 {
-    bind "<ctrl>d" { "move-cursor" (display-lines, 5, 0) }
-    bind "<ctrl>f" { "move-cursor" (display-lines, 5, 0) }
-    bind "<ctrl>u" { "move-cursor" (display-lines, -5, 0) }
-    bind "<ctrl>b" { "move-cursor" (display-lines, -5, 0) }
-    bind "<ctrl>e" { "move-cursor" (display-lines, -1, 0) }
-    bind "<ctrl>y" { "move-cursor" (display-lines, 1, 0) }
+    #bind "<ctrl>d" { "move-cursor" (display-lines, 5, 0) }
+    #bind "<ctrl>f" { "move-cursor" (display-lines, 5, 0) }
+    #bind "<ctrl>u" { "move-cursor" (display-lines, -5, 0) }
+    #bind "<ctrl>b" { "move-cursor" (display-lines, -5, 0) }
+    #bind "<ctrl>e" { "move-cursor" (display-lines, -1, 0) }
+    #bind "<ctrl>y" { "move-cursor" (display-lines, 1, 0) }
 }
 
 binding "gtk-vi-tree-view"

@@ -1,18 +1,18 @@
 #!/bin/sh
 
-fn="$(basename $1 | cut -d'.' -f1).pdf"
+fn="$(basename "$1" | cut -d'.' -f1).pdf"
 
 # latex
-file $1 | grep -iq latex && pdflatex -output-directory /tmp $1
+file "$1" | grep -iq latex && pdflatex -output-directory /tmp "$1"
 
 # markdown
-basename $1 | grep -iq "\.md$" && pandoc --template=/home/tait/Dropbox/Dotfiles/pandoc-templates/default.latex -s $1 -o /tmp/${fn}
+basename "$1" | grep -iq "\.md$" && pandoc --template=/home/tait/Dropbox/Dotfiles/pandoc-templates/default.latex -s "$1" -o /tmp/${fn}
 
 
 wid=$(xdotool search --name "${fn}")
 
 if test -z "$wid"; then
-    setsid zathura-tabbed /tmp/${fn}
+    setsid zathura-tabbed "/tmp/${fn}"
     xdotool search --name "${fn}" windowactivate
 else
     xdotool key --window $wid 'R'
