@@ -41,12 +41,10 @@ Plugin 'reedes/vim-colors-pencil'
 Plugin 'reedes/vim-pencil'
 Plugin 'reedes/vim-litecorrect'
 Plugin 'gerw/vim-latex-suite'
+Plugin 'mhinz/vim-startify'
 
 "Plugin 'ervandew/supertab'
 "Plugin 'klen/python-mode'
-"Plugin 'christoomey/vim-tmux-navigator' " http://robots.thoughtbot.com/seamlessly-navigate-vim-and-tmux-splits
-"Plugin 'vim-scripts/peaksea'
-"Plugin 'vimoutliner/vimoutliner'
 "Plugin 'vim-scripts/vcscommand.vim'
 "Plugin 'vim-scripts/dbext.vim'
 "Plugin 'Lokaltog/vim-easymotion'
