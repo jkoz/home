@@ -7,6 +7,9 @@ cd $1
 
 install -d ~/.config
 
+# ctags
+install -m755 ctags ~/.ctags
+
 # bind keys
 install -d ~/.config/sxhkd
 install -m755 config/sxhkd/* ~/.config/sxhkd

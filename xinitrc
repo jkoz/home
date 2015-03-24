@@ -3,7 +3,7 @@
 
 xrdb ~/.Xresources # load x resources
 
-xset r rate 300 50 # use faster typing
+xset r rate 250 60
 xset b off # no beep
 xset +fp ~/.fonts
 xset +fp /usr/share/fonts/local

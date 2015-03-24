@@ -16,7 +16,6 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 
 call vundle#begin()
-"Plugin 'ervandew/supertab'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'edsono/vim-matchit'
@@ -32,9 +31,7 @@ Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'mattn/emmet-vim'
 Plugin 'majutsushi/tagbar'
-Plugin 'kien/ctrlp.vim'
-Plugin 'suy/vim-ctrlp-commandline'
-Plugin 'JazzCore/ctrlp-cmatcher'
+Plugin 'jkoz/vim-fzf'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'bling/vim-airline'
 Plugin 'scrooloose/Syntastic'
@@ -45,16 +42,15 @@ Plugin 'reedes/vim-pencil'
 Plugin 'reedes/vim-litecorrect'
 Plugin 'gerw/vim-latex-suite'
 
+"Plugin 'ervandew/supertab'
 "Plugin 'klen/python-mode'
 "Plugin 'christoomey/vim-tmux-navigator' " http://robots.thoughtbot.com/seamlessly-navigate-vim-and-tmux-splits
 "Plugin 'vim-scripts/peaksea'
-"Plugin 'jkoz/dmenu.vim'
 "Plugin 'vimoutliner/vimoutliner'
 "Plugin 'vim-scripts/vcscommand.vim'
 "Plugin 'vim-scripts/dbext.vim'
 "Plugin 'Lokaltog/vim-easymotion'
 "Plugin 'sjl/gundo.vim'
-"Plugin 'naquad/ctrlp-digraphs.vim'
 "Plugin 'atweiden/vim-betterdigraphs'
 "Plugin 'chrisbra/unicode.vim'
 "Plugin 'vim-scripts/vim-auto-save'
@@ -295,6 +291,16 @@ aug END
 " Tag bar {{{
 let g:tagbar_autofocus = 1
 nn <silent> <leader>t :TagbarToggle<cr>
+
+let g:tagbar_type_markdown = {
+    \ 'ctagstype' : 'markdown',
+    \ 'kinds' : [
+        \ 'h:Heading_L1',
+        \ 'i:Heading_L2',
+        \ 'k:Heading_L3'
+    \ ]
+    \ }
+
 " }}}
 " Nerd Tree {{{
 nn <leader>no :NERDTreeToggle<CR>
@@ -312,35 +318,29 @@ let NERDTreeMouseMode=2 " Use a single click to fold/unfold directories and a do
 let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$',
             \ '\.o$', '\.so$', '\.egg$', '^\.git$', '\.svn$', '^target$', '^\.settings$', '^\.classpath$', '^\.project$', '^\.hg', '.pydevproject'  ]
 " }}}
-" Ctrlp {{{
-let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
-let g:ctrlp_max_height = 5
-let g:ctrlp_max_files=100000
-let g:ctrlp_clear_cache_on_exit=0
-let g:ctrlp_use_caching = 0
-let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
-
-nn <silent> <Leader>o :CtrlPBufTag<CR>
-nn <silent> <Leader>b :CtrlPBookmarkDir<CR>
-nn <silent> <Leader>z :CtrlPBuffer<CR>
-nn <silent> <Leader>m :CtrlPMRUFiles<CR>
-
-let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir', 'rtscript', 'commandline',
-                          \ 'undo', 'line', 'changes', 'mixed', 'bookmarkdir']
-" CtrlPCommandline
-com! CtrlPCommandline cal ctrlp#init(ctrlp#commandline#id())
-nn <silent> <Leader>q :CtrlPCommandline<CR>
-" CtrlPUnicode
-com! CtrlPUnicode call ctrlp#init(ctrlp#unicode#id())
-" }}}
 " Dmenu {{{
-let g:dmenu_backend = "dmenu -l 10"
+if exists('$DISPLAY')
+    let g:dmenu_backend = "fzf"
+    let g:dmenu_launcher= 'st -c Fzf -e sh -c'
+el
+    let g:dmenu_backend = "fzf-tmux"
+    let g:dmenu_launcher= ''
+en
+
+nn <silent> <c-p>     :Dmenu<CR>
+nn <silent> <leader>f :DmenuFM<CR>
+nn <silent> <Leader>z :DmenuBuffer<CR>
+nn <silent> <Leader>m :DmenuMRU<CR>
+nn <silent> <Leader>o :DmenuBufTag<CR>
+nn <silent> <Leader>q :DmenuHistory<CR>
+nn <silent> <Leader>l :DmenuLines<CR>
+
 " }}}
 " Databse {{{
-let g:dbext_default_profile_192_168_95_227_replaceme='type=MYSQL:user=root:passwd=mysql:dbname=replaceme:host=192.168.95.227'
-let g:dbext_default_profile_192_168_95_228_replaceme='type=MYSQL:user=root:passwd=mysql:dbname=replaceme:host=192.168.95.228'
-let g:dbext_default_profile_192_168_95_111_NI='type=MYSQL:user=root:passwd=mysql:dbname=NI:host=192.168.95.111:port=3307'
-let g:dbext_default_profile_192_168_99_246_NI='type=MYSQL:user=root:passwd=mysql:dbname=NI:host=192.168.99.246'
+"let g:dbext_default_profile_192_168_95_227_replaceme='type=MYSQL:user=root:passwd=mysql:dbname=replaceme:host=192.168.95.227'
+"let g:dbext_default_profile_192_168_95_228_replaceme='type=MYSQL:user=root:passwd=mysql:dbname=replaceme:host=192.168.95.228'
+"let g:dbext_default_profile_192_168_95_111_NI='type=MYSQL:user=root:passwd=mysql:dbname=NI:host=192.168.95.111:port=3307'
+"let g:dbext_default_profile_192_168_99_246_NI='type=MYSQL:user=root:passwd=mysql:dbname=NI:host=192.168.99.246'
 " }}}
 " Eclim {{{
 
