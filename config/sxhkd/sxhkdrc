@@ -39,7 +39,7 @@ mod4 + u
 mod4 + bracketright
     slock
 # Reboot
-mod4 + r
+mod4 + shift + r
     systemctl reboot
 # Power off
 mod4 + s
