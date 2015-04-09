@@ -73,6 +73,9 @@ setopt AUTO_CD                      # Automatically cd in to directories if it's
 setopt AUTO_PUSHD                   # Automatically push visited directories to the stack.
 setopt PUSHD_IGNORE_DUPS            # ...and don't duplicate them.
 
+bindkey -v
+export KEYTIMEOUT=1                 # 0.1 second to change to normal mode for line editing
+
 # History Options
 setopt APPEND_HISTORY               # Don't overwrite history.
 setopt SHARE_HISTORY                # write history entries directly to the history file, share the current history file between all sessions.
@@ -128,10 +131,22 @@ bindkey '^e' zle-fd
 #bindkey '^e' end-of-line
 # }}}
 # prompt {{{
-_promt_git_info() { git rev-parse --abbrev-ref HEAD 2> /dev/null | xargs -r printf '%%F{cyan}(%s) ';  }
-_prompt_hg_info() { hg branch 2> /dev/null | xargs -r printf '%%F{blue}(%s) '; }
-PROMPT="%{$fg[green]%}> %{$reset_color%}"
-RPROMPT="\$(_promt_git_info)\$(_prompt_hg_info)%{$reset_color%}"
+
+reset_color="%F{white}"
+_prompt_git_info() { git rev-parse --abbrev-ref HEAD 2> /dev/null | xargs -r printf '%%F{cyan}[%s] ';  }
+_prompt_hg_info() { hg branch 2> /dev/null | xargs -r printf '%%F{blue}[%s] '; }
+_prompt() { test -z "$VIM_PROMPT" && echo "%{%F{blue}%}>%{%F{blue}%}>%{%F{red}%}> " || echo "%F{blue}%}<%F{blue}%}<%F{red}%}< "; }
+
+PROMPT="\$(_prompt)%{$reset_color%}"
+RPROMPT="\$(_prompt_git_info)\$(_prompt_hg_info)%{$reset_color%}"
+
+function zle-line-init zle-keymap-select {
+    VIM_PROMPT="${${KEYMAP/vicmd/ normal }/(main|viins)/}"
+    zle reset-prompt
+}
+
+zle -N zle-line-init
+zle -N zle-keymap-select
 # }}}
 # completion {{{
 autoload -Uz compinit && compinit

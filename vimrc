@@ -42,6 +42,7 @@ Plugin 'reedes/vim-pencil'
 Plugin 'reedes/vim-litecorrect'
 Plugin 'gerw/vim-latex-suite'
 Plugin 'mhinz/vim-startify'
+Plugin 'fatih/vim-go'
 
 "Plugin 'ervandew/supertab'
 "Plugin 'klen/python-mode'
@@ -297,7 +298,18 @@ let g:tagbar_type_markdown = {
         \ 'i:Heading_L2',
         \ 'k:Heading_L3'
     \ ]
-    \ }
+\ }
+
+let g:tagbar_type_tex = {
+    \ 'ctagstype' : 'latex',
+    \ 'kinds'     : [
+        \ 's:sections',
+        \ 'g:graphics:0:0',
+        \ 'l:labels',
+        \ 'r:refs:1:0',
+        \ 'p:pagerefs:1:0'
+    \ ]
+\ }
 
 " }}}
 " Nerd Tree {{{
@@ -504,4 +516,15 @@ let g:tex_conceal= 'admgS' " do not conceal 'textit' as there is a bug conceal 2
 " }}}
 " Dispatch {{{
 nn <F9> :silent Dispatch!<CR>
+" }}}
+" Startify {{{
+let g:startify_relative_path          = 0
+let g:startify_files_number           = 8
+let g:startify_session_persistence    = 1
+let g:startify_session_autoload       = 1
+let g:startify_session_delete_buffers = 1
+let g:startify_change_to_dir          = 1
+let g:startify_enable_special         = 0
+let g:startify_enable_unsafe          = 1
+" }}}
 " }}}

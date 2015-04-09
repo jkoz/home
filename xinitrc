@@ -26,6 +26,9 @@ xsetroot -solid "#002b36" -cursor_name left_ptr -name " " # use left pointer cur
 # desktop notification
 #dunst &
 
+# wallpaper
+find ~/Dropbox/Pictures -type f | shuf -n1 | xargs feh --bg-center
+
 # gpg-agent
 gpg-agent --daemon --use-standard-socket
 

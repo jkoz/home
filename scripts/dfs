@@ -101,6 +101,7 @@ install -Dm644 irssi/scripts/* ~/.irssi/scripts
 # file manager
 install -d ~/.config/ranger
 install -Dm644 config/ranger/* ~/.config/ranger
+install -Dm755 ~/.config/ranger/scope.sh
 
 # panel
 install -Dm644 config/tint2/* ~/.config/tint2
