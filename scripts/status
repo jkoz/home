@@ -1,0 +1,30 @@
+#!/usr/bin/bash
+
+fifofile=/tmp/dwmstatus
+rm -rf ${fifofile}; mkfifo ${fifofile}
+
+
+# W: weather
+while true; do curl --silent 'http://weather.yahooapis.com/forecastrss?w=8676&u=c' | sed -ne '/Current Conditions/{n;p}' | sed -e 's/<BR \/>//' | xargs -r0 printf "W%s"; sleep 5; done > $fifofile &
+
+# D: date
+while true; do date '+D%I:%M %p'; sleep 1; done > $fifofile &
+
+# B: battery
+while true; do acpi -b | cut -d' ' -f4 | xargs -r0 printf "B%s"; sleep 2; done > $fifofile &
+
+# C: cpu
+while true; do grep 'cpu ' /proc/stat | awk '{printf "CCPU %0.1f%\n\r", ($2+$4)*100/($2+$4+$5)}'; sleep 2; done > $fifofile &
+
+
+weather="" clock="" battery="" cpu="" sep="    "
+cat ${fifofile} | while read -r line; do
+    case "$line" in
+        W*) weather="${line#?}${sep}";;
+        D*) clock="${line#?}${sep}";;
+        B*) battery="${line#?}${sep}";;
+        C*) cpu="${line#?}${sep}";;
+    esac
+    status=$(echo "${weather}${cpu}${clock}${battery}" | sed "s/$sep$//")
+    echo "$status"
+done

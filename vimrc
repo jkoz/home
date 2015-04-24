@@ -1,49 +1,41 @@
 " Bundles {{{
-let iCanHazVundle=1
-let vundle_readme=expand('~/.vim/bundle/vundle/README.md')
-if !filereadable(vundle_readme)
-    echo "Installing Vundle.."
-    echo ""
-    silent !mkdir -p ~/.vim/bundle
-    silent !git clone https://github.com/gmarik/vundle ~/.vim/bundle/vundle
-    let iCanHazVundle=0
+if !filereadable(expand('~/.vim/autoload/plug.vim'))
+    sil !mkdir -p ~/.vim/plugged
+    sil !git clone https://github.com/junegunn/vim-plug ~/.vim/autoload
+    :PlugInstall
 endif
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
 
-set nocompatible
-filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
+cal plug#begin('~/.vim/plugged')
 
-call vundle#begin()
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'edsono/vim-matchit'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/nerdtree'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-fugitive'
-Plugin 'gavinbeatty/dragvisuals.vim'
-Plugin 'mileszs/ack.vim'
-Plugin 'tpope/vim-dispatch'
-Plugin 'myusuf3/numbers.vim'
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
-Plugin 'mattn/emmet-vim'
-Plugin 'majutsushi/tagbar'
-Plugin 'jkoz/vim-fzf'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'bling/vim-airline'
-Plugin 'scrooloose/Syntastic'
-Plugin 'tpope/vim-markdown'
-Plugin 'nelstrom/vim-markdown-folding'
-Plugin 'reedes/vim-colors-pencil'
-Plugin 'reedes/vim-pencil'
-Plugin 'reedes/vim-litecorrect'
-Plugin 'gerw/vim-latex-suite'
-Plugin 'mhinz/vim-startify'
-Plugin 'fatih/vim-go'
+Plug 'Valloric/YouCompleteMe'
+Plug 'altercation/vim-colors-solarized'
+Plug 'edsono/vim-matchit'
+Plug 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-fugitive'
+Plug 'gavinbeatty/dragvisuals.vim'
+Plug 'mileszs/ack.vim'
+Plug 'tpope/vim-dispatch'
+Plug 'myusuf3/numbers.vim'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'mattn/emmet-vim'
+Plug 'majutsushi/tagbar'
+Plug 'kien/ctrlp.vim', { 'on': ['CtrlP', 'DmenuFM', 'DmenuBuffer', 'DmenuMRU', 'DmenuBufTag', 'DmenuHistory', 'DmenuLines'] }
+Plug 'jkoz/vim-fzf', { 'on': ['Dmenu', 'DmenuFM', 'DmenuBuffer', 'DmenuMRU', 'DmenuBufTag', 'DmenuHistory', 'DmenuLines'] }
+Plug 'bling/vim-airline'
+Plug 'scrooloose/Syntastic'
+Plug 'tpope/vim-markdown'
+Plug 'nelstrom/vim-markdown-folding'
+Plug 'reedes/vim-colors-pencil'
+Plug 'reedes/vim-pencil'
+Plug 'reedes/vim-litecorrect'
+Plug 'gerw/vim-latex-suite'
+Plug 'mhinz/vim-startify'
+Plug 'fatih/vim-go'
 
+"Plug 'airblade/vim-gitgutter'
 "Plugin 'ervandew/supertab'
 "Plugin 'klen/python-mode'
 "Plugin 'vim-scripts/vcscommand.vim'
@@ -56,16 +48,11 @@ Plugin 'fatih/vim-go'
 "Plugin 'ervandew/eclim'
 "Plugin 'airblade/vim-rooter'
 
-call vundle#end()
+call plug#end()
+
 filetype plugin indent on
 syntax on
 
-"...All your other bundles...
-if iCanHazVundle == 0
-    echo "Installing Bundles, please ignore key map error messages"
-    echo ""
-    :BundleInstall
-endif
 " }}}
 " Mappings {{{
 let mapleader = ","
@@ -282,7 +269,7 @@ aug configgroup
     au BufRead,BufNewFile *.vim setl shiftwidth=2 tabstop=2 foldmethod=marker foldlevel=0
     au BufNewFile,BufRead *.otl setl listchars=tab:\|\ ,extends:>,precedes:<,nbsp:~,trail:.
     au BufRead,BufNewFile *rc setl foldmethod=marker
-    au BufRead,BufNewFile *.c,*.h,*.hh setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=manual foldlevel=0
+    au BufRead,BufNewFile *.c,*.h,*.hh setl tabstop=4 softtabstop=4 expandtab foldmethod=manual foldlevel=0
     au BufRead,BufNewFile *.h,*.hpp,*.cc,*.cpp setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=manual foldlevel=0
 
 aug END
@@ -328,14 +315,7 @@ let NERDTreeMouseMode=2 " Use a single click to fold/unfold directories and a do
 let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$',
             \ '\.o$', '\.so$', '\.egg$', '^\.git$', '\.svn$', '^target$', '^\.settings$', '^\.classpath$', '^\.project$', '^\.hg', '.pydevproject'  ]
 " }}}
-" Dmenu {{{
-if exists('$DISPLAY')
-    let g:dmenu_backend = "fzf"
-    let g:dmenu_launcher= 'st -c Fzf -e sh -c'
-el
-    let g:dmenu_backend = "fzf-tmux"
-    let g:dmenu_launcher= ''
-en
+" Fzf {{{
 
 nn <silent> <c-p>     :Dmenu<CR>
 nn <silent> <leader>f :DmenuFM<CR>
@@ -344,6 +324,23 @@ nn <silent> <Leader>m :DmenuMRU<CR>
 nn <silent> <Leader>o :DmenuBufTag<CR>
 nn <silent> <Leader>q :DmenuHistory<CR>
 nn <silent> <Leader>l :DmenuLines<CR>
+
+if exists('$DISPLAY')
+    let g:dmenu_backend = "fzf"
+    let g:dmenu_launcher= 'st -c Fzf -e sh -c'
+elsei exists('$TMUX')
+    let g:dmenu_backend = "fzf-tmux"
+    let g:dmenu_launcher= ''
+el
+    nn <silent> <c-p>     :Dmenu<CR>
+    nn <silent> <leader>f :DmenuFM<CR>
+    nn <silent> <Leader>z :DmenuBuffer<CR>
+    nn <silent> <Leader>m :DmenuMRU<CR>
+    nn <silent> <Leader>o :DmenuBufTag<CR>
+    nn <silent> <Leader>q :DmenuHistory<CR>
+    nn <silent> <Leader>l :DmenuLines<CR>
+en
+
 
 " }}}
 " Databse {{{

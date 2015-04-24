@@ -197,7 +197,7 @@ stty -ixon
 # goc() - quickly build c & run it {{{
 goc() {
     # echo "int main() { printf(\"Hello from cmd\"); }" | goc
-    c99 -xc - -g -O2 -Wall -I/usr/include -lm -include math.h -include stdio.h -include stdlib.h -o /tmp/a.out;
+    c99 -xc - -g -O2 -Wall -I/usr/include -lm -include math.h -include stdio.h -include stdlib.h -o /tmp/a.out; /tmp/a.out;
 }
 # }}}
 # fd() - quick open file in terminal {{{

@@ -2,110 +2,44 @@
 #dnscrypt-proxy &
 
 xrdb ~/.Xresources # load x resources
-
 xset r rate 250 60
 xset b off # no beep
-xset +fp ~/.fonts
-xset +fp /usr/share/fonts/local
-xset +fp /usr/share/fonts/misc
 setxkbmap -option ctrl:swapcaps # swap caplocks and left ctrl
 xautolock -locker  "slock" -corners 0+00  -cornerdelay 1 & # xautolock
-xsetroot -solid "#002b36" -cursor_name left_ptr -name " " # use left pointer cursor in all cases
-
-# replace by st
-#/usr/bin/urxvtd -q -f -o # terminal daemon
-# idesk
-#idesk &
-# composite
-#compton -b
-# vnc TODO: this block start at the first time, should run as service
-#x11vnc -shared -rfbport 5900 -forever -usepw -display :0.0 -bg
-# Network manager front-end
-#nm-applet &
-
-# desktop notification
-#dunst &
-
-# wallpaper
-find ~/Dropbox/Pictures -type f | shuf -n1 | xargs feh --bg-center
-
-# gpg-agent
-gpg-agent --daemon --use-standard-socket
-
-# torrent
-transmission-daemon -c ~/Downloads
-
-# following services are now managed by systemd
-dropboxd &
+#xsetroot -solid "#002b36" -cursor_name left_ptr -name " " # use left pointer cursor in all cases
 sxhkd & # bindkey
-
-# web browser deamon
-#chromium --no-startup-window &
+compton -b
+dunst & # desktop notification
+find ~/Dropbox/Pictures -type f | shuf -n1 | xargs feh --bg-center
+gpg-agent --daemon --use-standard-socket
+#transmission-daemon -c ~/Downloads
+dropbox &
 google-chrome-stable --no-startup-window &
-
-# Redshift - changed screen colour temp
 redshift-gtk &
+status | while read -r line; do echo "%{r}$line      "; done | lemonbar -f "Cousin-10" -B "#50000000" &
 
-# Hides the mouse cursor after 5 seconds of idle
-# this causes bug in dwm, not able to move to other windows! FUCK
-#unclutter -root -jitter 10 &
-
-# fetchmail
-
-# auto mount usb
-#udiskie &
-
-#
-# Volume system tray
-# pa-applet &
+#xset +fp ~/.fonts
+#xset +fp /usr/share/fonts/local
+#xset +fp /usr/share/fonts/misc
+#x11vnc -shared -rfbport 5900 -forever -usepw -display :0.0 -bg
+#/usr/bin/urxvtd -q -f -o # terminal daemon
+#idesk &
+#nm-applet & # Network manager front-end
+#unclutter -root -jitter 10 & # Hides the mouse cursor
+#udiskie & # auto mount usb
+# pa-applet & # Volume system tray
 # volti &
-#
-# # Radio streams
-# radiotray &
-#
-# copy /past handler
-# autocutsel -fork &
-#
-#
+# radiotray & # Radio streams
+# autocutsel -fork & copy /past handler
 
 # Addition monitor
-if test $2; then
-    # TV configure if any
-    # Samsung TV : Menu / Picture / Picture Options / Size / Screen Fit (instead of 16:9)
-    # Sharp Aquos : Menu > System Options > View Option > View Mode > Dot by Dot
-    # monitors
-    xrandr --output HDMI1 --auto --primary --left-of LVDS1
-    xrandr --output LVDS1 --off
+#if test $2; then
+    #xrandr --output HDMI1 --auto --primary --left-of LVDS1
+    #xrandr --output LVDS1 --off
     #xrandr --output LVDS1 --auto --primary --on
-fi
+#fi
 
 
-# start with startx ~/.xinitrc bspwm
-# Here dwm is kept as default
-session=${1:-dwm}
-
-case $session in
-    awesome           ) exec awesome;;
-    bspwm             ) exec bspwm;;
-    catwm             ) exec catwm;;
-    cinnamon          ) exec cinnamon-session;;
-    dwm               ) dwmstatus & wmname LG3D & exec dwm;; # compatiple with java program
-    enlightenment     ) exec enlightenment_start;;
-    ede               ) exec startede;;
-    fluxbox           ) exec startfluxbox;;
-    gnome             ) exec gnome-session;;
-    gnome-classic     ) exec gnome-session --session=gnome-classic;;
-    i3|i3wm           ) exec i3;;
-    icewm             ) exec icewm-session;;
-    jwm               ) exec jwm;;
-    kde               ) exec startkde;;
-    mate              ) exec mate-session;;
-    monster|monsterwm ) exec monsterwm;;
-    notion            ) exec notion;;
-    openbox           ) exec openbox-session;;
-    unity             ) exec unity;;
-    xfce|xfce4        ) exec startxfce4;;
-    xmonad            ) exec xmonad;;
-    # No known session, try to run it as command
-    *) exec $1;;
-esac
+session=${1:-wm}
+exec ${1:-wm}
+test -n "$1" && wm || $1
