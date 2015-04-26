@@ -110,7 +110,9 @@ install -Dm644 config/tint2/* ~/.config/tint2
 install -Dm644 config/compton.conf ~/.config/compton.conf
 
 # conky
-#install -Dm644 conkyrc ~/.conkyrc
+install -d ~/.conky
+install -Dm644 conkyrc ~/.conkyrc
+install -Dm644 conky/* ~/.conky
 
 # mplayer
 install -d ~/.mplayer

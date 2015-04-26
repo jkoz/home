@@ -17,6 +17,7 @@ dropbox &
 google-chrome-stable --no-startup-window &
 redshift-gtk &
 status | while read -r line; do echo "%{r}$line      "; done | lemonbar -f "Cousin-10" -B "#50000000" &
+conky &
 
 #xset +fp ~/.fonts
 #xset +fp /usr/share/fonts/local

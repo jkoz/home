@@ -205,7 +205,7 @@ se shiftround " use multiple of shiftwidth when indenting with '<' and '>'
 "se number " turn on number
 "se nonumber " turn on number
 se cursorline " highlight current light
-se cursorcolumn
+"se cursorcolumn
 
 " paragraph {{{
 se nowrap
