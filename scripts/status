@@ -11,7 +11,7 @@ while true; do curl --silent 'http://weather.yahooapis.com/forecastrss?w=8676&u=
 while true; do date '+D%I:%M %p'; sleep 1; done > $fifofile &
 
 # B: battery
-while true; do acpi -b | cut -d' ' -f4 | xargs -r0 printf "B%s"; sleep 2; done > $fifofile &
+while true; do acpi -b | cut -d',' -f2 | xargs -r0 printf "B%s"; sleep 2; done > $fifofile &
 
 # C: cpu
 while true; do grep 'cpu ' /proc/stat | awk '{printf "CCPU %0.1f%\n\r", ($2+$4)*100/($2+$4+$5)}'; sleep 2; done > $fifofile &

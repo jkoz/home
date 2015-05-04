@@ -1,4 +1,4 @@
-# encrypts DNS traffic between the user and a DNS resolver, preventing spying, spoofing or man-in-the-middle attacks.
+ encrypts DNS traffic between the user and a DNS resolver, preventing spying, spoofing or man-in-the-middle attacks.
 #dnscrypt-proxy &
 
 xrdb ~/.Xresources # load x resources
@@ -6,18 +6,20 @@ xset r rate 250 60
 xset b off # no beep
 setxkbmap -option ctrl:swapcaps # swap caplocks and left ctrl
 xautolock -locker  "slock" -corners 0+00  -cornerdelay 1 & # xautolock
+xsetroot -solid "#002b36" -cursor_name left_ptr -name " "
 #xsetroot -solid "#002b36" -cursor_name left_ptr -name " " # use left pointer cursor in all cases
 sxhkd & # bindkey
 compton -b
 dunst & # desktop notification
-find ~/Dropbox/Pictures -type f | shuf -n1 | xargs feh --bg-center
+find ~/Dropbox/Pictures -type f | shuf -n1 | xargs feh --bg-fill
 gpg-agent --daemon --use-standard-socket
-#transmission-daemon -c ~/Downloads
+transmission-daemon -c ~/Downloads
 dropbox &
 google-chrome-stable --no-startup-window &
 redshift-gtk &
-status | while read -r line; do echo "%{r}$line      "; done | lemonbar -f "Cousin-10" -B "#50000000" &
-conky &
+status | while read -r line; do echo "%{r}$line      "; done | lemonbar -f "Cousin-11:bold:antialias=true:dpi=96" -B "#75ffffff" -F"#ff000000" &
+#conky &
+devmon --exec-on-drive "st -c Fzf -e sh -c \"xdotool search 'Fzf' windowsize 100% 50%; dm fm %d\"" &
 
 #xset +fp ~/.fonts
 #xset +fp /usr/share/fonts/local
@@ -40,7 +42,4 @@ conky &
     #xrandr --output LVDS1 --auto --primary --on
 #fi
 
-
-session=${1:-wm}
-exec ${1:-wm}
-test -n "$1" && wm || $1
+exec wm

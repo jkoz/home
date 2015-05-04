@@ -57,6 +57,10 @@ export AXS_HOME="${PROJECT}/axs"
 export MEDIA_HOME="$HOME/media"
 export GEM_HOME=/home/tait/.gem/ruby/2.2.0
 export XMODIFIERS=@im=SCIM
+
+export GTK_MODULES=rgba
+export GTK_RGBA_APPS="allbut:firefox-bin:gnome-mplayer:totem:soffice:<unknown>:exe"
+
 export GTK_IM_MODULE="scim"
 export QT_IM_MODULE="scim"
 export MPD_HOST=~/.mpd/socket
