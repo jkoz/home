@@ -42,7 +42,7 @@ mod4 + bracketright
 mod4 + shift + r
     systemctl reboot
 # Power off
-mod4 + s
+mod4 + shift + s
     systemctl poweroff
 # Browser
 mod4 + b
