@@ -17,8 +17,7 @@ transmission-daemon -c ~/Downloads
 dropbox &
 google-chrome-stable --no-startup-window &
 redshift-gtk &
-#status | while read -r line; do echo "%{r}$line      "; done | lemonbar -f "Cousin-11:bold:antialias=true:dpi=96" -B "#75ffffff" -F"#ff000000" &
-status | while read -r line; do echo "%{r}$line      "; done | lemonbar -f "Cousin-11:bold:autohint=false:dpi=96" -B "#f0073642" -F"#ffffffff" &
+status | while read -r line; do echo "%{r}$line      "; done | lemonbar -f "Lucida Grande-11:Bold" -B "#f0073642" -F"#ffffffff" &
 #conky &
 devmon --exec-on-drive "st -c Fzf -e sh -c \"xdotool search 'Fzf' windowsize 100% 50%; dm fm %d\"" &
 

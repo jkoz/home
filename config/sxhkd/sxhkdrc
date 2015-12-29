@@ -13,10 +13,10 @@ mod4 + d
     xdotool search --maxdept 1 --onlyvisible --name "LDOCE5 viewer" windowunmap || xdotool search --maxdept 1 --name "LDOCE5 viewer" windowmap windowraise windowmove 0 20 windowsize 100% 97% || ldoce5viewer &
 # File Manager
 mod4 + f
-    st -c Fzf -e sh -c "xdotool search 'Fzf' windowsize 100% 50%; dm fm"
+    st -c Fzf -e sh -c "xdotool search 'Fzf' windowsize 100% 50% windowmove 0 20; dm fm"
 # Switch window
 mod4 + w
-    st -c Fzf -e sh -c "xdotool search 'Fzf' windowsize 100% 50%; dm sw"
+    st -c Fzf -e sh -c "xdotool search 'Fzf' windowsize 100% 50% windowmove 0 20; dm sw"
 # Increase Backlight
 mod4 + Up
     xbacklight -inc 20
@@ -34,7 +34,7 @@ mod4 + p
     xdotool search --maxdept 1 --onlyvisible --classname "tabbed-zathura" windowunmap || xdotool search --maxdept 1 --classname "tabbed-zathura" windowmap windowraise windowmove 0 20 windowsize 100% 97% || zathura-tabbed &
 # Kill process
 mod4 + u
-    st -c Fzf -e sh -c "xdotool search 'Fzf' windowsize 100% 50%; dm ps"
+    st -c Fzf -e sh -c "xdotool search 'Fzf' windowsize 100% 50% windowmove 0 20; dm ps"
 # Lock screen
 mod4 + bracketright
     slock
@@ -55,7 +55,7 @@ mod4 + Print
     scrot -s -e 'mv $f /tmp/ && gimp /tmp/$f'
 # Run applications (desktop files)
 mod4 + space
-    st -c Fzf -e sh -c "xdotool search 'Fzf' windowsize 100% 50%; dm rn"
+    st -c Fzf -e sh -c "xdotool search 'Fzf' windowsize 100% 50% windowmove 0 20; dm rn"
 # Toogle Mpd
 mod4 + n
     mpc -h ~/.mpd/socket toggle
@@ -64,13 +64,13 @@ mod4 + e
     clerk
 # Edit systemd files
 mod4 + z
-    st -c Fzf -e sh -c "xdotool search 'Fzf' windowsize 100% 50%; dm open /etc/systemd/ /usr/lib/systemd ~/.config/systemd"
+    st -c Fzf -e sh -c "xdotool search 'Fzf' windowsize 100% 50% windowmove 0 20; dm open /etc/systemd/ /usr/lib/systemd ~/.config/systemd"
 # Google launcher
 mod4 + g
     chromium --show-app-list
 # Edit clouds file
 mod4 + c
-    st -c Fzf -e sh -c "xdotool search 'Fzf' windowsize 100% 50%; dm open $CLOUD_HOME"
+    st -c Fzf -e sh -c "xdotool search 'Fzf' windowsize 100% 50% windowmove 0 20; dm open $CLOUD_HOME"
 # Notes TODO: move to dm
 mod4 + m
     cd $CLOUD_HOME/Documents && xdg-open "$(ag --silent -l -g "Note.md$" Notes CS | dm)" &
@@ -79,7 +79,7 @@ mod4 + r
     pkill -USR1 -x sxhkd
 # Menu
 mod4 + bracketleft
-    st -c Fzf -e sh -c "xdotool search 'Fzf' windowsize 100% 50%; dm mn"
+    st -c Fzf -e sh -c "xdotool search 'Fzf' windowsize 100% 50% windowmove 0 20; dm mn"
 # Close window
 mod4 + shift + c
     xdotool selectwindow windowkill

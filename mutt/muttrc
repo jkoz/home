@@ -8,6 +8,8 @@
 push <show-version> #show version
 set nomark_old #avoid marking unread msgs as old ones
 set nobeep #plz dont be noisy
+set confirmappend=no
+set wait_key=no # do not wait new key "Press any key to continue..."
 set delete = yes #don't confirm
 set quit = yes #don't confirm
 set sort = "threads"
@@ -15,7 +17,7 @@ set sort_aux = "reverse-last-date-received" #like gmail
 set sort_re # thread based on regex
 set followup_to = no #http://larve.net/people/hugo/2000/07/ml-mutt
 set honor_followup_to = no
-set pager_index_lines = 10 # number of index lines to show
+#set pager_index_lines = 10 # number of index lines to show
 set pager_context = 5 # number of context lines to show
 set pager_stop # don't go to the next message automatically
 set menu_scroll

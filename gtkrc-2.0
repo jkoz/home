@@ -1,12 +1,15 @@
 # use solarize scheme
-include "/usr/share/themes/Numix Solarized/gtk-2.0/gtkrc"
+#include "/usr/share/themes/Numix Solarized/gtk-2.0/gtkrc"
+include "/usr/share/themes/Numix-OSX/gtk-2.0/gtkrc"
 
 # font
 style "user-font" {
-	font_name = "Cousine 10"
+	#font_name = "Cousine 10"
+    font_name = "Lucida Grande 11"
 }
 widget_class "*" style "user-font"
-gtk-font-name="Cousine 10"
+#gtk-font-name="Cousine 10"
+gtk-font-name="Lucida Grande 11"
 
 binding "gtk-vi-text-view"
 {
