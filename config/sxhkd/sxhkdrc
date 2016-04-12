@@ -46,6 +46,12 @@ mod4 + shift + s
     systemctl poweroff
 # Browser
 mod4 + b
+    xdotool search --maxdept 1 --onlyvisible --classname "VimbT" windowunmap || xdotool search --maxdept 1 --classname "VimbT" windowmap windowraise windowmove 0 20 windowsize 100% 97% || vimb-tabbed &
+mod4 + h
+    st -c Fzf -e sh -c "dm bh | xargs -r vimb-tabbed"
+mod4 + m
+    st -c Fzf -e sh -c "dm bm | xargs -r vimb-tabbed"
+mod4 + shift + b
     xdotool search --maxdept 1 --onlyvisible --name "\- Google Chrome" windowunmap || xdotool search --maxdept 1 "\- Google Chrome" windowmap windowraise windowmove 0 20 windowsize 100% 97% || google-chrome-stable &
 # Screen print
 Print

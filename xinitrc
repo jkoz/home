@@ -7,30 +7,62 @@ xset b off # no beep
 setxkbmap -option ctrl:swapcaps # swap caplocks and left ctrl
 xautolock -locker  "slock" -corners 0+00  -cornerdelay 1 & # xautolock
 xsetroot -solid "#002b36" -cursor_name left_ptr -name " "
-#xsetroot -solid "#002b36" -cursor_name left_ptr -name " " # use left pointer cursor in all cases
-sxhkd & # bindkey
+
+# bindkey
+sxhkd &
+
+# Composite
 compton -b
-dunst & # desktop notification
-find ~/Dropbox/Pictures -type f | shuf -n1 | xargs feh --bg-fill
+
+# Desktop notification
+dunst &
+
+# GPG
 gpg-agent --daemon --use-standard-socket
+
+# Torrent
 transmission-daemon -c ~/Downloads
+
+# Cloud
 dropbox &
-google-chrome-stable --no-startup-window &
-redshift-gtk &
-status | while read -r line; do echo "%{r}$line      "; done | lemonbar -f "Lucida Grande-11:Bold" -B "#f0073642" -F"#ffffffff" &
+
+# browser
+#google-chrome-stable --no-startup-window &
+
+#
+redshift &
+
+# Status
+status | while read -r line; do echo "%{r}$line      "; done | lemonbar -f "Cousine-11" -B "#f0073643" -F"#ffffffff" &
 #conky &
-devmon --exec-on-drive "st -c Fzf -e sh -c \"xdotool search 'Fzf' windowsize 100% 50%; dm fm %d\"" &
+
+#devmon --exec-on-drive "st -c Fzf -e sh -c \"xdotool search 'Fzf' windowsize 100% 50%; dm fm %d\"" &
 
 #xset +fp ~/.fonts
 #xset +fp /usr/share/fonts/local
 #xset +fp /usr/share/fonts/misc
+
+# VNC
 #x11vnc -shared -rfbport 5900 -forever -usepw -display :0.0 -bg
+
+# Terminal
 #/usr/bin/urxvtd -q -f -o # terminal daemon
+
+# Desktop
 #idesk &
+
+# Network
 #nm-applet & # Network manager front-end
-#unclutter -root -jitter 10 & # Hides the mouse cursor
-#udiskie & # auto mount usb
-# pa-applet & # Volume system tray
+
+# Hides the mouse cursor
+#unclutter -root -jitter 10 &
+
+# auto mount usb
+#udiskie &
+
+# Volume system tray
+# pa-applet &
+
 # volti &
 # radiotray & # Radio streams
 # autocutsel -fork & copy /past handler

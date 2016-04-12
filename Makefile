@@ -21,7 +21,8 @@ all: \
 	conk \
 	ply \
 	idsk \
-	fnt
+	fnt \
+	vimb
 
 vm:
 	install -Dm600 vimrc ~/.vimrc
@@ -119,3 +120,9 @@ fnt:
 	install -Dm644 fonts/xbmicons.bdf ~/.fonts/xbmicons.bdf
 	mkfontscale ~/.fonts
 	mkfontdir ~/.fonts
+
+vimb:
+	install -Dm644 config/vimb/style.css ~/.config/vimb/style.css
+	install -Dm644 config/vimb/config ~/.config/vimb/config
+	install -Dm644 config/vimb/bookmark ~/.config/vimb/bookmark
+

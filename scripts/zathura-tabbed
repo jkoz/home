@@ -9,8 +9,7 @@ then
 fi
 
 runtabbed() {
-    tabbed -dn tabbed-zathura -r 2 zathura -e '' "$uri" >"$xidfile" \
-        2>/dev/null &
+    tabbed -c -f -dn tabbed-zathura -r 2 zathura -e '' "$uri" >"$xidfile" 2>/dev/null &
 }
 
 if [ ! -r "$xidfile" ];

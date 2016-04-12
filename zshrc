@@ -1,7 +1,7 @@
 # environment {{{
 export EDITOR="vim"
 export PAGER="less"
-export BROWSER="google-chrome-stable"
+export BROWSER="vimb-tabbed"
 export MOVPLAY="mplayer"
 export PICVIEW="feh"
 export SNDPLAY="mplayer"
