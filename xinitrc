@@ -15,22 +15,23 @@ sxhkd &
 compton -b
 
 # Desktop notification
-dunst &
+#dunst &
 
 # GPG
-gpg-agent --daemon --use-standard-socket
+#gpg-agent --daemon --use-standard-socket
 
 # Torrent
-transmission-daemon -c ~/Downloads
+# Move to systemd
+#transmission-daemon -c ~/Downloads
 
 # Cloud
-dropbox &
+#dropbox &
 
 # browser
 #google-chrome-stable --no-startup-window &
 
-#
-redshift &
+# move to systemd
+#redshift &
 
 # Status
 status | while read -r line; do echo "%{r}$line      "; done | lemonbar -f "Cousine-11" -B "#f0073643" -F"#ffffffff" &
@@ -74,4 +75,4 @@ status | while read -r line; do echo "%{r}$line      "; done | lemonbar -f "Cous
     #xrandr --output LVDS1 --auto --primary --on
 #fi
 
-exec wm
+exec bspwm

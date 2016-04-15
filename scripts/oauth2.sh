@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#set -x
+
 user=""
 mail_feed=""
 curl_imap=""
@@ -26,7 +28,7 @@ _refresh_tokens() {
         refresh_token=`grep refresh_token $xoauth_file | sed -r 's/refresh_token=(.*)/\1/g'`
     else
         echo "Creating new tokens... "
-        $BROWSER "${oauth2_uri}/auth?scope=${scope}&response_type=${response_type}&redirect_uri=${redirect_uri}&client_id=${client_id}" |> /dev/null
+        $BROWSER "${oauth2_uri}/auth?scope=${scope}&response_type=${response_type}&redirect_uri=${redirect_uri}&client_id=${client_id}"
         printf "Go to browser, copy and paste code here: "; read code
         response=$(curl -s "${oauth2_uri}/token" -d "client_id=${client_id}&&client_secret=${client_secret}&&redirect_uri=${redirect_uri}&&grant_type=${grant_type}&&code=${code}")
         access_token=`echo "$response" | python -mjson.tool | grep -oP 'access_token"\s*:\s*"\K(.*)"' | sed 's/"//'`

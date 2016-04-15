@@ -33,7 +33,7 @@ Plug 'reedes/vim-colors-pencil'
 Plug 'reedes/vim-pencil'
 Plug 'reedes/vim-litecorrect'
 Plug 'gerw/vim-latex-suite'
-Plug 'mhinz/vim-startify'
+"Plug 'mhinz/vim-startify'
 Plug 'fatih/vim-go'
 
 "Plug 'airblade/vim-gitgutter'

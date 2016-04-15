@@ -22,7 +22,10 @@ all: \
 	ply \
 	idsk \
 	fnt \
-	vimb
+	vimb \
+	bspwm \
+	dircolors \
+	offlineimap
 
 vm:
 	install -Dm600 vimrc ~/.vimrc
@@ -80,6 +83,8 @@ systemd:
 	install -Dm644 config/systemd/user/fetchmail.service ~/.config/systemd/user/fetchmail.service
 	install -Dm644 config/systemd/user/mpd.service ~/.config/systemd/user/mpd.service
 	install -Dm644 config/systemd/user/mpd.socket ~/.config/systemd/user/mpd.socket
+	install -Dm644 config/systemd/user/torrent.service ~/.config/systemd/user/torrent.service
+	install -Dm644 config/systemd/user/offlineimap.service ~/.config/systemd/user/offlineimap.service
 
 x:
 	install -Dm644 xinitrc ~/.xinitrc
@@ -124,5 +129,15 @@ fnt:
 vimb:
 	install -Dm644 config/vimb/style.css ~/.config/vimb/style.css
 	install -Dm644 config/vimb/config ~/.config/vimb/config
+	cp ~/.config/vimb/bookmark config/vimb/bookmark
 	install -Dm644 config/vimb/bookmark ~/.config/vimb/bookmark
 
+bspwm:
+	cp config/bspwm/bspwmrc ~/.config/bspwm/bspwmrc
+	chmod +x ~/.config/bspwm/bspwmrc
+
+dircolors:
+	install -m644 dircolors ~/.dircolors
+
+offlineimap:
+	install -m644 offlineimaprc ~/.offlineimaprc

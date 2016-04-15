@@ -49,7 +49,7 @@ auto_view text/html
 # Sidebar{{{
 set sidebar_delim   = '  │'
 set sidebar_visible = yes
-set sidebar_width   = 24
+set sidebar_width   = 30
 color sidebar_new color221 color233
 set status_chars  = " *%A"
 set status_format = "───[ Folder: %f ]───[%r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? ]───%>─%?p?( %p postponed )?───"
@@ -57,6 +57,14 @@ ignore *                                # ignore all headers
 unignore from: to: cc: date: subject:   # show only these
 unhdr_order *                           # some distros order things by default
 #hdr_order from: to: cc: date: subject:  # and in this order
+bind index \cp sidebar-prev
+bind index \cn sidebar-next
+bind index \co sidebar-open
+#bind pager CP sidebar-prev
+#bind pager CN sidebar-next
+#bind pager CO sidebar-open
+macro index b '<enter-command>toggle sidebar_visible<enter>'
+macro pager b '<enter-command>toggle sidebar_visible<enter>'
 # }}}
 # Formats {{{
 set date_format         = "%d/%m/%y at %I:%M%P"
@@ -98,46 +106,23 @@ set use_from = yes
 set envelope_from = yes
 
 # default
-set spoolfile = '~/Mail/phuoctaitp@gmail.com/INBOX'; \
-mailboxes `find ~/Mail -maxdepth 1 -mindepth 1 -type d -printf "'%h/%f/INBOX' "`
-folder-hook *Mail \
-        'set folder = '~/Mail'; \
-         mailboxes `find ~/Mail -maxdepth 1 -mindepth 1 -type d -printf "'%h/%f/INBOX' "`'
+set spoolfile = '~/Mail/phuoctaitp@gmail.com/INBOX';
 
-# phuoctaitp@gmail.com {{{
-folder-hook 'phuoctaitp@gmail.com' \
-        'set folder = '~/Mail/phuoctaitp@gmail.com'; \
-         set spoolfile = '~/Mail/phuoctaitp@gmail.com/INBOX'; \
-         set mbox = '~/Mail/phuoctaitp@gmail.com/archive'; \
-         set record = '+[Gmail]/.Sent\\ Mail'; \
-         set postponed = '+[Gmail]/.Drafts'; \
-         set realname = "Tai Tran"; \
-         set from = "phuoctaitp@gmail.com"; \
-         set sendmail = "msmtp -a gmail-phuoctaitp"; \
-         macro index F "!tmux split-window -v -l 3 \"mailagent gmail-phuoctaitp\"<enter>"; \
-         macro index d '<save-message>=[Gmail]/.Trash<enter>'; \
-         unmailboxes *; \
-         mailboxes `find ~/Mail/phuoctaitp@gmail.com -maxdepth 5 -mindepth 1 -type d ! -regex ".*\[Gmail\]$\|.*/cur$\|.*/new$\|.*/tmp$" | sed "s/ /\\\\ /g" | awk 1 ORS=" "`; \
-         color status yellow default;'
+set folder = '~/Mail/phuoctaitp@gmail.com';
+set spoolfile = '~/Mail/phuoctaitp@gmail.com/INBOX';
+set mbox = '~/Mail/phuoctaitp@gmail.com/archive';
+set record = '+[Gmail]/.Sent\\ Mail';
+set postponed = '+[Gmail]/.Drafts';
+set realname = "Tai Tran";
+set from = "phuoctaitp@gmail.com";
+# TODO: use send.py from http://cscorley.github.io/2014/01/19/sup/
+set sendmail = "msmtp -a gmail-phuoctaitp";
+macro index F "!tmux split-window -v -l 3 \"mailagent gmail-phuoctaitp\"<enter>";
+macro index d '<save-message>=[Gmail]/.Trash<enter>';
+unmailboxes *;
+mailboxes `find ~/Mail/phuoctaitp@gmail.com -maxdepth 5 -mindepth 1 -type d ! -regex ".*\[Gmail\]$\|.*/cur$\|.*/new$\|.*/tmp$" | sed "s/ /\\\\ /g" | awk 1 ORS=" "`; \
+color status yellow default;
 
-# }}}
-# thunderchief3000@yahoo.com {{{
-folder-hook 'phuoctaitp@gmail.com/[Gmail]/.Trash' 'macro index d "<delete-message><enter>"'
-folder-hook 'thunderchief3000@yahoo.com' \
-        'set folder='~/Mail/thunderchief3000@yahoo.com'; \
-         set spoolfile = '~/Mail/thunderchief3000@yahoo.com/Inbox'; \
-         set mbox = '~/Mail/thunderchief3000@yahoo.com/Inbox'; \
-         set record = '+Sent'; \
-         set postponed = '+Draft'; \
-         set realname = "Tai Tran"; \
-         set from = "thunderchief3000@yahoo.com"; \
-         set sendmail = "msmtp -a yahoo-thunderchief3000"; \
-         macro index F "!tmux split-window -v -l 3 \"mailagent yahoo-thunderchief3000\"<enter>"; \
-         macro index d '<save-message>=Trash<enter>'; \
-         unmailboxes *; \
-         mailboxes `find ~/Mail/thunderchief3000@yahoo.com -maxdepth 5 -mindepth 1 -type d ! -regex ".*/cur$\|.*/new$\|.*/tmp$" | sed "s/ /\\\\ /g" | awk 1 ORS=" "`; \
-         color status blue default;'
-# }}}
 
 macro index,pager c "<change-folder>?<toggle-mailboxes>" "open a different folder"
 
@@ -156,7 +141,7 @@ color quoted3 cyan default
 color error     red             default         # error messages
 color message   white           default         # message  informational messages
 color indicator white           red             # indicator for the "current message"
-color status    white           blue            # status lines in the folder index sed for the mini-help line
+#color status    white           blue            # status lines in the folder index sed for the mini-help line
 color tree      red             default         # the "tree" display of threads within the folder index
 color search    white           blue            # search matches found with search within the internal pager
 color markers   red             default         # The markers indicate a wrapped line hen showing messages with looong lines

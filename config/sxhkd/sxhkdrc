@@ -86,13 +86,46 @@ mod4 + r
 # Menu
 mod4 + bracketleft
     st -c Fzf -e sh -c "xdotool search 'Fzf' windowsize 100% 50% windowmove 0 20; dm mn"
+
+## Window manager stuff
+
 # Close window
 mod4 + shift + c
     xdotool selectwindow windowkill
-# Quit wm
-mod4 + shift + q
-    pkill -USR1 -x wm
 # Toogle max
 mod4 + shift + m
     xdotool selectwindow windowmove 0 20 windowsize 100% 97%
+
+# Quit wm
+#mod4 + shift + q
+    #pkill -USR1 -x wm
+
+mod4 + shift + q
+    bspc quit
+
+# alternate tiled and monocle
+mod4 + j
+    bspc desktop -l next
+
+### Focus
+
+# focus the next/previous node
+mod4 + {_,shift + }y
+    bspc node -f {next,prev}
+
+# focus the node in the given direction
+mod4 + {_,shift + }{h,j,k,l}
+    bspc node -{f,s} {west,south,north,east}
+
+# preselect the direction
+mod4 + ctrl + {h,j,k,l}
+    bspc node -p {west,south,north,east}
+
+# preselect the ratio
+mod4 + ctrl + {1-9}
+    bspc node -o 0.{1-9}
+
+# cancel the preselection for the focused node
+mod4 + ctrl + space
+    bspc node -p cancel
 

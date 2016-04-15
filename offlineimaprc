@@ -1,0 +1,29 @@
+[general]
+ui = ttyui
+accounts = gmail-phuoctaitp
+fsync = False
+
+[Account gmail-phuoctaitp]
+localrepository = gmail-phuoctaitp-local
+remoterepository = gmail-phuoctaitp-remote
+status_backend = sqlite
+
+[Repository gmail-phuoctaitp-local]
+type = Maildir
+localfolders = ~/Mail/phuoctaitp@gmail.com
+nametrans = lambda folder: { 'archive': '[Gmail]/All Mail' }.get(folder, folder)
+
+[Repository gmail-phuoctaitp-remote]
+maxconnections = 1
+type = Gmail
+remoteuser = phuoctaitp@gmail.com
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+realdelete = no
+nametrans = lambda folder: {'[Gmail]/All Mail': 'archive'}.get(folder, folder)
+
+folderfilter = lambda folder: folder not in ['[Gmail]/Trash',
+             '[Gmail]/Important',
+             '[Gmail]/Spam',
+             '[Gmail]/Drafts',
+             '[Gmail]/Sent Mail',
+             '[Gmail]/Starred']
