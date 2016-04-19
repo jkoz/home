@@ -1,0 +1,8 @@
+[Unit]
+Description=Sync mail
+RefuseManualStart=no
+RefuseManualStop=yes
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/mailagent -aV

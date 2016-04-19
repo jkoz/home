@@ -25,7 +25,7 @@ all: \
 	vimb \
 	bspwm \
 	dircolors \
-	offlineimap
+	mailagent
 
 vm:
 	install -Dm600 vimrc ~/.vimrc
@@ -80,11 +80,12 @@ notification:
 	install -Dm644 config/dunst/dunstrc ~/.config/dunst/dunstrc
 
 systemd:
-	install -Dm644 config/systemd/user/fetchmail.service ~/.config/systemd/user/fetchmail.service
+	#install -Dm644 config/systemd/user/fetchmail.service ~/.config/systemd/user/fetchmail.service
 	install -Dm644 config/systemd/user/mpd.service ~/.config/systemd/user/mpd.service
 	install -Dm644 config/systemd/user/mpd.socket ~/.config/systemd/user/mpd.socket
 	install -Dm644 config/systemd/user/torrent.service ~/.config/systemd/user/torrent.service
-	install -Dm644 config/systemd/user/offlineimap.service ~/.config/systemd/user/offlineimap.service
+	install -Dm644 config/systemd/user/mailagent.service ~/.config/systemd/user/mailagent.service
+	install -Dm644 config/systemd/user/mailagent.timer ~/.config/systemd/user/mailagent.timer
 
 x:
 	install -Dm644 xinitrc ~/.xinitrc
@@ -138,6 +139,3 @@ bspwm:
 
 dircolors:
 	install -m644 dircolors ~/.dircolors
-
-offlineimap:
-	install -m644 offlineimaprc ~/.offlineimaprc

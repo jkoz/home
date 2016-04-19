@@ -27,8 +27,8 @@ sxhkd &
 # Cloud
 #dropbox &
 
-# browser
-#google-chrome-stable --no-startup-window &
+# wallpaper
+feh --bg-center ~/Dropbox/Picture/pkptyVB-one-color-wallpaper.jpg
 
 # move to systemd
 #redshift &
@@ -75,4 +75,4 @@ status | while read -r line; do echo "%{r}$line      "; done | lemonbar -f "Cous
     #xrandr --output LVDS1 --auto --primary --on
 #fi
 
-exec bspwm
+#exec bspwm

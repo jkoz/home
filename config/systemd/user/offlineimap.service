@@ -1,8 +1,0 @@
-[Unit]
-Description=OfflineIMAP Quicksync
-After=network.target
-
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/offlineimap -o -q
-TimeoutStartSec=1min30s
