@@ -63,7 +63,7 @@ ino jk <esc>
 vn jk <esc>
 
 "nn ; :
-nn <leader>s :so $MYVIMRC<cr>
+nn <leader>r :so $MYVIMRC<cr>
 "se verbose=0
 
 " switching vim window buffer
@@ -109,6 +109,9 @@ nn <silent> <leader><space> :nohl<cr>
 " Quick quit
 nn <silent> q :q<cr>
 nn <silent> - :bd<cr>
+
+" Quick save
+nn <leader>w :update<cr>
 
 " copy full directory path of opened file to clipboard
 nmap cpd :let @+ = expand("%:p:h")<CR>
@@ -231,7 +234,7 @@ se wildignore+=*.so,*.swp,*.zip,*.class,*.jar,*.gz,*pom.xml.org,*pyc,*.xls,*.svn
 se wildignore+=*_build/*,*/coverage/*,*/target/*,*/tmp/*,*/lib/*,*/.settings/*,*/.git/*
 
 " completeopt {{{
-se dict=/usr/share/dict/words
+se dict=/usr/share/dict/cracklib-small
 set complete=.,b,u,]
 set wildmode=longest,list:longest
 "set completeopt=menu,preview
