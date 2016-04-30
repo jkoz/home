@@ -22,13 +22,14 @@ set pager_context = 5 # number of context lines to show
 set pager_stop # don't go to the next message automatically
 set menu_scroll
 set menu_context = 5
+set fast_reply
 set include = yes #automatically quote message
 set editor = "vim -c 'set ft=mail spell spelllang=en'"
 set edit_headers = yes #you can add cc, bcc, or change ur from input
 set query_command = "goobook query '%s'" #autocomplete addresses, TODO
 set header_cache = ~/.cache/mutt/headers # Store message headers locally to speed things up.
-set message_cachedir = ~/.cache/mutt/bodies
-set certificate_file = ~/.mutt.d/certificates
+#set message_cachedir = ~/.cache/mutt/bodies
+#set certificate_file = ~/.mutt.d/certificates
 set auto_tag = yes
 set charset = "utf-8"
 set move = no #don't ask to move read messages to mbox on exit
@@ -43,28 +44,24 @@ set mask = * # Gmail have hidden files .All Mail ....
 #ignore "DomainKey-Signature:"
 #ignore "DKIM-Signature:"
 hdr_order Date From To Cc
-alternative_order text/plain text/html *
+#alternative_order text/plain text/html *
 auto_view text/html
 # }}}
 # Sidebar{{{
-set sidebar_delim   = '  │'
+#set sidebar_delim   = '    '
 set sidebar_visible = yes
 set sidebar_width   = 30
-color sidebar_new color221 color233
+color sidebar_new yellow default
 set status_chars  = " *%A"
 set status_format = "───[ Folder: %f ]───[%r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? ]───%>─%?p?( %p postponed )?───"
 ignore *                                # ignore all headers
 unignore from: to: cc: date: subject:   # show only these
 unhdr_order *                           # some distros order things by default
 #hdr_order from: to: cc: date: subject:  # and in this order
-bind index \cp sidebar-prev
-bind index \cn sidebar-next
-bind index \co sidebar-open
-#bind pager CP sidebar-prev
-#bind pager CN sidebar-next
-#bind pager CO sidebar-open
-macro index b '<enter-command>toggle sidebar_visible<enter>'
-macro pager b '<enter-command>toggle sidebar_visible<enter>'
+bind index,pager \ek sidebar-prev
+bind index,pager \ej sidebar-next
+bind index,pager \eo sidebar-open
+macro index,pager b '<enter-command>toggle sidebar_visible<enter>'
 # }}}
 # Formats {{{
 set date_format         = "%d/%m/%y at %I:%M%P"
@@ -74,6 +71,9 @@ set reply_regexp = "^(([Rr][Ee]?(\[[0-9]+\])?: *)?(\[[^]]+\] *)?)*"
 set quote_regexp = "^( {0,4}[>|:#%]| {0,4}[a-z0-9]+[>|]+)+"
 # }}}
 #Mapping {{{
+bind index,pager   \t          next-unread
+bind index,pager  ,\t      previous-unread
+
 bind index gg           first-entry
 bind index G            last-entry
 bind index K            previous-thread
@@ -82,7 +82,7 @@ bind index,pager r      group-reply
 bind index,pager \#     noop
 bind index i            noop
 # Remap bounce-message function to "B"
-#bind index B            bounce-message
+bind index B            bounce-message
 #bind index I            noop
 
 bind  pager k           previous-line
@@ -106,18 +106,18 @@ set use_from = yes
 set envelope_from = yes
 
 # default
-set spoolfile = '~/Mail/phuoctaitp@gmail.com/INBOX';
+set spoolfile = '~/Mail/phuoctaitp@gmail.com/Inbox';
 
 set folder = '~/Mail/phuoctaitp@gmail.com';
-set spoolfile = '~/Mail/phuoctaitp@gmail.com/INBOX';
+set spoolfile = '~/Mail/phuoctaitp@gmail.com/Inbox';
 set mbox = '~/Mail/phuoctaitp@gmail.com/archive';
 set record = '+[Gmail]/.Sent\\ Mail';
 set postponed = '+[Gmail]/.Drafts';
 set realname = "Tai Tran";
 set from = "phuoctaitp@gmail.com";
 # TODO: use send.py from http://cscorley.github.io/2014/01/19/sup/
-set sendmail = "msmtp -a gmail-phuoctaitp";
-macro index F "!tmux split-window -v -l 3 \"mailagent gmail-phuoctaitp\"<enter>";
+set sendmail = "sendm";
+macro index,pager \cF "!tmux split-window -v -l 3 \"mailagent gmail-phuoctaitp\"<enter>";
 macro index d '<save-message>=[Gmail]/.Trash<enter>';
 unmailboxes *;
 mailboxes `find ~/Mail/phuoctaitp@gmail.com -maxdepth 5 -mindepth 1 -type d ! -regex ".*\[Gmail\]$\|.*/cur$\|.*/new$\|.*/tmp$" | sed "s/ /\\\\ /g" | awk 1 ORS=" "`; \
