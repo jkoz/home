@@ -6,6 +6,7 @@ xset r rate 250 60
 xset b off # no beep
 setxkbmap -option ctrl:swapcaps # swap caplocks and left ctrl
 xautolock -locker  "slock" -corners 0+00  -cornerdelay 1 & # xautolock
+
 xsetroot -solid "#002b36" -cursor_name left_ptr -name " "
 
 # bindkey
@@ -28,7 +29,7 @@ sxhkd &
 #dropbox &
 
 # wallpaper
-feh --bg-center ~/Dropbox/Picture/pkptyVB-one-color-wallpaper.jpg
+#feh --bg-center ~/Dropbox/Picture/pkptyVB-one-color-wallpaper.jpg
 
 # move to systemd
 #redshift &
