@@ -1,8 +1,10 @@
 # Commands {{{
 # z - move down (including delete msg)
 # Z - move up
+# u - undo delete
 # 123 - jump to msg 123
 # $ - commit changes (deleted messages)
+# sheet.shiar.nl/mutt
 # }}}
 # General {{{
 push <show-version> #show version
@@ -22,6 +24,7 @@ set pager_context = 5 # number of context lines to show
 set pager_stop # don't go to the next message automatically
 set menu_scroll
 set menu_context = 5
+set fast_reply # dont ask too much
 set include = yes #automatically quote message
 set editor = "vim -c 'set ft=mail spell spelllang=en'"
 set edit_headers = yes #you can add cc, bcc, or change ur from input
@@ -35,6 +38,8 @@ set move = no #don't ask to move read messages to mbox on exit
 set pipe_decode # strip headers and eval mimes when piping
 set thorough_search # strip headers and eval mimes before searching
 set mask = * # Gmail have hidden files .All Mail ....
+#set crypt_autosign = yes
+set status_format = "───[ Folder: %f ]───[%r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? ]───%>─%?p?( %p postponed )?───"
 
 #set alias_file = ~/.muttrc.d/aliases
 #source ~/.muttrc.d/aliases
@@ -47,15 +52,21 @@ alternative_order text/plain text/html *
 auto_view text/html
 # }}}
 # Sidebar{{{
-set sidebar_delim   = '  │'
+set sidebar_delim   = '    |'
 set sidebar_visible = yes
-set sidebar_width   = 24
-color sidebar_new color221 color233
+set sidebar_width   = 38
+#color sidebar_new color221 color233
+color sidebar_new yellow default
 set status_chars  = " *%A"
-set status_format = "───[ Folder: %f ]───[%r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? ]───%>─%?p?( %p postponed )?───"
 ignore *                                # ignore all headers
 unignore from: to: cc: date: subject:   # show only these
 unhdr_order *                           # some distros order things by default
+macro index,pager b '<enter-command>toggle sidebar_visible<enter>'
+bind index B bounce-message
+bind index,pager \ek sidebar-prev
+bind index,pager \ej sidebar-next
+bind index,pager \eo sidebar-open
+
 #hdr_order from: to: cc: date: subject:  # and in this order
 # }}}
 # Formats {{{
@@ -73,6 +84,10 @@ bind index J            next-thread
 bind index,pager r      group-reply
 bind index,pager \#     noop
 bind index i            noop
+bind index   \t          next-unread
+bind pager   \t          next-unread
+bind index  ,\t      previous-unread
+bind pager  ,\t      previous-unread
 # Remap bounce-message function to "B"
 #bind index B            bounce-message
 #bind index I            noop
