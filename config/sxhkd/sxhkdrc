@@ -3,10 +3,10 @@ mod4 + Return
     st
 # Terminal Dropdown
 mod4 + i
-    xdotool search --maxdept 1 --onlyvisible --classname "terminaldropdown" windowunmap || xdotool search --maxdept 1 --classname "terminaldropdown" windowmap windowraise windowmove 0 20 windowsize 100% 97% || st -c terminaldropdown -e tmux a &
+    xdotool search --maxdept 1 --onlyvisible --class "terminaldropdown" windowunmap || xdotool search --maxdept 1 --class "terminaldropdown" windowmap windowraise windowmove 0 20 windowsize 100% 97% || st -c terminaldropdown -e tmux a &
 # Terminal
-mod4 + t
-    xdotool search --maxdept 1 --onlyvisible --classname "st-256color" windowunmap || xdotool search --maxdept 1 --classname "st-256color" windowmap windowraise windowmove 0 20 || st &
+#mod4 + t
+    #xdotool search --maxdept 1 --onlyvisible --class "st-256color" windowunmap || xdotool search --maxdept 1 --class "st-256color" windowmap windowraise windowmove 0 20 || st &
 
 # Dictionary
 mod4 + d
