@@ -1,0 +1,7 @@
+#!/bin/sh
+# mutt call with options -f phuoctaitp@gmail.com -- phuoctaitp@gmail.com
+
+echo $@ > /tmp/asdf
+while read a;do echo $a; done | ~/Repo/curl/build/src/curl -v -silent --sasl-ir --ssl-reqd --user "phuoctaitp"  \
+    --cacert /etc/ssl/certs/ca-certificates.crt --oauth2-bearer "$(oauth2 -a phuoctaitp 2>/dev/null)" \
+    --url "smtp.gmail.com:587" --mail-from "phuoctaitp@gmail.com" --mail-rcpt "phuoctaitp@gmail.com" --upload-file -
