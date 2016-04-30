@@ -43,3 +43,26 @@ Slave :gmail-phuoctaitp-local:
 Patterns *
 Create Both
 SyncState *
+
+# tai.t@hotmail.com
+IMAPAccount hotmail-tait
+Host imap-mail.outlook.com
+User tai.t@hotmail.com
+PassCmd "oauth2 -a tait"
+Port 993
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore hotmail-tait-remote
+Account hotmail-tait
+
+MaildirStore hotmail-tait-local
+Path  ~/Mail/tai.t@hotmail.com/
+Inbox ~/Mail/tai.t@hotmail.com/Inbox
+
+Channel hotmail-tait
+Master :hotmail-tait-remote:
+Slave :hotmail-tait-local:
+Patterns *
+Create Both
+SyncState *
