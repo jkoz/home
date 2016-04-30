@@ -25,7 +25,7 @@ all: \
 	vimb \
 	bspwm \
 	dircolors \
-	mailagent
+	texlive
 
 vm:
 	install -Dm600 vimrc ~/.vimrc
@@ -139,3 +139,7 @@ bspwm:
 
 dircolors:
 	install -m644 dircolors ~/.dircolors
+
+texlive:
+	install -Dm644 texmf/tex/latex/shading/shading.sty ~/texmf/tex/latex/shading/shading.sty
+	install -Dm644 texmf/tex/latex/shading/shading.tex ~/texmf/tex/latex/shading/shading.tex

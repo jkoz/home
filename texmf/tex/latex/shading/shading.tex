@@ -1,0 +1,227 @@
+%%% ====================================================================
+%%%  @LaTeX-file{
+%%%     filename        = "shading.tex",
+%%%     version         = "1.1",
+%%%     date            = "29 September 1992",
+%%%     time            = "08:30:45 MDT",
+%%%     author          = "Art Mulder",
+%%%     address         = "Department of Computing Science
+%%%                        615 General Services Building
+%%%                        University of Alberta
+%%%                        Edmonton, Alberta
+%%%                        T6G 2H1, Canada.",
+%%%     telephone       = "n/a",
+%%%     FAX             = "(403) 492-1071",
+%%%     checksum        = "49623 227 1018 8613",
+%%%     email           = "art@cs.ualberta.ca",
+%%%     codetable       = "ISO/ASCII",
+%%%     keywords        = "documentation",
+%%%     supported       = "yes",
+%%%     docstring       = "The LaTeX document briefly describes the
+%%%                        LaTeX style file ``shading.sty''.
+%%%                        Shading.sty is a style file for putting
+%%%                        text on a shaded background in LaTeX.
+%%%
+%%%                        Requires a Postscript printer and
+%%%                        dvi converter",
+%%%  }
+%%% ====================================================================
+\documentstyle[12pt, moretext, shading]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% shading.tex                           Art Mulder ( art@cs.ualberta.ca )
+% 25 September, 1992
+%
+% A brief manual on the use of the "shading.sty" LaTeX style file.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Usage:
+%   - Process this file with latex.  (The file "shading.sty" must either
+%     be in a standard location with the other LaTeX style files, or in
+%     the same directory as this file).
+%   - Convert to postscript, via a tool such as "dvips"
+%   - either view with a Postscript previewer (like ghostview) or
+%     print to a postscript printer.
+%
+% In the above \documentstyle command, the style file ``moretext'' is
+% optional.  It simply shrinks the margins to something that I like a
+% bit better than the default values for article.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Help yourself to whatever you want from this file.
+% Caveat Emptor.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%       Title "Page"
+%---------------------------------------------------------------------------
+\title{The {\tt shading.sty} document style}
+\author{Arthur E. Mulder\thanks{Author of this document only.  The
+  style file itself has had several authors / contributors:
+  J\'{e}r\^{o}me Maillot ({\tt maillot@bora.inria.fr}),
+  Leo ??  ({\tt LEO@vaxc.cc.monash.edu.au}), and
+  M.A.R. ({\tt mroth@afit.af.mil}).}
+\date{29 September 1992 \\
+Version 1.01}
+\maketitle
+
+%---------------------------------------------------------------------------
+
+\section{Introduction}
+  The purpose of this style file is to permit you, in LaTeX, to place text
+  in a box with a shaded background.  This particular solution uses
+  Postscript to do so, and is therefore of no use to you if you do not have
+  a postscript printer.  Furthermore, if you wish to be able to preview your
+  document before printing, you will also need a Postscript viewer, such as
+  {\tt Ghostview}.
+
+%---------------------------------------------------------------------------
+\section{Usage}
+  To use this style option, you must add the name of the style file, {\tt
+  shading} to the {\tt documentstyle} command in your document:
+
+  \begin{quote}
+        \verb|\documentstyle[... shading ...]{article}|
+  \end{quote}
+
+  Note that this should also work with teh {\tt report} and {\tt book}
+  styles.  You are not restricted to using the {\tt article} style.
+
+\subsection{Shading Commands}
+  There are two commands provided by this style:
+
+  \begin{quote}
+    \verb|\textshade|[{\em grayscale}]\{{\em corneroption}\}\{{\em text
+        to be shaded}\}
+
+    \verb|\parashade|[{\em grayscale}]\{{\em corneroption}\}\{{\em paragraph
+        to be shaded}\}
+  \end{quote}
+
+
+  \begin{tabular}{lp{4.5in}}
+  {\tt grayscale} & This is a number from 0 to 1.  The higher the number,
+                  the {\em lighter} the resulting shading.  With a value
+                  of 1, there is essentially no shading, and you end up
+                  with just a box.  A value of 0 is probably of little
+                  practical use.  If this value is omitted, a default
+                  value of .95 is used. \\
+  {\tt corneroption} &   This is either the {\tt sharpcorners} or
+                    {\tt roundcorners}, with obvious effects upon the box
+                    that is drawn. \\
+  \end{tabular}
+
+
+\subsection{Limitations}
+  There are a number of limitations that go along with this style:
+
+  \begin{itemize}
+
+    \item You can not break text across lines within the \verb|\textshade|
+      command.
+
+    \item You can not break text across pages with either command.
+
+    \item You can not specify the line width of the surrounding box, or
+      the amount of space between the surrounding box and the text to
+      be shaded {\em as arguments}.
+
+      See the examples below for how you {\em can}
+      fiddle with the line width of the surrounding box.
+
+    \item Modifying the xgrayspace and ygrayspace in the argument
+      will only affect the space added to the right and
+      bottom of the box, respectively.
+
+  \end{itemize}
+
+%---------------------------------------------------------------------------
+\section{Examples of Usage}
+
+%
+%% 1)
+%
+\subsection{}
+  \noindent\begin{minipage}{3in}
+    This is a test of a\ \textshade[1]{roundcorners}{shaded box} routine.
+    With a grayscale of 1, we essentially get no shading, and just a box.
+  \end{minipage}\hspace{.25in}\begin{minipage}{3in}
+    \begin{verbatim}
+This is a test of a\
+\textshade[1]{roundcorners}{shaded box}
+routine.  With a ...
+     \end{verbatim}\end{minipage}
+
+%
+%% 2)
+%
+\subsection{}
+  \noindent\begin{minipage}{3in}
+    This is another test of a\ \textshade{sharpcorners}{shaded box}
+    routine.  The default shading of .95 is used here.  Note also the
+    difference between a ``sharpcorners'' and a ``roundcorners'' box.
+  \end{minipage}\hspace{.25in}\begin{minipage}{3in}
+\begin{verbatim}
+...
+\textshade{sharpcorners}{shaded box}
+...
+\end{verbatim}
+\end{minipage}
+
+%
+%% 3)
+%
+\subsection{}
+\noindent\begin{minipage}{3in}
+    \parashade[.995]{roundcorners}{\gdef\outlineboxwidth{.5}%
+    This is one very long line which I expect will be broken over one or more
+    lines. The idea is to have this paragraph enclosed in a shaded box. I'll
+    just keep on typing until I can be sure that there are more than two lines
+    in this paragraph.
+    }
+ \end{minipage}\hspace{.25in}
+\begin{minipage}{3in}
+
+\begin{verbatim}
+\parashade[.995]{roundcorners}
+{\gdef\outlineboxwidth{.5}%
+This is one very ... paragraph.}
+\end{verbatim}\end{minipage}
+
+  \smallskip
+    In the prior example, take note of how the width of the box surrounding
+    the paragraph was changed from it's default of 2 (points?) to .5,
+    through the use of the \verb|\gdef\outlineboxwidth{.5}| command.
+
+    This is probably a pretty kludgey way of doing it, but it works well
+    enough for now.  If you feel like fixing it up, you're welcome to give
+    it a try!
+
+%
+%% 4)
+%
+\subsection{}
+  \noindent\begin{minipage}{3in}
+    So, let's try fiddling with the linewidth to get
+    \textshade[.8]{sharpcorners}{\gdef\outlineboxwidth{0}no box}
+    around this text.  Not bad, eh?
+  \end{minipage}\hspace{.25in}\begin{minipage}{3in}
+\begin{verbatim}
+...
+\textshade[.8]{sharpcorners}
+{\gdef\outlineboxwidth{0}no box}
+...
+\end{verbatim}\end{minipage}
+
+%---------------------------------------------------------------------------
+\section{Moving On\ldots}
+  For further information about ways that you can tweak this style to serve
+  you better, please see the source code for the style:  {\tt shading.sty}
+
+%---------------------------------------------------------------------------
+\section{Caveat Emptor}
+  I did not write or design this document style option.  I simply wrote this
+  document, first as an exercise in trying out the shading document style,
+  and secondly as a service to any others whom I might pass this on to.
+  A fair amount of the content of this file came from the contents of the
+  style file {\tt shading.sty}. \hfill {\em \ldots Art Mulder, 9/25/92}
+%---------------------------------------------------------------------------
+\end{document}
