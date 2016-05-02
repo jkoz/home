@@ -31,7 +31,7 @@ sxhkd &
 # wallpaper
 #feh --bg-center ~/Dropbox/Picture/pkptyVB-one-color-wallpaper.jpg
 
-# move to systemd
+# move to systemd: systemctl --user enable redshift.service
 #redshift &
 
 # Status

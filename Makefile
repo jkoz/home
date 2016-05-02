@@ -90,6 +90,7 @@ systemd:
 x:
 	install -Dm644 xinitrc ~/.xinitrc
 	install -Dm644 Xresources ~/.Xresources
+	install -Dm644 xprofile ~/.xprofile
 
 irc:
 	install -Dm644 irssi/config ~/.irssi/config
@@ -134,7 +135,7 @@ vimb:
 	install -Dm644 config/vimb/bookmark ~/.config/vimb/bookmark
 
 bspwm:
-	cp config/bspwm/bspwmrc ~/.config/bspwm/bspwmrc
+	install -Dm644 config/bspwm/bspwmrc ~/.config/bspwm/bspwmrc
 	chmod +x ~/.config/bspwm/bspwmrc
 
 dircolors:
