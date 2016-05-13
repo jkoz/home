@@ -1,2 +1,2 @@
-text/html;  vimb %s ; copiousoutput
+text/html;  google-chrome-stable %s ; copiousoutput
 #text/html;  elinks -dump %s; nametemplate=%s.html; copiousoutput

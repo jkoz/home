@@ -71,7 +71,8 @@ bind index,pager \eo sidebar-open
 # }}}
 # Formats {{{
 set date_format         = "%d/%m/%y at %I:%M%P"
-set index_format        = "%3C %Z %D %-15.15L (%?l?%4l&%4c?) %s"
+#set index_format        = "%3C %Z %D %-15.15L (%?l?%4l&%4c?) %s"
+#set index_format        = "%-15.15L %s"
 set alias_format        = "%4n %t %-20a  %r"
 set reply_regexp = "^(([Rr][Ee]?(\[[0-9]+\])?: *)?(\[[^]]+\] *)?)*"
 set quote_regexp = "^( {0,4}[>|:#%]| {0,4}[a-z0-9]+[>|]+)+"
