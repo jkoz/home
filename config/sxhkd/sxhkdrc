@@ -91,7 +91,7 @@ mod4 + bracketleft
 
 # Close window
 mod4 + shift + c
-    xdotool selectwindow windowkill
+    bspc node -c
 # Toogle max
 mod4 + shift + m
     xdotool selectwindow windowmove 0 20 windowsize 100% 97%

@@ -25,7 +25,9 @@ all: \
 	vimb \
 	bspwm \
 	dircolors \
-	texlive
+	texlive \
+	feh \
+	bar
 
 vm:
 	install -Dm600 vimrc ~/.vimrc
@@ -75,6 +77,7 @@ mail:
 	install -Dm644 mbsyncrc ~/.mbsyncrc
 	install -Dm6644 msmtprc ~/.msmtprc
 	install -Dm644 mutt/muttrc ~/.mutt/muttrc
+	install -Dm644 mailcap ~/.mailcap
 
 notification:
 	install -Dm644 config/dunst/dunstrc ~/.config/dunst/dunstrc
@@ -86,6 +89,7 @@ systemd:
 	install -Dm644 config/systemd/user/torrent.service ~/.config/systemd/user/torrent.service
 	install -Dm644 config/systemd/user/mailagent.service ~/.config/systemd/user/mailagent.service
 	install -Dm644 config/systemd/user/mailagent.timer ~/.config/systemd/user/mailagent.timer
+	install -Dm644 config/systemd/user/dropbox.service ~/.config/systemd/user/dropbox.service
 
 x:
 	install -Dm644 xinitrc ~/.xinitrc
@@ -131,8 +135,10 @@ fnt:
 vimb:
 	install -Dm644 config/vimb/style.css ~/.config/vimb/style.css
 	install -Dm644 config/vimb/config ~/.config/vimb/config
-	cp ~/.config/vimb/bookmark config/vimb/bookmark
-	install -Dm644 config/vimb/bookmark ~/.config/vimb/bookmark
+	touch ~/.config/vimb/bookmark
+	sort -u ~/.config/vimb/bookmark config/vimb/bookmark > /tmp/bookmark
+	install -Dm644 /tmp/bookmark  ~/.config/vimb/bookmark
+	install -Dm644 /tmp/bookmark  config/vimb/bookmark
 
 bspwm:
 	install -Dm644 config/bspwm/bspwmrc ~/.config/bspwm/bspwmrc
@@ -144,3 +150,8 @@ dircolors:
 texlive:
 	install -Dm644 texmf/tex/latex/shading/shading.sty ~/texmf/tex/latex/shading/shading.sty
 	install -Dm644 texmf/tex/latex/shading/shading.tex ~/texmf/tex/latex/shading/shading.tex
+
+bar:
+	install -Dm644 config/tint2/tint2rc ~/.config/tint2/tint2rc
+feh:
+	install -Dm644 config/Arch.jpg ~/.config/Arch.jpg

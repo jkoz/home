@@ -5,6 +5,7 @@ User thunderchief3000@yahoo.com
 PassCmd "oauth2 --feed thunderchief3000"
 Port 993
 SSLType IMAPS
+AuthMechs "XOAUTH2"
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 IMAPStore yahoo-thunderchief3000-remote
@@ -28,6 +29,7 @@ User phuoctaitp@gmail.com
 PassCmd "oauth2 -a phuoctaitp"
 Port 993
 SSLType IMAPS
+AuthMechs "XOAUTH2"
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 IMAPStore gmail-phuoctaitp-remote

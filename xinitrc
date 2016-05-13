@@ -14,6 +14,9 @@ sxhkd &
 # Composite
 #compton -b
 
+# Feh
+feh --bg-scale ~/.config/Arch.jpg
+
 # Desktop notification
 #dunst &
 
@@ -34,8 +37,9 @@ sxhkd &
 #redshift &
 
 # Status
-status | while read -r line; do echo "%{r}$line      "; done | lemonbar -f "Cousine-11" -B "#f0073643" -F"#ffffffff" &
+#status | while read -r line; do echo "%{r}$line      "; done | lemonbar -f "Cousine-11" -B "#f0073643" -F"#ffffffff" &
 #conky &
+tint2&
 
 #devmon --exec-on-drive "st -c Fzf -e sh -c \"xdotool search 'Fzf' windowsize 100% 50%; dm fm %d\"" &
 

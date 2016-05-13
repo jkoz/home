@@ -44,8 +44,8 @@ set mask = * # Gmail have hidden files .All Mail ....
 #ignore "DomainKey-Signature:"
 #ignore "DKIM-Signature:"
 hdr_order Date From To Cc
-#alternative_order text/plain text/html *
 auto_view text/html
+alternative_order text/plain text/enriched text/html
 # }}}
 # Sidebar{{{
 #set sidebar_delim   = '    '

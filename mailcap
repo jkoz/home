@@ -1,0 +1,2 @@
+text/html;  vimb %s ; copiousoutput
+#text/html;  elinks -dump %s; nametemplate=%s.html; copiousoutput
