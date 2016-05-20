@@ -40,6 +40,7 @@ sxhkd:
 
 gtk:
 	install -Dm644 config/gtk-2.0/gtkfilechooser.ini ~/.config/gtk-2.0/gtkfilechooser.ini
+	install -Dm644 config/gtk-3.0/settings.ini ~/.config/gtk-3.0/settings.ini
 	install -Dm644 gtkrc-2.0 ~/.gtkrc-2.0
 
 news:

@@ -1,6 +1,10 @@
 # use solarize scheme
-#include "/usr/share/themes/Numix Solarized/gtk-2.0/gtkrc"
-include "/usr/share/themes/Numix-OSX/gtk-2.0/gtkrc"
+#include "/usr/share/themes/Numix/gtk-2.0/gtkrc"
+#include "/usr/share/themes/Numix-OSX/gtk-2.0/gtkrc"
+
+gtk-theme-name = "Numix"
+gtk-icon-theme-name = "Numix-Circle"
+gtk-font-name = "Helvetica 11"
 
 # font
 style "user-font" {
