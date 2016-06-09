@@ -4,16 +4,13 @@
 
 gtk-theme-name = "Numix"
 gtk-icon-theme-name = "Numix-Circle"
-gtk-font-name = "Helvetica 11"
+gtk-font-name = "Lucida Grande 10"
 
 # font
 style "user-font" {
-	#font_name = "Cousine 10"
-    font_name = "Lucida Grande 11"
+    font_name = "Lucida Grande 10"
 }
 widget_class "*" style "user-font"
-#gtk-font-name="Cousine 10"
-gtk-font-name="Lucida Grande 11"
 
 binding "gtk-vi-text-view"
 {

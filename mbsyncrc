@@ -26,7 +26,7 @@ SyncState *
 IMAPAccount gmail-phuoctaitp
 Host imap.gmail.com
 User phuoctaitp@gmail.com
-PassCmd "oauth2 -a phuoctaitp"
+PassCmd "oauth2 phuoctaitp@gmail.com"
 Port 993
 SSLType IMAPS
 AuthMechs "XOAUTH2"
@@ -46,11 +46,35 @@ Patterns *
 Create Both
 SyncState *
 
+# ctphung1987@gmail.com
+IMAPAccount gmail-ctphung1987
+Host imap.gmail.com
+User ctphung1987@gmail.com
+PassCmd "oauth2 ctphung1987@gmail.com"
+Port 993
+SSLType IMAPS
+AuthMechs "XOAUTH2"
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore gmail-ctphung1987-remote
+Account gmail-ctphung1987
+
+MaildirStore gmail-ctphung1987-local
+Path  ~/Mail/ctphung1987@gmail.com/
+Inbox ~/Mail/ctphung1987@gmail.com/Inbox
+
+Channel gmail-ctphung1987
+Master :gmail-ctphung1987-remote:
+Slave :gmail-ctphung1987-local:
+Patterns *
+Create Both
+SyncState *
+
 # tai.t@hotmail.com
 IMAPAccount hotmail-tait
 Host imap-mail.outlook.com
 User tai.t@hotmail.com
-PassCmd "oauth2 -a tait"
+PassCmd "passcmdtest"
 Port 993
 SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt

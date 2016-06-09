@@ -1,7 +1,28 @@
 #!/bin/sh
 # mutt call with options -f phuoctaitp@gmail.com -- phuoctaitp@gmail.com
+echo $@ > /tmp/sendm.log
 
-echo $@ > /tmp/asdf
-while read a;do echo $a; done | ~/Repo/curl/build/src/curl -v -silent --sasl-ir --ssl-reqd --user "phuoctaitp"  \
-    --cacert /etc/ssl/certs/ca-certificates.crt --oauth2-bearer "$(oauth2 -a phuoctaitp 2>/dev/null)" \
-    --url "smtp.gmail.com:587" --mail-from "phuoctaitp@gmail.com" --mail-rcpt "phuoctaitp@gmail.com" --upload-file -
+args=$(getopt -q -o f: -l "from" -n "$(basename $0)" -- "$@")
+eval set -- "$args"; while true; do
+    case "$1" in
+        -f|--from) shift; from="$1"; shift ;;
+        --) shift; break ;;
+    esac
+done # $@ will store all remaing args
+
+#echo $from
+#echo $@
+user=$(echo $from | cut -d'@' -f1)
+
+from_stmt=
+for to in $@; do
+    from_stmt="${from_stmt}--mail-rcpt $to "
+done
+
+#echo $from_stmt
+
+
+# Required my patched curl version https://github.com/jkoz/curl
+while read a;do echo $a; done | curl -v -silent --sasl-ir --ssl-reqd --user "$user"  \
+    --cacert /etc/ssl/certs/ca-certificates.crt --oauth2-bearer "$(oauth2 $user 2>/dev/null)" \
+    --url "smtp.gmail.com:587" --mail-from "$from" $from_stmt --upload-file -
