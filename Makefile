@@ -27,7 +27,8 @@ all: \
 	dircolors \
 	texlive \
 	feh \
-	bar
+	bar \
+	st
 
 vm:
 	install -Dm600 vimrc ~/.vimrc
@@ -154,5 +155,9 @@ texlive:
 
 bar:
 	install -Dm644 config/tint2/tint2rc ~/.config/tint2/tint2rc
+
 feh:
 	install -Dm644 config/Arch.jpg ~/.config/Arch.jpg
+
+st:
+	install -Dm644 config/st/config.def.h ~/st/config.def.h
