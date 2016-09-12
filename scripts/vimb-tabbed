@@ -7,5 +7,5 @@ echo "Opening $@ ..."
 if xdotool search -classname 'VimbT'; then
     echo "<Esc>;tabopen $@<CR>" | socat - unix-connect:$(grep 'socket' /tmp/vimb.socket)
 else
-    tabbed -c -n 'VimbT' /usr/bin/vimb --socket --dump --embed $@ > /tmp/vimb.socket
+    tabbed -c -n 'VimbT' vimb --socket --dump --embed $@ > /tmp/vimb.socket
 fi
