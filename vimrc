@@ -7,7 +7,7 @@ endif
 
 cal plug#begin('~/.vim/plugged')
 
-Plug 'Valloric/YouCompleteMe'
+"Plug 'Valloric/YouCompleteMe'
 Plug 'altercation/vim-colors-solarized'
 Plug 'edsono/vim-matchit'
 Plug 'scrooloose/nerdcommenter'
@@ -19,12 +19,10 @@ Plug 'mileszs/ack.vim'
 Plug 'tpope/vim-dispatch'
 Plug 'osyo-manga/vim-hopping'
 Plug 'myusuf3/numbers.vim'
-Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'mattn/emmet-vim'
 Plug 'majutsushi/tagbar'
-Plug 'kien/ctrlp.vim', { 'on': ['CtrlP', 'DmenuFM', 'DmenuBuffer', 'DmenuMRU', 'DmenuBufTag', 'DmenuHistory', 'DmenuLines'] }
-Plug 'jkoz/vim-fzf', { 'on': ['Dmenu', 'DmenuFM', 'DmenuBuffer', 'DmenuMRU', 'DmenuBufTag', 'DmenuHistory', 'DmenuLines'] }
+Plug 'kien/ctrlp.vim'
 Plug 'bling/vim-airline'
 Plug 'scrooloose/Syntastic'
 Plug 'tpope/vim-markdown'
@@ -33,9 +31,12 @@ Plug 'reedes/vim-colors-pencil'
 Plug 'reedes/vim-pencil'
 Plug 'reedes/vim-litecorrect'
 Plug 'gerw/vim-latex-suite'
-"Plug 'mhinz/vim-startify'
 Plug 'fatih/vim-go'
 
+"Plug 'SirVer/ultisnips'
+"Plug 'mhinz/vim-startify'
+"Plug 'kien/ctrlp.vim', { 'on': ['CtrlP', 'DmenuFM', 'DmenuBuffer', 'DmenuMRU', 'DmenuBufTag', 'DmenuHistory', 'DmenuLines'] }
+"Plug 'jkoz/vim-fzf', { 'on': ['Dmenu', 'DmenuFM', 'DmenuBuffer', 'DmenuMRU', 'DmenuBufTag', 'DmenuHistory', 'DmenuLines'] }
 "Plug 'airblade/vim-gitgutter'
 "Plugin 'ervandew/supertab'
 "Plugin 'klen/python-mode'
@@ -321,13 +322,13 @@ let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$',
 " }}}
 " Fzf {{{
 
-nn <silent> <c-p>     :Dmenu<CR>
-nn <silent> <leader>f :DmenuFM<CR>
-nn <silent> <Leader>z :DmenuBuffer<CR>
-nn <silent> <Leader>m :DmenuMRU<CR>
-nn <silent> <Leader>o :DmenuBufTag<CR>
-nn <silent> <Leader>q :DmenuHistory<CR>
-nn <silent> <Leader>l :DmenuLines<CR>
+nn <silent> <c-p>     :CtrlP<CR>
+"nn <silent> <leader>f :DmenuFM<CR>
+nn <silent> <Leader>z :CtrlPBuffer<CR>
+nn <silent> <Leader>m :CtrlPMRUFiles<CR>
+nn <silent> <Leader>o :CtrlPBufTag<CR>
+nn <silent> <Leader>q :CtrlPHistory<CR>
+nn <silent> <Leader>l :CtrlPLines<CR>
 
 if exists('$DISPLAY')
     let g:dmenu_backend = "fzf"

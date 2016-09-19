@@ -160,4 +160,4 @@ feh:
 	install -Dm644 config/Arch.jpg ~/.config/Arch.jpg
 
 st:
-	install -Dm644 config/st/config.def.h ~/st/config.def.h
+	install -Dm644 config/st/config.def.h ~/.config/st/config.def.h
