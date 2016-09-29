@@ -12,8 +12,10 @@ mod4 + i
 mod4 + d
     xdotool search --maxdept 1 --onlyvisible --name "LDOCE5 viewer" windowunmap || xdotool search --maxdept 1 --name "LDOCE5 viewer" windowmap windowraise windowmove 0 20 windowsize 100% 97% || ldoce5viewer &
 # File Manager
+#mod4 + f
+    #st -c Fzf -e sh -c "xdotool search 'Fzf' ; dm fm"
 mod4 + f
-    st -c Fzf -e sh -c "xdotool search 'Fzf' ; dm fm"
+    xdotool search --maxdept 1 --onlyvisible --name "File Manager" windowunmap || xdotool search --maxdept 1 --name "File Manager" windowmap windowraise windowmove 0 20 windowsize 100% 97% || thunar &
 # Switch window
 mod4 + w
     st -c Fzf -e sh -c "xdotool search 'Fzf' ; dm sw"
