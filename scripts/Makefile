@@ -16,15 +16,12 @@ all: $(BIN)
 
 install:
 	mkdir -p $(BINPREFIX)
-
-	cp oauth2.sh oauth2
-
-	cp -p {$(BINLST)} $(BINPREFIX)
-	chmod 755 $(BINPREFIX)/{$(BINLST)}
-	rm oauth2
+	install -Dm755 preview $(BINPREFIX)
+	install -Dm755 zathura-tabbed $(BINPREFIX)
 
 uninstall:
-	rm $(BINPREFIX)/{$(BINLST)}
+	rm -f $(BINPREFIX)/preview
+	rm -f $(BINPREFIX)/zathura-tabbed
 clean:
 	rm -rf *.sh
 .PHONY: all install uninstall clean
