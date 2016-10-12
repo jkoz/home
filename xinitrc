@@ -4,12 +4,14 @@
 xrdb ~/.Xresources # load x resources
 xset r rate 250 60
 xset b off # no beep
-setxkbmap -option ctrl:swapcaps # swap caplocks and left ctrl
 xautolock -locker  "slock" -corners 0+00  -cornerdelay 1 & # xautolock
 xsetroot -solid "#002b36" -cursor_name left_ptr -name " "
 
-# bindkey
-sxhkd &
+#setxkbmap -option ctrl:swapcaps # swap caplocks and left ctrl
+[ -f ~/.Xmodmap ] && xmodmap ~/.Xmodmap
+
+# bindkey, combine with dwm config.def.h now
+#sxhkd &
 
 # Composite
 #compton -b
@@ -34,7 +36,7 @@ feh --bg-scale ~/.config/Arch.jpg
 #google-chrome-stable --no-startup-window &
 
 # move to systemd
-#redshift &
+redshift &
 
 # Status
 #status | while read -r line; do echo "%{r}$line      "; done | lemonbar -f "Cousine-11" -B "#f0073643" -F"#ffffffff" &

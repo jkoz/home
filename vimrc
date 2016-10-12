@@ -64,7 +64,7 @@ ino jk <esc>
 vn jk <esc>
 
 "nn ; :
-nn <leader>r :so $MYVIMRC<cr>
+"nn <leader>r :so $MYVIMRC<cr> use for dispatch
 "se verbose=0
 
 " switching vim window buffer
@@ -337,13 +337,20 @@ elsei exists('$TMUX')
     let g:dmenu_backend = "fzf-tmux"
     let g:dmenu_launcher= ''
 el
-    nn <silent> <c-p>     :Dmenu<CR>
-    nn <silent> <leader>f :DmenuFM<CR>
-    nn <silent> <Leader>z :DmenuBuffer<CR>
-    nn <silent> <Leader>m :DmenuMRU<CR>
-    nn <silent> <Leader>o :DmenuBufTag<CR>
-    nn <silent> <Leader>q :DmenuHistory<CR>
-    nn <silent> <Leader>l :DmenuLines<CR>
+    "nn <silent> <c-p>     :Dmenu<CR>
+    "nn <silent> <leader>f :DmenuFM<CR>
+    "nn <silent> <Leader>z :DmenuBuffer<CR>
+    "nn <silent> <Leader>m :DmenuMRU<CR>
+    "nn <silent> <Leader>o :DmenuBufTag<CR>
+    "nn <silent> <Leader>q :DmenuHistory<CR>
+    "nn <silent> <Leader>l :DmenuLines<CR>
+    nn <silent> <c-p>     :CtrlP<CR>
+    "nn <silent> <leader>f :DmenuFM<CR>
+    nn <silent> <Leader>z :CtrlPBuffer<CR>
+    nn <silent> <Leader>m :CtrlPMRUFiles<CR>
+    nn <silent> <Leader>o :CtrlPBufTag<CR>
+    nn <silent> <Leader>q :CtrlPHistory<CR>
+    nn <silent> <Leader>l :CtrlPLines<CR>
 en
 
 
@@ -517,7 +524,7 @@ let g:enable_numbers = 0
 let g:tex_conceal= 'admgS' " do not conceal 'textit' as there is a bug conceal 2 textit on the same line, only first match is conceal
 " }}}
 " Dispatch {{{
-nn <F9> :silent Dispatch!<CR>
+nn <leader>r :silent Dispatch!<CR>
 " }}}
 " Startify {{{
 let g:startify_relative_path          = 0

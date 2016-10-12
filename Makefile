@@ -29,6 +29,7 @@ all: \
 	feh \
 	bar \
 	st \
+	xmodmap \
 	dwm
 
 vm:
@@ -165,3 +166,6 @@ st:
 
 dwm:
 	install -Dm644 config/dwm/config.def.h ~/.config/dwm/config.def.h
+
+xmodmap:
+	install -Dm644 Xmodmap ~/.Xmodmap

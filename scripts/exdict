@@ -1,0 +1,5 @@
+#!/bin/sh
+
+xdotool search --maxdept 1 --onlyvisible --name "LDOCE5 viewer" windowunmap ||
+    xdotool search --maxdept 1 --name "LDOCE5 viewer" windowmap windowraise ||
+    ldoce5viewer &

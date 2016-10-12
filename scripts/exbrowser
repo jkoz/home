@@ -1,0 +1,4 @@
+#!/bin/sh
+xdotool search --maxdept 1 --onlyvisible --classname "uzbl-tabbed" windowunmap ||
+    xdotool search --maxdept 1 --classname "uzbl-tabbed" windowmap ||
+    uzbl-tabbed &

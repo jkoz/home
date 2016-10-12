@@ -1,0 +1,4 @@
+#!/bin/sh
+xdotool search --maxdept 1 --onlyvisible --class "terminaldropdown" windowunmap ||
+    xdotool search --maxdept 1 --class "terminaldropdown" windowmap windowraise ||
+    st -c terminaldropdown -e tmux a &
