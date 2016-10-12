@@ -28,7 +28,8 @@ all: \
 	texlive \
 	feh \
 	bar \
-	st
+	st \
+	dwm
 
 vm:
 	install -Dm600 vimrc ~/.vimrc
@@ -161,3 +162,6 @@ feh:
 
 st:
 	install -Dm644 config/st/config.def.h ~/.config/st/config.def.h
+
+dwm:
+	install -Dm644 config/dwm/config.def.h ~/.config/dwm/config.def.h
