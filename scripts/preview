@@ -6,7 +6,7 @@ fn="$(basename "$1" | cut -d'.' -f1).pdf"
 file "$1" | grep -iq latex && pdflatex -output-directory /tmp "$1"
 
 # markdown
-basename "$1" | grep -iq "\.md$" && pandoc -V fontsize=14 -V geometry:margin=1in --template=~/Repo/home/pandoc-templates/default.latex -s "$1" -o /tmp/${fn}
+basename "$1" | grep -iq "\.md$" && pandoc -V fontsize=14 -V geometry:margin=1in  -s "$1" -o /tmp/${fn}
 
 
 wid=$(xdotool search --name "${fn}")
