@@ -2,7 +2,6 @@
 histfile=~/.config/vimb/history
 histsize=1000
 
-echo "Opening $@ ..."
 
 if xdotool search -classname 'VimbT'; then
     echo "<Esc>;tabopen $@<CR>" | socat - unix-connect:$(grep 'socket' /tmp/vimb.socket)

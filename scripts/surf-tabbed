@@ -1,0 +1,10 @@
+#!/bin/sh
+xidfile="/tmp/tabbed-surf.xid"
+xid="$([ -r $xidfile ] && cat $xidfile)"
+
+if [ -n "$xid" ] && xprop -id "$xid" >/dev/null 2>&1 ; then
+    surf -e "$xid" $@ >/dev/null 2>&1 &
+else
+    tabbed -c -dn 'surf-tabbed' -r 2 surf -e '' $@ >"$xidfile" 2>/dev/null &
+fi
+

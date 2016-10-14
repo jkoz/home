@@ -1,28 +1,11 @@
 #!/bin/sh
 
 xidfile="/tmp/tabbed-zathura.xid"
-uri=""
+xid="$([ -r $xidfile ] && cat $xidfile)"
 
-if [ "$#" -gt 0 ];
-then
-    uri="$1"
-fi
-
-runtabbed() {
-    tabbed -c -f -dn tabbed-zathura -r 2 zathura -e '' "$uri" >"$xidfile" 2>/dev/null &
-}
-
-if [ ! -r "$xidfile" ];
-then
-    runtabbed
+if [ -n "$xid" ] && xprop -id "$xid" >/dev/null 2>&1 ; then
+    zathura -e "$xid" "$@" >/dev/null 2>&1 &
 else
-    xid=$(cat "$xidfile")
-    xprop -id "$xid" >/dev/null 2>&1
-    if [ $? -gt 0 ];
-    then
-        runtabbed
-    else
-        zathura -e "$xid" "$uri" >/dev/null 2>&1 &
-    fi
+    tabbed -c -f -dn 'zathura-tabbed' -r 2 zathura -e '' "$@" >"$xidfile" 2>/dev/null &
 fi
 

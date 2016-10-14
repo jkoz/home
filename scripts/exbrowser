@@ -1,4 +1,6 @@
 #!/bin/sh
-xdotool search --maxdept 1 --onlyvisible --classname "uzbl-tabbed" windowunmap ||
-    xdotool search --maxdept 1 --classname "uzbl-tabbed" windowmap ||
-    uzbl-tabbed &
+brw="surf-tabbed"
+
+xdotool search --maxdept 1 --onlyvisible --classname "surf-tabbed" windowunmap ||
+    xdotool search --maxdept 1 --classname "surf-tabbed" windowmap ||
+    $brw &

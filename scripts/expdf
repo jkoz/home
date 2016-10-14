@@ -1,0 +1,5 @@
+#!/bin/sh
+
+xdotool search --maxdept 1 --onlyvisible --classname "zathura-tabbed" windowunmap ||
+    xdotool search --maxdept 1 --classname "zathura-tabbed" windowmap windowraise ||
+    zathura-tabbed &
