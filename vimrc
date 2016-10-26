@@ -7,7 +7,6 @@ endif
 
 cal plug#begin('~/.vim/plugged')
 
-"Plug 'Valloric/YouCompleteMe'
 Plug 'altercation/vim-colors-solarized'
 Plug 'edsono/vim-matchit'
 Plug 'scrooloose/nerdcommenter'
@@ -15,27 +14,34 @@ Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-fugitive'
 Plug 'gavinbeatty/dragvisuals.vim'
-Plug 'mileszs/ack.vim'
-Plug 'tpope/vim-dispatch'
 Plug 'osyo-manga/vim-hopping'
 Plug 'myusuf3/numbers.vim'
-Plug 'honza/vim-snippets'
 Plug 'kana/vim-metarw'
 Plug 'mattn/webapi-vim'
-Plug 'mattn/emmet-vim'
 Plug 'mattn/vim-metarw-gdrive'
 Plug 'majutsushi/tagbar'
 Plug 'kien/ctrlp.vim'
-Plug 'bling/vim-airline'
 Plug 'scrooloose/Syntastic'
 Plug 'tpope/vim-markdown'
 Plug 'nelstrom/vim-markdown-folding'
-Plug 'reedes/vim-colors-pencil'
 Plug 'reedes/vim-pencil'
 Plug 'reedes/vim-litecorrect'
-Plug 'gerw/vim-latex-suite'
-Plug 'fatih/vim-go'
+Plug 'suan/vim-instant-markdown'
+Plug 'itchyny/lightline.vim'
+Plug 'tpope/vim-dispatch'
 
+
+"Plug 'junegunn/goyo.vim'
+"Plug 'bling/vim-airline'
+"Plug 'vim-airline/vim-airline-themes'
+"Plug 'lervag/vimtex'
+"Plug 'gerw/vim-latex-suite'
+"Plug 'mileszs/ack.vim'
+"Plug 'honza/vim-snippets'
+"Plug 'reedes/vim-colors-pencil'
+"Plug 'fatih/vim-go'
+"Plug 'Valloric/YouCompleteMe'
+"Plug 'mattn/emmet-vim'
 "Plug 'SirVer/ultisnips'
 "Plug 'mhinz/vim-startify'
 "Plug 'kien/ctrlp.vim', { 'on': ['CtrlP', 'DmenuFM', 'DmenuBuffer', 'DmenuMRU', 'DmenuBufTag', 'DmenuHistory', 'DmenuLines'] }
@@ -249,27 +255,6 @@ set background=dark
 colo solarized
 "}}}
 "}}}
-" Functions {{{
-" strip \r (^M)
-fu! DoStripCM()
-    exe ":silent %s/\r//g"
-endf
-com! StripCM cal DoStripCM()
-
-fu! MvnTest()
-   exe "Mvn test -Dtest=" . expand("%:t:r")
-endf
-com! DoMvnTest cal MvnTest()
-
-fu! MvnTestDebug()
-    let l:cmd = "Mvn org.apache.maven.plugins:maven-surefire-plugin:2.9:test "
-    let l:cmd = l:cmd . "-Dmaven.surefire.debug=\"-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=1111 -Xnoagent -Djava.compiler=NONE\" test "
-    "let l:cmd = l:cmd . "-Dtest=" . expand("%:t:r")
-    exe l:cmd
-endf
-com! DoMvnTestDebug cal MvnTestDebug()
-
-" }}}
 " Auto Groups {{{
 aug configgroup
     au!
@@ -279,7 +264,29 @@ aug configgroup
     au BufRead,BufNewFile *rc setl foldmethod=marker
     au BufRead,BufNewFile *.c,*.h,*.hh setl tabstop=4 softtabstop=4 expandtab foldmethod=manual foldlevel=0
     au BufRead,BufNewFile *.h,*.hpp,*.cc,*.cpp setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=manual foldlevel=0
+aug END
 
+aug pencil
+    autocmd!
+    autocmd FileType tex,latex
+                \   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
+                \ | call litecorrect#init()
+                \ | setl spell spl=en_us noru nonu nornu
+                \ | setl fdo+=search
+                \ | setl nocursorcolumn
+    autocmd FileType markdown,mkd,md
+                \   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
+                \ | call litecorrect#init()
+                \ | setl spell spl=en_us noru nonu nornu
+                \ | setl fdo+=search
+    autocmd Filetype git,gitsendemail,*commit*,*COMMIT*
+                \   call pencil#init({'wrap': 'soft', 'textwidth': 72})
+                \ | call litecorrect#init()
+                \ | setl spell spl=en_us et sw=2 ts=2 noai
+    autocmd Filetype mail
+                \   call pencil#init({'wrap': 'soft', 'textwidth': 60})
+                \ | call litecorrect#init()
+                \ | setl spell spl=en_us et sw=2 ts=2 noai nonu nornu
 aug END
 " }}}
 " Tag bar {{{
@@ -364,54 +371,13 @@ en
 "let g:dbext_default_profile_192_168_95_111_NI='type=MYSQL:user=root:passwd=mysql:dbname=NI:host=192.168.95.111:port=3307'
 "let g:dbext_default_profile_192_168_99_246_NI='type=MYSQL:user=root:passwd=mysql:dbname=NI:host=192.168.99.246'
 " }}}
-" Eclim {{{
-
-nn <silent> <Leader>el :LocateFile<CR>
-nn <silent> <Leader>es :JavaSearchContext<CR>
-nn <silent> <Leader>ei :JavaImport<CR>
-nn <silent> <Leader>ep :ProjectsTree<CR>
-nn <silent> <Leader>eh :JavaHierarchy<cr>
-xn <silent> <Leader>ef :JavaFormat<cr>
-nn <silent> <Leader>ej :JavaDocComment<cr>
-
-let g:EclimJavaSearchSingleResult='edit'
-let g:EclimLocateFileDefaultAction='edit'
-let g:EclimLocateFileScope = 'workspace'
-let g:EclimCompletionMethod = 'omnifunc'
-
-fu! CopyBreakPoint()
-    let @+ = GetBreakPoint()
-endf
-com! DoCopyBreakPoint cal CopyBreakPoint()
-
-fu! GetBreakPoint()
-    return 'stop at ' . GetQualiedName() . ':' . line(".")
-endf
-
-fu! ClearAllBreakPoint()
-    call writefile([], $HOME . "/.jdbrc")
-endf
-com! DoClearAllBreakPoint cal ClearAllBreakPoint()
-
-fu! SetBreakPoint()
-    cal AppendToFile($HOME . "/.jdbrc", [GetBreakPoint()])
-    cal CopyBreakPoint()
-endf
-com! DoSetBreakPoint cal SetBreakPoint()
-
-fu! GetQualiedName()
-    let l:bp = substitute(split(getline("1"))[1], ';', '.', '')
-    let l:bp = l:bp . substitute(expand('%:t'), '.java', '', '')
-    return l:bp
-endf
-
-" }}}
 " Drag visuals {{{
-vm <expr> H DVB_Drag('left')
-vm <expr> L DVB_Drag('right')
-vm <expr> J DVB_Drag('down')
-vm <expr> K DVB_Drag('up')
-vm <expr> D DVB_Duplicate()
+" TODO: tempory disable visual effect as we need to use J for join multiple lines
+"vm <expr> H DVB_Drag('left')
+"vm <expr> L DVB_Drag('right')
+"vm <expr> J DVB_Drag('down')
+"vm <expr> K DVB_Drag('up')
+"vm <expr> D DVB_Duplicate()
 " }}}
 " Better Digraphs {{{
 "inoremap <expr>  <C-K>  BDG_GetDigraph()
@@ -471,33 +437,11 @@ let g:syntastic_warning_symbol = '⚠'
 " Pencil {{{
 " soft mode use 1 line even if it is long line
 let g:pencil#mode_indicators = {'hard': 'PH', 'soft': 'PS', 'off': ''}
-aug pencil
-    autocmd!
-    autocmd FileType tex,latex
-                \   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
-                \ | call litecorrect#init()
-                \ | setl spell spl=en_us noru nonu nornu
-                \ | setl fdo+=search
-                \ | setl nocursorcolumn
-                \ | let b:dispatch = "sh /usr/local/bin/preview '%:p'"
-    autocmd FileType markdown,mkd,md
-                \   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
-                \ | call litecorrect#init()
-                \ | setl spell spl=en_us noru nonu nornu
-                \ | setl fdo+=search
-                \ | let b:dispatch = "sh /usr/local/bin/preview '%:p'"
-    autocmd Filetype git,gitsendemail,*commit*,*COMMIT*
-                \   call pencil#init({'wrap': 'soft', 'textwidth': 72})
-                \ | call litecorrect#init()
-                \ | setl spell spl=en_us et sw=2 ts=2 noai
-    autocmd Filetype mail
-                \   call pencil#init({'wrap': 'soft', 'textwidth': 60})
-                \ | call litecorrect#init()
-                \ | setl spell spl=en_us et sw=2 ts=2 noai nonu nornu
-aug END
 " }}}
-" Airline {{{
-let g:airline_section_x = '%{PencilMode()}'
+" lightline {{{
+let g:lightline = {
+      \ 'colorscheme': 'solarized',
+      \ }
 " }}}
 " Gui {{{
 if has('gui_running')
@@ -519,8 +463,8 @@ let g:enable_numbers = 0
 " }}}
 " Goyo {{{
 "let g:goyo_width = 150
-"let g:goyo_margin_top = 2
-"let g:goyo_margin_bottom = 2
+"let g:goyo_margin_top = 1
+"let g:goyo_margin_bottom = 1
 "let g:goyo_linenr = 0
 " }}}
 " Latex {{{
@@ -539,4 +483,12 @@ let g:startify_change_to_dir          = 1
 let g:startify_enable_special         = 0
 let g:startify_enable_unsafe          = 1
 " }}}
+" Instant markdown {{{
+let g:instant_markdown_autostart = 0
+" }}}
+
+" TODO: not sure why it doesnt work when I put it in Option section, somethings
+" need to load first!
+" Hack Disable tilder column "~" by change its color
+hi! EndOfBuffer ctermbg=bg ctermfg=bg guibg=bg guifg=bg
 " }}}

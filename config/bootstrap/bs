@@ -1,0 +1,36 @@
+#!/bin/sh
+
+# Boot strap from usb
+
+wifi-menu
+fdisk /dev/mmcblk0
+mkfs.ext4 /dev/mmcblk0p1
+mount /dev/mmcblk0p1 /mnt
+pacstrap /mnt base tmux vim git grub net-tools wireless_tools sudo dialog wpa_supplicant yajl base-devel
+genfstab -p /mnt >> /mnt/etc/fstab
+grub-install /dev/mmcblk0
+grub-mkconfig -o /boot/grub/grub.cfg
+
+# wm
+pacman -S libxft libxinerama
+pacman -S xorg xorg-server xorg-xinit xclip
+pacman -S xdotool python3 uzbl-tabbed
+
+# make tmux works
+
+# surf
+
+# pdf
+pacman -S zathura zathura-pdf-mupdf
+
+# texlive
+pacman -S pandoc texlive-core
+
+# google drive
+gdrive list --query "name contains 'ldoce'" -m 5
+gdrive download Tk1uTXVmSzBILVE --path /mnt/home/tait/Downloads
+gdrive download 0ByQiIV4mZLBVbGxMdkQ1eDlNY2s --recursive
+gdrive upload ihet_period3_notes.md
+gdrive update $(gdrive list --query "name contains 'ihet_period3_notes.md'" -m 10 | tail -1 | cut -d' ' -f1) ihet_period3_notes.md
+
+# mutt

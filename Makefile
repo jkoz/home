@@ -21,16 +21,18 @@ all: \
 	conk \
 	ply \
 	idsk \
-	fnt \
 	vimb \
 	bspwm \
-	dircolors \
 	texlive \
 	feh \
 	bar \
 	st \
 	xmodmap \
-	dwm
+	dwm \
+	tabbed \
+	dircolors \
+	surf
+
 
 vm:
 	install -Dm600 vimrc ~/.vimrc
@@ -74,8 +76,9 @@ gdb:
 git:
 	install gitconfig ~/.gitconfig
 
-#surf:
-	#install -Dm644 surf/script.js ~/.surf/script.js
+surf:
+	install -Dm644 config/surf/config.def.h ~/.config/surf/config.def.h
+	install -Dm644 surf/script.js ~/.surf/script.js
 
 mail:
 	install -Dm644 mbsyncrc ~/.mbsyncrc
@@ -148,9 +151,6 @@ bspwm:
 	install -Dm644 config/bspwm/bspwmrc ~/.config/bspwm/bspwmrc
 	chmod +x ~/.config/bspwm/bspwmrc
 
-dircolors:
-	install -m644 dircolors ~/.dircolors
-
 texlive:
 	install -Dm644 texmf/tex/latex/shading/shading.sty ~/texmf/tex/latex/shading/shading.sty
 	install -Dm644 texmf/tex/latex/shading/shading.tex ~/texmf/tex/latex/shading/shading.tex
@@ -169,3 +169,9 @@ dwm:
 
 xmodmap:
 	install -Dm644 Xmodmap ~/.Xmodmap
+
+dircolors:
+	install -m644 dircolors ~/.dircolors
+
+tabbed:
+	install -Dm644 config/tabbed/config.def.h ~/.config/tabbed/config.h

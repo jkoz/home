@@ -3,4 +3,4 @@ brw="surf-tabbed"
 
 xdotool search --maxdept 1 --onlyvisible --classname "surf-tabbed" windowunmap ||
     xdotool search --maxdept 1 --classname "surf-tabbed" windowmap ||
-    $brw &
+    $brw www.google.com &

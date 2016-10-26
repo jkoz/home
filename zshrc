@@ -1,7 +1,7 @@
 # environment {{{
 export EDITOR="vim"
 export PAGER="less"
-export BROWSER="vimb-tabbed"
+export BROWSER="surf-tabbed"
 export MOVPLAY="mplayer"
 export PICVIEW="feh"
 export SNDPLAY="mplayer"
@@ -55,7 +55,7 @@ export PROJECT="$HOME/data/projects"
 export CATALINA_HOME="${PROJECT}/apache-tomcat-8.0.5/"
 export AXS_HOME="${PROJECT}/axs"
 export MEDIA_HOME="$HOME/media"
-export GEM_HOME=/home/tait/.gem/ruby/2.2.0
+export GEM_HOME=$HOME/.gem/ruby/2.3.0
 
 #export GTK_MODULES=rgba
 export GTK_RGBA_APPS="allbut:firefox-bin:gnome-mplayer:totem:soffice:<unknown>:exe"
@@ -119,13 +119,13 @@ bindkey '^d' delete-char
 bindkey '^r' history-incremental-pattern-search-backward
 bindkey '^s' history-incremental-pattern-search-forward
 
-zle-fd() {
-    zle kill-whole-line
-    fd
-    zle accept-line
-}
-zle -N zle-fd
-bindkey '^e' zle-fd
+#zle-fd() {
+    #zle kill-whole-line
+    #fd
+    #zle accept-line
+#}
+#zle -N zle-fd
+#bindkey '^e' zle-fd
 
 #bindkey '^b' backward-word
 #bindkey '^w' forward-word
@@ -238,8 +238,8 @@ else
     alias l='ls --color=auto'
     alias ls='ls --color=auto'
 fi
-alias dmenu='st -c Fzf -e sh -c'
-alias pdf="zathura-tabbed"
+#alias dmenu='st -c Fzf -e sh -c'
+alias pdf=zathura-tabbed
 alias bt="transmission-remote"
 alias extract='dtrx'
 alias gz='tar -xzf'
