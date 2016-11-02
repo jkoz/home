@@ -24,6 +24,7 @@ install:
 	install -Dm755 expdf $(BINPREFIX)
 	install -Dm755 surf-tabbed $(BINPREFIX)
 	install -Dm755 zathura-tabbed $(BINPREFIX)
+	install -Dm755 newpost $(BINPREFIX)
 
 uninstall:
 	rm -f $(BINPREFIX)/preview
@@ -34,6 +35,7 @@ uninstall:
 	rm -f $(BINPREFIX)/expdf
 	rm -f $(BINPREFIX)/surf-tabbed
 	rm -f $(BINPREFIX)/zathura-tabbed
+	rm -f $(BINPREFIX)/newpost
 
 clean:
 	rm -rf *.sh

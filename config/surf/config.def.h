@@ -6,7 +6,7 @@ static char *styledir       = "~/.surf/styles/";
 static char *cachefolder    = "~/.surf/cache/";
 
 static Bool kioskmode       = FALSE; /* Ignore shortcuts */
-static Bool showindicators  = FALSE;  /* Show indicators in window title */
+static Bool showindicators  = TRUE;  /* Show indicators in window title */
 static Bool zoomto96dpi     = TRUE;  /* Zoom pages to always emulate 96dpi */
 static Bool runinfullscreen = TRUE; /* Run in fullscreen mode by default */
 
@@ -75,11 +75,7 @@ static SiteStyle styles[] = {
 };
 
 /* search engines */
-static SearchEngine searchengines[] = {
-       { "g",   "http://www.google.ca/search?q=%s"   },
-       { "gh",   "http://www.github.com/search?q=%s"   },
-       { "ddg", "https://duckduckgo.com/?q=%s"       },
-};
+static char *searchengine   = "http://www.google.ca/search?q=";
 
 #define MODKEY GDK_CONTROL_MASK
 
