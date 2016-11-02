@@ -119,6 +119,7 @@ static unsigned int mousebg = 0;
  * will reverse too. Another logic would only make the simple feature too
  * complex.
  */
+static unsigned int defaultattr = 11;
 static unsigned int defaultitalic = 11;
 static unsigned int defaultunderline = 7;
 
