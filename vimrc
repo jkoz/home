@@ -26,8 +26,8 @@ Plug 'reedes/vim-pencil'
 Plug 'reedes/vim-litecorrect'
 Plug 'itchyny/lightline.vim'
 Plug 'tpope/vim-dispatch'
-Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
 
 
 "Plug 'suan/vim-instant-markdown'
