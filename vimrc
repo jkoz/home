@@ -340,7 +340,7 @@ nn <silent> <Leader>z :CtrlPBuffer<CR>
 nn <silent> <Leader>m :CtrlPMRUFiles<CR>
 nn <silent> <Leader>o :CtrlPBufTag<CR>
 nn <silent> <Leader>q :CtrlPHistory<CR>
-nn <silent> <Leader>l :CtrlPLines<CR>
+nn <silent> <Leader>l :CtrlPLine<CR>
 
 if exists('$DISPLAY')
     let g:dmenu_backend = "fzf"
