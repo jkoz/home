@@ -1,35 +1,42 @@
 " Bundles {{{
-if !filereadable(expand('~/.vim/autoload/plug.vim'))
-    sil !mkdir -p ~/.vim/plugged
-    sil !git clone https://github.com/junegunn/vim-plug ~/.vim/autoload
-    :PlugInstall
+
+if empty(glob('~/.vim/bundle/Vundle.vim'))
+    sil !mkdir -p ~/.vim/bundle
+    sil !git clone http://github.com/VundleVim/Vundle.Vim ~/.vim/bundle/Vundle.vim
 endif
 
-cal plug#begin('~/.vim/plugged')
+set nocompatible
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
-Plug 'altercation/vim-colors-solarized'
-Plug 'edsono/vim-matchit'
-Plug 'scrooloose/nerdcommenter'
-Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-fugitive'
-Plug 'gavinbeatty/dragvisuals.vim'
-Plug 'osyo-manga/vim-hopping'
-Plug 'myusuf3/numbers.vim'
-Plug 'kana/vim-metarw'
-Plug 'mattn/webapi-vim'
-Plug 'mattn/vim-metarw-gdrive'
-Plug 'majutsushi/tagbar'
-Plug 'kien/ctrlp.vim'
-Plug 'scrooloose/Syntastic'
-Plug 'reedes/vim-pencil'
-Plug 'reedes/vim-litecorrect'
-Plug 'itchyny/lightline.vim'
-Plug 'tpope/vim-dispatch'
-Plug 'godlygeek/tabular'
-Plug 'plasticboy/vim-markdown'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-fugitive'
+Plugin 'gavinbeatty/dragvisuals.vim'
+Plugin 'osyo-manga/vim-hopping'
+Plugin 'myusuf3/numbers.vim'
+Plugin 'kana/vim-metarw'
+Plugin 'mattn/webapi-vim'
+Plugin 'mattn/vim-metarw-gdrive'
+Plugin 'majutsushi/tagbar'
+Plugin 'kien/ctrlp.vim'
+Plugin 'scrooloose/Syntastic'
+Plugin 'reedes/vim-pencil'
+Plugin 'reedes/vim-litecorrect'
+Plugin 'itchyny/lightline.vim'
+Plugin 'tpope/vim-dispatch'
+Plugin 'godlygeek/tabular'
+Plugin 'plasticboy/vim-markdown'
+Plugin 'dhruvasagar/vim-table-mode'
+Plugin 'edkolev/tmuxline.vim'
+call vundle#end()
+filetype plugin indent on
 
 
+"Plugin 'edsono/vim-matchit'
 "Plug 'suan/vim-instant-markdown'
 "Plug 'tpope/vim-markdown'
 "Plug 'nelstrom/vim-markdown-folding'
@@ -60,8 +67,6 @@ Plug 'plasticboy/vim-markdown'
 "Plugin 'vim-scripts/vim-auto-save'
 "Plugin 'ervandew/eclim'
 "Plugin 'airblade/vim-rooter'
-
-call plug#end()
 
 filetype plugin indent on
 syntax on
@@ -375,10 +380,10 @@ en
 " }}}
 " Drag visuals {{{
 " TODO: tempory disable visual effect as we need to use J for join multiple lines
-"vm <expr> H DVB_Drag('left')
-"vm <expr> L DVB_Drag('right')
-"vm <expr> J DVB_Drag('down')
-"vm <expr> K DVB_Drag('up')
+vm <expr> <c-h> DVB_Drag('left')
+vm <expr> <c-l> DVB_Drag('right')
+vm <expr> <c-j>  DVB_Drag('down')
+vm <expr> <c-k>  DVB_Drag('up')
 "vm <expr> D DVB_Duplicate()
 " }}}
 " Better Digraphs {{{
