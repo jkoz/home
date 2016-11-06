@@ -12,11 +12,10 @@ call vundle#begin()
 
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
+Plugin 'scrooloose/nerdtree'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
 Plugin 'gavinbeatty/dragvisuals.vim'
-Plugin 'osyo-manga/vim-hopping'
 Plugin 'myusuf3/numbers.vim'
 Plugin 'kana/vim-metarw'
 Plugin 'mattn/webapi-vim'
@@ -31,11 +30,11 @@ Plugin 'tpope/vim-dispatch'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'dhruvasagar/vim-table-mode'
-Plugin 'edkolev/tmuxline.vim'
 call vundle#end()
 filetype plugin indent on
 
 
+"Plugin 'osyo-manga/vim-hopping'
 "Plugin 'edsono/vim-matchit'
 "Plug 'suan/vim-instant-markdown'
 "Plug 'tpope/vim-markdown'
