@@ -140,7 +140,7 @@ bindkey '^s' history-incremental-pattern-search-forward
 reset_color="%F{white}"
 _prompt_git_info() { git rev-parse --abbrev-ref HEAD 2> /dev/null | xargs -r printf '%%F{cyan}[%s] ';  }
 _prompt_hg_info() { hg branch 2> /dev/null | xargs -r printf '%%F{blue}[%s] '; }
-_prompt() { test -z "$VIM_PROMPT" && echo "%{%F{blue}%}>%{%F{blue}%}>%{%F{red}%}> " || echo "%F{blue}%}<%F{blue}%}<%F{red}%}< "; }
+_prompt() { test -z "$VIM_PROMPT" && echo "%F{white}%}> " || echo "%F{cyan}%}< "; }
 
 PROMPT="\$(_prompt)%{$reset_color%}"
 RPROMPT="\$(_prompt_git_info)\$(_prompt_hg_info)%{$reset_color%}"
