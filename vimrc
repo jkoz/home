@@ -1,3 +1,9 @@
+" Notes {{{
+"set digraph
+" help digraph-table
+" search PLUS-MINUS
+" c^k +-
+" }}}
 " Bundles {{{
 
 if empty(glob('~/.vim/bundle/Vundle.vim'))
@@ -16,7 +22,6 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
 Plugin 'gavinbeatty/dragvisuals.vim'
-Plugin 'myusuf3/numbers.vim'
 Plugin 'kana/vim-metarw'
 Plugin 'mattn/webapi-vim'
 Plugin 'mattn/vim-metarw-gdrive'
@@ -25,48 +30,11 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'scrooloose/Syntastic'
 Plugin 'reedes/vim-pencil'
 Plugin 'reedes/vim-litecorrect'
-Plugin 'itchyny/lightline.vim'
 Plugin 'tpope/vim-dispatch'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'dhruvasagar/vim-table-mode'
 call vundle#end()
-filetype plugin indent on
-
-
-"Plugin 'osyo-manga/vim-hopping'
-"Plugin 'edsono/vim-matchit'
-"Plug 'suan/vim-instant-markdown'
-"Plug 'tpope/vim-markdown'
-"Plug 'nelstrom/vim-markdown-folding'
-"Plug 'junegunn/goyo.vim'
-"Plug 'bling/vim-airline'
-"Plug 'vim-airline/vim-airline-themes'
-"Plug 'lervag/vimtex'
-"Plug 'gerw/vim-latex-suite'
-"Plug 'mileszs/ack.vim'
-"Plug 'honza/vim-snippets'
-"Plug 'reedes/vim-colors-pencil'
-"Plug 'fatih/vim-go'
-"Plug 'Valloric/YouCompleteMe'
-"Plug 'mattn/emmet-vim'
-"Plug 'SirVer/ultisnips'
-"Plug 'mhinz/vim-startify'
-"Plug 'kien/ctrlp.vim', { 'on': ['CtrlP', 'DmenuFM', 'DmenuBuffer', 'DmenuMRU', 'DmenuBufTag', 'DmenuHistory', 'DmenuLines'] }
-"Plug 'jkoz/vim-fzf', { 'on': ['Dmenu', 'DmenuFM', 'DmenuBuffer', 'DmenuMRU', 'DmenuBufTag', 'DmenuHistory', 'DmenuLines'] }
-"Plug 'airblade/vim-gitgutter'
-"Plugin 'ervandew/supertab'
-"Plugin 'klen/python-mode'
-"Plugin 'vim-scripts/vcscommand.vim'
-"Plugin 'vim-scripts/dbext.vim'
-"Plugin 'Lokaltog/vim-easymotion'
-"Plugin 'sjl/gundo.vim'
-"Plugin 'atweiden/vim-betterdigraphs'
-"Plugin 'chrisbra/unicode.vim'
-"Plugin 'vim-scripts/vim-auto-save'
-"Plugin 'ervandew/eclim'
-"Plugin 'airblade/vim-rooter'
-
 filetype plugin indent on
 syntax on
 
@@ -78,36 +46,9 @@ let mapleader = ","
 ino jk <esc>
 vn jk <esc>
 
-"nn ; :
-"nn <leader>r :so $MYVIMRC<cr> use for dispatch
-"se verbose=0
-
-" switching vim window buffer
-" TODO: c-j conflict utilsnip
-"map <c-j> <c-w>j<c-w>_
-"map <c-k> <c-w>k<c-w>_
-"map <c-h> <c-w>h<c-w>_
-"map <c-l> <c-w>l<c-w>_
-
-" this good but i familiar with shift ;
+" change : to ;
 nn ; :
 nn : ;
-
-nn v <C-V>
-nn <C-V> v
-
-vn v <C-V>
-vn <C-V> v
-
-" map copy/paste
-vm <C-c> "+y
-nn <C-v> "+p
-
-" resize vim
-"nn <silent> <F11> :exe "vert res -2" <cr>
-"nn <silent> <F12> :exe "vert res +2" <cr>
-"nn <silent> <F9>  :exe "res -2" <cr>
-"nn <silent> <F10> :exe "res +2" <cr>
 
 " Toggle wrap
 nn <Leader>W :setl nowrap! <CR>
@@ -227,21 +168,27 @@ se shiftround " use multiple of shiftwidth when indenting with '<' and '>'
 se cursorline " highlight current light
 "se cursorcolumn
 
-" paragraph {{{
+" statusline
+"se stl=Current:\ %4l\ Total:\ %4L
+se statusline=%f         " Path to the file
+se statusline+=%=        " Switch to the right side
+se statusline+=%l        " Current line
+se statusline+=/         " Separator
+se statusline+=%L        " Total lines
+
+" paragraph
 se nowrap
 se textwidth=80 " for coding
 se wrapmargin=0
 se formatoptions=vt " t: automatetic text wrapping
-"}}}
 
 se makeprg=make
 
-" fold {{{
+" fold
 se foldenable
 se foldmethod=manual
 se foldlevelstart=0   " close all fold by default
 nnoremap <space> za  " space open/closes folds
-"}}}
 
 se sidescroll=1
 se sidescrolloff=10
@@ -249,17 +196,17 @@ se sidescrolloff=10
 se wildignore+=*.so,*.swp,*.zip,*.class,*.jar,*.gz,*pom.xml.org,*pyc,*.xls,*.svn
 se wildignore+=*_build/*,*/coverage/*,*/target/*,*/tmp/*,*/lib/*,*/.settings/*,*/.git/*
 
-" completeopt {{{
+" completion
 se dict=/usr/share/dict/cracklib-small
-set complete=.,b,u,]
-set wildmode=longest,list:longest
+se complete=.,b,u,]
+se wildmode=longest,list:longest
 "set completeopt=menu,preview
 set completeopt=menuone,menu,longest
-" }}}
-" color {{{
-set background=dark
+
+" color
+se background=dark
 colo solarized
-"}}}
+
 "}}}
 " Auto Groups {{{
 aug configgroup
@@ -271,7 +218,6 @@ aug configgroup
     au BufRead,BufNewFile *.c,*.h,*.hh setl tabstop=4 softtabstop=4 expandtab foldmethod=manual foldlevel=0
     au BufRead,BufNewFile *.h,*.hpp,*.cc,*.cpp setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=manual foldlevel=0
 aug END
-
 aug pencil
     autocmd!
     autocmd FileType tex,latex
@@ -345,37 +291,6 @@ nn <silent> <Leader>m :CtrlPMRUFiles<CR>
 nn <silent> <Leader>o :CtrlPBufTag<CR>
 nn <silent> <Leader>q :CtrlPHistory<CR>
 nn <silent> <Leader>l :CtrlPLine<CR>
-
-if exists('$DISPLAY')
-    let g:dmenu_backend = "fzf"
-    let g:dmenu_launcher= 'st -c Fzf -e sh -c'
-elsei exists('$TMUX')
-    let g:dmenu_backend = "fzf-tmux"
-    let g:dmenu_launcher= ''
-el
-    "nn <silent> <c-p>     :Dmenu<CR>
-    "nn <silent> <leader>f :DmenuFM<CR>
-    "nn <silent> <Leader>z :DmenuBuffer<CR>
-    "nn <silent> <Leader>m :DmenuMRU<CR>
-    "nn <silent> <Leader>o :DmenuBufTag<CR>
-    "nn <silent> <Leader>q :DmenuHistory<CR>
-    "nn <silent> <Leader>l :DmenuLines<CR>
-    nn <silent> <c-p>     :CtrlP<CR>
-    "nn <silent> <leader>f :DmenuFM<CR>
-    nn <silent> <Leader>z :CtrlPBuffer<CR>
-    nn <silent> <Leader>m :CtrlPMRUFiles<CR>
-    nn <silent> <Leader>o :CtrlPBufTag<CR>
-    nn <silent> <Leader>q :CtrlPHistory<CR>
-    nn <silent> <Leader>l :CtrlPLines<CR>
-en
-
-
-" }}}
-" Databse {{{
-"let g:dbext_default_profile_192_168_95_227_replaceme='type=MYSQL:user=root:passwd=mysql:dbname=replaceme:host=192.168.95.227'
-"let g:dbext_default_profile_192_168_95_228_replaceme='type=MYSQL:user=root:passwd=mysql:dbname=replaceme:host=192.168.95.228'
-"let g:dbext_default_profile_192_168_95_111_NI='type=MYSQL:user=root:passwd=mysql:dbname=NI:host=192.168.95.111:port=3307'
-"let g:dbext_default_profile_192_168_99_246_NI='type=MYSQL:user=root:passwd=mysql:dbname=NI:host=192.168.99.246'
 " }}}
 " Drag visuals {{{
 " TODO: tempory disable visual effect as we need to use J for join multiple lines
@@ -385,69 +300,13 @@ vm <expr> <c-j>  DVB_Drag('down')
 vm <expr> <c-k>  DVB_Drag('up')
 "vm <expr> D DVB_Duplicate()
 " }}}
-" Better Digraphs {{{
-"inoremap <expr>  <C-K>  BDG_GetDigraph()
-" }}}
-" Ack {{{
-nn <silent> <Leader>a :Ack <cword><cr>
-if executable('ag')
-    let g:ackprg = "ag --nocolor --nogroup --column"
-elseif executable('ack-grep')
-    let g:ackprg = "ack-grep --nocolor --nogroup --column"
-elseif executable('ack')
-    let g:ackprg = "ack --nocolor --nogroup --column"
-endif
-" }}}
-" Util snippet {{{
-" - latex: only type key words, not the forwards slash
-let g:UltiSnipsSnippetsDir="~/.vim/bundle/vim-snippets/UltiSnips"
-let g:UltiSnipsExpandTrigger = "<c-g>i" " a little bit slow to trigger!
-let g:UltiSnipsJumpForwardTrigger="<c-j>"
-let g:UltiSnipsJumpBackwardTrigger="<c-k>"
-let g:UltiSnipsListSnippets = "<c-s-s>"
-" }}}
-" YouCompleteMe {{{
-nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
-nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
-nnoremap <leader>pg :YcmCompleter GoTo<CR>
-nnoremap <leader>pd :YcmCompleter GoToDefinition<CR>
-nnoremap <leader>pc :YcmCompleter GoToDeclaration<CR>
-
-"Do not ask when starting vim
-let g:ycm_confirm_extra_conf = 0
-let g:syntastic_always_populate_loc_list = 1
-let g:ycm_collect_identifiers_from_tags_files = 1
-
-" default search for current directory for ycm_extra_conf
-let g:ycm_global_ycm_extra_conf = "./.ycm_extra_conf.py"
-
-" avoid conflict with other plugins use tab (snippets)
-let g:ycm_key_list_select_completion = ['<C-TAB>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<C-S-TAB>', '<Up>']
-
-
-" auto close preview
-let g:ycm_autoclose_preview_window_after_completion=1
-
-" debug
-let g:ycm_server_use_vim_stdout = 1
-let g:ycm_server_log_level = 'debug'
-" }}}
 " Syntastic {{{
 let g:syntastic_error_symbol = '✗'
 let g:syntastic_warning_symbol = '⚠'
 " }}}
-" SuperTab {{{
-"let g:SuperTabDefaultCompletionType = '<C-Tab>'
-" }}}
 " Pencil {{{
 " soft mode use 1 line even if it is long line
 let g:pencil#mode_indicators = {'hard': 'PH', 'soft': 'PS', 'off': ''}
-" }}}
-" lightline {{{
-let g:lightline = {
-      \ 'colorscheme': 'solarized',
-      \ }
 " }}}
 " Gui {{{
 if has('gui_running')
@@ -463,38 +322,13 @@ if has('gui_running')
     colo solarized
 endif
 " }}}
-" Numbers {{{
-nn <leader>N :NumbersToggle<cr>
-let g:enable_numbers = 0
-" }}}
-" Goyo {{{
-"let g:goyo_width = 150
-"let g:goyo_margin_top = 1
-"let g:goyo_margin_bottom = 1
-"let g:goyo_linenr = 0
-" }}}
-" Latex {{{
-let g:tex_conceal= 'admgS' " do not conceal 'textit' as there is a bug conceal 2 textit on the same line, only first match is conceal
-" }}}
 " Dispatch {{{
 nn <leader>r :silent Dispatch!<CR>
-" }}}
-" Startify {{{
-let g:startify_relative_path          = 0
-let g:startify_files_number           = 8
-let g:startify_session_persistence    = 1
-let g:startify_session_autoload       = 1
-let g:startify_session_delete_buffers = 1
-let g:startify_change_to_dir          = 1
-let g:startify_enable_special         = 0
-let g:startify_enable_unsafe          = 1
-" }}}
-" Instant markdown {{{
-let g:instant_markdown_autostart = 0
 " }}}
 
 " TODO: not sure why it doesnt work when I put it in Option section, somethings
 " need to load first!
 " Hack Disable tilder column "~" by change its color
 hi! EndOfBuffer ctermbg=bg ctermfg=bg guibg=bg guifg=bg
+hi! StatusLine ctermbg=bg cterm=NONE ctermfg=214
 " }}}

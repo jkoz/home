@@ -43,7 +43,7 @@ redshift &
 #conky &
 #tint2&
 #slstatus&
-while true; do xsetroot -name "$(acpi)"; sleep 1; done
+while true; do xsetroot -name "$(acpi | cut -d',' -f2)  $(date +'%b %d %l:%M%p  ')"; sleep 1; done &
 
 #devmon --exec-on-drive "st -c Fzf -e sh -c \"xdotool search 'Fzf' windowsize 100% 50%; dm fm %d\"" &
 
