@@ -27,6 +27,7 @@ Plugin 'mattn/webapi-vim'
 Plugin 'mattn/vim-metarw-gdrive'
 Plugin 'majutsushi/tagbar'
 Plugin 'kien/ctrlp.vim'
+Plugin 'suy/vim-ctrlp-commandline'
 Plugin 'scrooloose/Syntastic'
 Plugin 'reedes/vim-pencil'
 Plugin 'reedes/vim-litecorrect'
@@ -34,6 +35,7 @@ Plugin 'tpope/vim-dispatch'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'dhruvasagar/vim-table-mode'
+Plugin 'itchyny/lightline.vim'
 call vundle#end()
 filetype plugin indent on
 syntax on
@@ -282,15 +284,18 @@ let NERDTreeMouseMode=2 " Use a single click to fold/unfold directories and a do
 let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$',
             \ '\.o$', '\.so$', '\.egg$', '^\.git$', '\.svn$', '^target$', '^\.settings$', '^\.classpath$', '^\.project$', '^\.hg', '.pydevproject'  ]
 " }}}
-" Fzf {{{
+" CtrlP {{{
 
 nn <silent> <c-p>     :CtrlP<CR>
-"nn <silent> <leader>f :DmenuFM<CR>
 nn <silent> <Leader>z :CtrlPBuffer<CR>
 nn <silent> <Leader>m :CtrlPMRUFiles<CR>
 nn <silent> <Leader>o :CtrlPBufTag<CR>
 nn <silent> <Leader>q :CtrlPHistory<CR>
 nn <silent> <Leader>l :CtrlPLine<CR>
+
+let g:ctrlp_extensions = ['commandline']
+com! CtrlPCommandLine call ctrlp#init(ctrlp#commandline#id())
+nn <silent>  <leader>f :CtrlPCommandLine<cr>
 " }}}
 " Drag visuals {{{
 " TODO: tempory disable visual effect as we need to use J for join multiple lines
@@ -330,5 +335,5 @@ nn <leader>r :silent Dispatch!<CR>
 " need to load first!
 " Hack Disable tilder column "~" by change its color
 hi! EndOfBuffer ctermbg=bg ctermfg=bg guibg=bg guifg=bg
-hi! StatusLine ctermbg=bg cterm=NONE ctermfg=214
+"hi! StatusLine ctermbg=bg cterm=NONE ctermfg=214
 " }}}
