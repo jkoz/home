@@ -86,4 +86,5 @@ apps:
 	rm -f ~/.config/config.h && sudo make -C ~/.config/dmenu clean install
 	rm -f ~/.config/config.h && sudo make -C ~/.config/st clean install
 	rm -f ~/.config/config.h && sudo make -C ~/.config/tabbed clean install
+	rm -f ~/.config/config.h && sudo make -C ~/.config/surf clean install
 
