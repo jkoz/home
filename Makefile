@@ -12,13 +12,21 @@ all:
 	install -Dm644 tmuxinator/cs.yml ~/.tmuxinator/cs.yml
 	install -Dm644 local/share/applications/vim.desktop ~/.local/share/applications/vim.desktop
 	install -Dm644 local/share/applications/zathura-tabbed.desktop ~/.local/share/applications/zathura-tabbed.desktop
+	install -Dm644 dircolors ~/.dircolors
 	install -Dm644 zshrc ~/.zshrc
 	install -Dm644 ncmpcpp/config ~/.ncmpcpp/config
 	install -Dm644 mpdconf ~/.mpdconf
 	install -Dm644 gdbinit ~/.gdbinit
 	install gitconfig ~/.gitconfig
+	[ -d ~/.config/surf ] && git -C ~/.config/surf pull || git clone http://git.suckless.org/surf ~/.config/surf
 	install -Dm644 config/surf/config.def.h ~/.config/surf/config.def.h
 	install -Dm644 surf/script.js ~/.surf/script.js
+	[ -d ~/.config/st ] && git -C ~/.config/st pull || git clone http://git.suckless.org/st ~/.config/st
+	install -Dm644 config/st/config.def.h ~/.config/st/config.def.h
+	[ -d ~/.config/dwm ] && git -C ~/.config/dwm pull || git clone http://git.suckless.org/dwm ~/.config/dwm
+	install -Dm644 config/dwm/config.def.h ~/.config/dwm/config.def.h
+	[ -d ~/.config/dmenu ] && git -C ~/.config/dmenu pull || git clone http://git.suckless.org/dmenu ~/.config/dmenu
+	[ -d ~/.config/tabbed ] && git -C ~/.config/tabbed pull || git clone http://git.suckless.org/tabbed ~/.config/tabbed
 	install -Dm644 mbsyncrc ~/.mbsyncrc
 	install -Dm6644 msmtprc ~/.msmtprc
 	install -Dm644 mutt/muttrc ~/.mutt/muttrc
@@ -54,8 +62,8 @@ all:
 	install -Dm644 idesktop/icons/terminal-32x32.png ~/.idesktop/icons/terminal-32x32.png
 	install -Dm644 fonts/ter-x14n.bdf ~/.fonts/ter-x14n.bdf
 	install -Dm644 fonts/xbmicons.bdf ~/.fonts/xbmicons.bdf
-	mkfontscale ~/.fonts
-	mkfontdir ~/.fonts
+	#mkfontscale ~/.fonts
+	#mkfontdir ~/.fonts
 	install -Dm644 config/vimb/style.css ~/.config/vimb/style.css
 	install -Dm644 config/vimb/config ~/.config/vimb/config
 	touch ~/.config/vimb/bookmark
@@ -68,8 +76,14 @@ all:
 	install -Dm644 texmf/tex/latex/shading/shading.tex ~/texmf/tex/latex/shading/shading.tex
 	#install -Dm644 config/tint2/tint2rc ~/.config/tint2/tint2rc
 	install -Dm644 config/Arch.jpg ~/.config/Arch.jpg
-	install -Dm644 config/st/config.def.h ~/.config/st/config.def.h
-	install -Dm644 config/dwm/config.def.h ~/.config/dwm/config.def.h
 	install -Dm644 Xmodmap ~/.Xmodmap
 	install -m644 dircolors ~/.dircolors
 	install -Dm644 config/tabbed/config.def.h ~/.config/tabbed/config.h
+	sudo make install -C ~/home/scripts
+
+apps:
+	rm -f ~/.config/config.h && sudo make -C ~/.config/dwm clean install
+	rm -f ~/.config/config.h && sudo make -C ~/.config/dmenu clean install
+	rm -f ~/.config/config.h && sudo make -C ~/.config/st clean install
+	rm -f ~/.config/config.h && sudo make -C ~/.config/tabbed clean install
+
