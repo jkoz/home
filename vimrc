@@ -313,6 +313,9 @@ let g:syntastic_warning_symbol = '⚠'
 " soft mode use 1 line even if it is long line
 let g:pencil#mode_indicators = {'hard': 'PH', 'soft': 'PS', 'off': ''}
 " }}}
+" Dispatch {{{
+nn <leader>r :silent Dispatch!<CR>
+" }}}
 " Gui {{{
 if has('gui_running')
     se guioptions-=m  "remove menu bar
@@ -325,15 +328,13 @@ if has('gui_running')
 
     se background=dark
     colo solarized
+el
+    " TODO: not sure why it doesnt work when I put it in Option section, somethings
+    " need to load first!
+    " Hack Disable tilder column "~" by change its color
+    hi! EndOfBuffer ctermbg=bg ctermfg=bg guibg=bg guifg=bg
 endif
 " }}}
-" Dispatch {{{
-nn <leader>r :silent Dispatch!<CR>
-" }}}
 
-" TODO: not sure why it doesnt work when I put it in Option section, somethings
-" need to load first!
-" Hack Disable tilder column "~" by change its color
-hi! EndOfBuffer ctermbg=bg ctermfg=bg guibg=bg guifg=bg
 "hi! StatusLine ctermbg=bg cterm=NONE ctermfg=214
 " }}}
