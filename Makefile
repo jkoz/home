@@ -18,15 +18,6 @@ all:
 	install -Dm644 mpdconf ~/.mpdconf
 	install -Dm644 gdbinit ~/.gdbinit
 	install gitconfig ~/.gitconfig
-	[ -d ~/.config/surf ] && git -C ~/.config/surf pull || git clone http://git.suckless.org/surf ~/.config/surf
-	install -Dm644 config/surf/config.def.h ~/.config/surf/config.def.h
-	install -Dm644 surf/script.js ~/.surf/script.js
-	[ -d ~/.config/st ] && git -C ~/.config/st pull || git clone http://git.suckless.org/st ~/.config/st
-	install -Dm644 config/st/config.def.h ~/.config/st/config.def.h
-	[ -d ~/.config/dwm ] && git -C ~/.config/dwm pull || git clone http://git.suckless.org/dwm ~/.config/dwm
-	install -Dm644 config/dwm/config.def.h ~/.config/dwm/config.def.h
-	[ -d ~/.config/dmenu ] && git -C ~/.config/dmenu pull || git clone http://git.suckless.org/dmenu ~/.config/dmenu
-	[ -d ~/.config/tabbed ] && git -C ~/.config/tabbed pull || git clone http://git.suckless.org/tabbed ~/.config/tabbed
 	install -Dm644 mbsyncrc ~/.mbsyncrc
 	install -Dm6644 msmtprc ~/.msmtprc
 	install -Dm644 mutt/muttrc ~/.mutt/muttrc
@@ -80,6 +71,17 @@ all:
 	install -m644 dircolors ~/.dircolors
 	install -Dm644 config/tabbed/config.def.h ~/.config/tabbed/config.h
 	sudo make install -C ~/home/scripts
+
+ui:
+	[ -d ~/.config/surf ] && git -C ~/.config/surf pull || git clone http://git.suckless.org/surf ~/.config/surf
+	install -Dm644 config/surf/config.def.h ~/.config/surf/config.def.h
+	install -Dm644 surf/script.js ~/.surf/script.js
+	[ -d ~/.config/st ] && git -C ~/.config/st pull || git clone http://git.suckless.org/st ~/.config/st
+	install -Dm644 config/st/config.def.h ~/.config/st/config.def.h
+	[ -d ~/.config/dwm ] && git -C ~/.config/dwm pull || git clone http://git.suckless.org/dwm ~/.config/dwm
+	install -Dm644 config/dwm/config.def.h ~/.config/dwm/config.def.h
+	[ -d ~/.config/dmenu ] && git -C ~/.config/dmenu pull || git clone http://git.suckless.org/dmenu ~/.config/dmenu
+	[ -d ~/.config/tabbed ] && git -C ~/.config/tabbed pull || git clone http://git.suckless.org/tabbed ~/.config/tabbed
 
 apps:
 	rm -f ~/.config/config.h && sudo make -C ~/.config/dwm clean install
