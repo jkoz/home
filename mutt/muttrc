@@ -128,7 +128,7 @@ folder-hook 'phuoctaitp@gmail.com' \
          set realname = "Tai Tran"; \
          set from = "phuoctaitp@gmail.com"; \
          set sendmail = "sendm"; \
-         macro index \cF "!tmux split-window -v -l 3 \"mailagent gmail-phuoctaitp; read\"<enter>"; \
+         macro index \cF "!tmux split-window -v -l 3 \"mbsync gmail-phuoctaitp \"<enter>"; \
          macro index d '<save-message>=[Gmail]/.Trash<enter>'; \
          unmailboxes *; \
          mailboxes `find ~/Mail/phuoctaitp@gmail.com -maxdepth 5 -mindepth 1 -type d ! -regex ".*\[Gmail\]$\|.*/cur$\|.*/new$\|.*/tmp$" | sed "s/ /\\\\ /g" | awk 1 ORS=" "`; \
@@ -144,7 +144,7 @@ folder-hook 'ctphung1987@gmail.com' \
          set realname = "Phung Chau"; \
          set from = "ctphung1987@gmail.com"; \
          set sendmail = "sendm"; \
-         macro index \cF "!tmux split-window -v -l 3 \"mailagent gmail-ctphung1987; read\"<enter>"; \
+         macro index \cF "!tmux split-window -v -l 3 \"mbsync gmail-ctphung1987 \"<enter>"; \
          macro index d '<save-message>=[Gmail]/.Trash<enter>'; \
          unmailboxes *; \
          mailboxes `find ~/Mail/ctphung1987@gmail.com -maxdepth 5 -mindepth 1 -type d ! -regex ".*\[Gmail\]$\|.*/cur$\|.*/new$\|.*/tmp$" | sed "s/ /\\\\ /g" | awk 1 ORS=" "`; \
@@ -160,7 +160,7 @@ folder-hook 'tai.t@hotmail.com' \
          set realname = "Phung Chau"; \
          set from = "tai.t@hotmail.com"; \
          set sendmail = "sendm"; \
-         macro index \cF "!tmux split-window -v -l 3 \"mailagent gmail-phuoctaitp; read\"<enter>"; \
+         macro index \cF "!tmux split-window -v -l 3 \"mbsync gmail-phuoctaitp\"<enter>"; \
          macro index d '<save-message>=[Gmail]/.Trash<enter>'; \
          unmailboxes *; \
          mailboxes `find ~/Mail/tai.t@gmail.com -maxdepth 5 -mindepth 1 -type d ! -regex ".*\[Gmail\]$\|.*/cur$\|.*/new$\|.*/tmp$" | sed "s/ /\\\\ /g" | awk 1 ORS=" "`; \
@@ -178,7 +178,7 @@ folder-hook 'thunderchief3000@yahoo.com' \
          set realname = "Tai Tran"; \
          set from = "thunderchief3000@yahoo.com"; \
          set sendmail = "msmtp -a yahoo-thunderchief3000"; \
-         macro index F "!tmux split-window -v -l 3 \"mailagent yahoo-thunderchief3000\"<enter>"; \
+         macro index F "!tmux split-window -v -l 3 \"mbsync yahoo-thunderchief3000\"<enter>"; \
          macro index d '<save-message>=Trash<enter>'; \
          unmailboxes *; \
          mailboxes `find ~/Mail/thunderchief3000@yahoo.com -maxdepth 5 -mindepth 1 -type d ! -regex ".*/cur$\|.*/new$\|.*/tmp$" | sed "s/ /\\\\ /g" | awk 1 ORS=" "`; \
