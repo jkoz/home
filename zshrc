@@ -239,7 +239,7 @@ else
     alias ls='ls --color=auto'
 fi
 #alias dmenu='st -c Fzf -e sh -c'
-alias dict=sdcv
+alias d=sdcv
 alias pdf=zathura-tabbed
 alias bt="transmission-remote"
 alias extract='dtrx'
