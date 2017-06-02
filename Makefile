@@ -13,7 +13,13 @@ all:
 	install -Dm644 local/share/applications/vim.desktop ~/.local/share/applications/vim.desktop
 	install -Dm644 local/share/applications/zathura-tabbed.desktop ~/.local/share/applications/zathura-tabbed.desktop
 	install -Dm644 dircolors ~/.dircolors
-	install -Dm644 zshrc ~/.zshrc
+	#install -Dm644 zshrc ~/.zshrc
+	install -Dm644 bashrc ~/.bashrc
+	install -Dm644 bashrc.d/aliases.bash ~/.bashrc.d/aliases.bash
+	install -Dm644 bashrc.d/functions.bash ~/.bashrc.d/functions.bash
+	install -Dm644 bashrc.d/fzf.bash ~/.bashrc.d/fzf.bash
+	install -Dm644 bashrc.d/gentoo.bash ~/.bashrc.d/gentoo.bash
+	install -Dm644 bashrc.d/centos.bash ~/.bashrc.d/centos.bash
 	install -Dm644 ncmpcpp/config ~/.ncmpcpp/config
 	install -Dm644 mpdconf ~/.mpdconf
 	install -Dm644 gdbinit ~/.gdbinit
