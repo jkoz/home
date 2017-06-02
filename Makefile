@@ -73,7 +73,7 @@ all:
 	sudo make install -C ~/home/scripts
 
 ui:
-	[ -d ~/.config/surf ] && git -C ~/.config/surf pull || git clone http://git.suckless.org/surf ~/.config/surf
+	[ -d ~/.config/surf ] && git -C ~/.config/surf pull || { git clone http://git.suckless.org/surf ~/.config/surf && git -C ~/.config/surf apply ~/home/config/surf/surf-space-search.diff;}
 	install -Dm644 config/surf/config.def.h ~/.config/surf/config.def.h
 	install -Dm644 surf/script.js ~/.surf/script.js
 	[ -d ~/.config/st ] && git -C ~/.config/st pull || git clone http://git.suckless.org/st ~/.config/st
