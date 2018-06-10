@@ -17,7 +17,7 @@ all:
 	install -Dm644 bashrc ~/.bashrc
 	install -Dm644 bashrc.d/aliases.bash ~/.bashrc.d/aliases.bash
 	install -Dm644 bashrc.d/functions.bash ~/.bashrc.d/functions.bash
-	install -Dm644 bashrc.d/fzf.bash ~/.bashrc.d/fzf.bash
+	#install -Dm644 bashrc.d/fzf.bash ~/.bashrc.d/fzf.bash
 	install -Dm644 bashrc.d/gentoo.bash ~/.bashrc.d/gentoo.bash
 	install -Dm644 bashrc.d/centos.bash ~/.bashrc.d/centos.bash
 	install -Dm644 ncmpcpp/config ~/.ncmpcpp/config
