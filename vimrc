@@ -26,8 +26,8 @@ Plugin 'kana/vim-metarw'
 Plugin 'mattn/webapi-vim'
 Plugin 'mattn/vim-metarw-gdrive'
 Plugin 'majutsushi/tagbar'
-Plugin 'kien/ctrlp.vim'
-Plugin 'suy/vim-ctrlp-commandline'
+Plugin 'junegunn/fzf'
+Plugin 'junegunn/fzf.vim'
 Plugin 'scrooloose/Syntastic'
 Plugin 'reedes/vim-pencil'
 Plugin 'reedes/vim-litecorrect'
@@ -36,6 +36,22 @@ Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'dhruvasagar/vim-table-mode'
 Plugin 'itchyny/lightline.vim'
+Plugin 'liuchengxu/vista.vim'
+Plugin 'prabirshrestha/vim-lsp'
+Plugin 'mattn/vim-lsp-settings'
+Plugin 'ycm-core/YouCompleteMe'
+Plugin 'puremourning/vimspector'
+Plugin 'easymotion/vim-easymotion'
+
+"Plugin 'lgranie/vim-lsp-java'
+"let g:vim_lsp_java = {
+  "\ 'eclipse_jdtls' : {
+    "\ 'repository': expand('/Users/taitran/Downloads/jdt'),
+    "\ 'config': 'config_linux',
+    "\ 'workspace': expand('/Users/taitran/github/test-maven-app'),
+  "\ },
+  "\ }
+
 call vundle#end()
 filetype plugin indent on
 syntax on
@@ -284,18 +300,14 @@ let NERDTreeMouseMode=2 " Use a single click to fold/unfold directories and a do
 let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$',
             \ '\.o$', '\.so$', '\.egg$', '^\.git$', '\.svn$', '^target$', '^\.settings$', '^\.classpath$', '^\.project$', '^\.hg', '.pydevproject'  ]
 " }}}
-" CtrlP {{{
-
-nn <silent> <c-p>     :CtrlP<CR>
-nn <silent> <Leader>z :CtrlPBuffer<CR>
-nn <silent> <Leader>m :CtrlPMRUFiles<CR>
-nn <silent> <Leader>o :CtrlPBufTag<CR>
-nn <silent> <Leader>q :CtrlPHistory<CR>
-nn <silent> <Leader>l :CtrlPLine<CR>
-
-let g:ctrlp_extensions = ['commandline']
-com! CtrlPCommandLine call ctrlp#init(ctrlp#commandline#id())
-nn <silent>  <leader>f :CtrlPCommandLine<cr>
+" FZF {{{
+nn <silent> <c-p>     :FZF<CR>
+nn <silent> <leader>z :Buffers<CR>
+nn <silent> <leader>m :History<CR>
+nn <silent> <leader>o :Tags<CR>
+nn <silent> <leader>g :Command<CR>
+nn <silent> <leader>l :Lines<CR>
+nn <silent> <leader>f :History:<cr>
 " }}}
 " Drag visuals {{{
 " TODO: tempory disable visual effect as we need to use J for join multiple lines
@@ -352,6 +364,8 @@ el
     hi! EndOfBuffer ctermbg=bg ctermfg=bg guibg=bg guifg=bg
 endif
 " }}}
-
-"hi! StatusLine ctermbg=bg cterm=NONE ctermfg=214
+" vimspector{{{
+let g:vimspector_enable_mappings = 'HUMAN'
+nmap <leader>jd :YcmCompleter GoTo<CR>
+" }}}
 " }}}
