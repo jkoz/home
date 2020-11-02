@@ -368,4 +368,7 @@ endif
 let g:vimspector_enable_mappings = 'HUMAN'
 nmap <leader>jd :YcmCompleter GoTo<CR>
 " }}}
+" easymotion {{{
+map <Leader>s <Plug>(easymotion-bd-f)
+" }}}
 " }}}
