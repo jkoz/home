@@ -65,7 +65,6 @@ export GTK_IM_MODULE=ibus
 export QT_IM_MODULE=ibus
 
 export MPD_HOST=~/.mpd/socket
-eval `dircolors ~/.dircolors`
 PATH=${GEM_HOME}/bin:${PATH}
 
 # history
@@ -73,13 +72,10 @@ HISTSIZE=10000
 SAVEHIST=${HISTSIZE}
 HISTFILE=~/.zsh_history
 # }}}
-# options {{{
-setopt AUTO_CD                      # Automatically cd in to directories if it's not a command name.
-setopt AUTO_PUSHD                   # Automatically push visited directories to the stack.
-setopt PUSHD_IGNORE_DUPS            # ...and don't duplicate them.
 
+# options {{{
+# vim bind
 bindkey -v
-export KEYTIMEOUT=1                 # 0.1 second to change to normal mode for line editing
 
 # History Options
 setopt APPEND_HISTORY               # Don't overwrite history.
@@ -98,48 +94,33 @@ setopt COMPLETE_IN_WORD             # Complete items from the beginning to the c
 setopt NO_ALWAYS_LAST_PROMPT        # Put prompt beneath potentials
 setopt COMPLETEALIASES              # Complete aliased commands
 setopt NO_BEEP                      # Never, ever, beep at me.
-
 setopt PROMPT_SUBST                 # Expand parameters within prompts.
 setopt LOCAL_OPTIONS                # Options set/unset inside functions, stay within the function.
 setopt INTERACTIVE_COMMENTS         # Allow me to comment lines in an interactive shell.
-
 setopt MULTIBYTE
 unsetopt FLOW_CONTROL
+setopt NO_HUP # jobs background will not be kill if exit its session
+unsetopt HUP
+stty -ixon # Map Ctrl-S to sth usefull other than XOFF (interrupt data flow).
 
-autoload -U compinit; compinit  # advance tab complete
 autoload -U promptinit; promptinit;  prompt walters # prompt
 autoload -U colors && colors
 # }}}
+
 # bindings {{{
 bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
 bindkey '^h' backward-delete-char
 bindkey '^d' delete-char
-
 bindkey '^r' history-incremental-pattern-search-backward
 bindkey '^s' history-incremental-pattern-search-forward
-
-#zle-fd() {
-    #zle kill-whole-line
-    #fd
-    #zle accept-line
-#}
-#zle -N zle-fd
-#bindkey '^e' zle-fd
-
-#bindkey '^b' backward-word
-#bindkey '^w' forward-word
-#bindkey '^h' backward-char
-#bindkey '^l' forward-char
-
-#bindkey '^g' beginning-of-line
-#bindkey '^e' end-of-line
 # }}}
+
 # prompt {{{
 
 reset_color="%F{white}"
-_prompt_git_info() { git rev-parse --abbrev-ref HEAD 2> /dev/null | xargs -r printf '%%F{cyan}[%s] ';  }
-_prompt_hg_info() { hg branch 2> /dev/null | xargs -r printf '%%F{blue}[%s] '; }
+_prompt_git_info() { git rev-parse --abbrev-ref HEAD 2> /dev/null | xargs printf '%%F{cyan}[%s] ';  }
+_prompt_hg_info() { hg branch 2> /dev/null | xargs printf '%%F{blue}[%s] '; }
 _prompt() { test -z "$VIM_PROMPT" && echo "%F{white}%}> " || echo "%F{cyan}%}< "; }
 
 PROMPT="\$(_prompt)%{$reset_color%}"
@@ -150,53 +131,10 @@ function zle-line-init zle-keymap-select {
     zle reset-prompt
 }
 
-zle -N zle-line-init
+#zle -N zle-line-init
 zle -N zle-keymap-select
 # }}}
-# completion {{{
-autoload -Uz compinit && compinit
 
-zstyle ':completion:*' list-colors "${LS_COLORS}" # Complete with same colors as ls.
-
-# Fuzzy matching of completions for when you mistype them:
-zstyle ':completion:*' completer _expand _complete _correct _approximate # Completion modifiers.
-zstyle ':completion:*:match:*' original only
-zstyle ':completion:*' max-errors 1 # Be lenient to 1 errors.
-
-# And if you want the number of errors allowed by _approximate to increase with the length of what you have typed so far:
-zstyle -e ':completion:*:approximate:*' max-errors 'reply=($((($#PREFIX+$#SUFFIX)/3))numeric)'
-
-# Ignore completion functions for commands you don’t have:
-zstyle ':completion:*:functions' ignored-patterns '_*'
-
-# Ignore the current directory in completions
-zstyle ':completion:*' ignore-parents pwd
-
-# Use a completion cache
-zstyle ':completion:*' use-cache true
-zstyle ':completion:*' cache-path /.zsh/cache
-
-# Completing process IDs with menu selection:
-zstyle ':completion:*:*:kill:*' menu yes select
-zstyle ':completion:*:kill:*'   force-list always
-
-# If you end up using a directory as argument, this will remove the trailing slash (usefull in ln)
-zstyle ':completion:*' squeeze-slashes true
-
-# Sudo completion
-zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /usr/X11R6/bin
-
-zstyle ':completion:*' menu select
-# }}}
-# zsh opt {{{ # jobs background will not be kill if exit its session
-setopt NO_HUP
-unsetopt HUP
-
-# Use modern completion system
-
-# Map Ctrl-S to sth usefull other than XOFF (interrupt data flow).
-stty -ixon
-# }}}
 # functions {{{
 
 # goc() - quickly build c & run it {{{
@@ -205,6 +143,7 @@ goc() {
     c99 -xc - -g -O2 -Wall -I/usr/include -lm -include math.h -include stdio.h -include stdlib.h -o /tmp/a.out; /tmp/a.out;
 }
 # }}}
+
 # fd() - quick open file in terminal {{{
 fd () {
     f="$(pwd)"
@@ -228,15 +167,16 @@ fd () {
 #}}}
 
 #}}}
+
 # alias {{{
 if which exa >/dev/null; then
     alias ls=exa
     alias l='exa -lh'
     alias ll='exa -abghHliS'
 else
-    alias ll='ls -lah --color=auto'
-    alias l='ls --color=auto'
-    alias ls='ls --color=auto'
+    alias ll='ls -lah '
+    alias l='ls -G'
+    alias ls='ls -G'
 fi
 #alias dmenu='st -c Fzf -e sh -c'
 alias d=sdcv
@@ -282,6 +222,7 @@ alias eZ='vim ${DOTFILES_HOME}/zshrc; uD'
 alias eI='vim ${DOTFILES_HOME}/i3/config; uD'
 alias eV='vim ${DOTFILES_HOME}/vimrc; uD'
 alias eC='vim ${DOTFILES_HOME}/outliners/cmd.txt;'
+alias vim=/usr/local/Cellar/macvim/8.2-166_1/bin/vim
 alias CDinfo='cdparanoia -vsQ'
 alias rip='cdparanoia -B'
 alias mp3='for t in track{01-14}*.wav; do lame -b 320 $t; done'
