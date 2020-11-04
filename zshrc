@@ -103,6 +103,9 @@ setopt NO_HUP # jobs background will not be kill if exit its session
 unsetopt HUP
 stty -ixon # Map Ctrl-S to sth usefull other than XOFF (interrupt data flow).
 
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
 autoload -U promptinit; promptinit;  prompt walters # prompt
 autoload -U colors && colors
 # }}}
@@ -222,7 +225,6 @@ alias eZ='vim ${DOTFILES_HOME}/zshrc; uD'
 alias eI='vim ${DOTFILES_HOME}/i3/config; uD'
 alias eV='vim ${DOTFILES_HOME}/vimrc; uD'
 alias eC='vim ${DOTFILES_HOME}/outliners/cmd.txt;'
-alias vim=/usr/local/Cellar/macvim/8.2-166_1/bin/vim
 alias CDinfo='cdparanoia -vsQ'
 alias rip='cdparanoia -B'
 alias mp3='for t in track{01-14}*.wav; do lame -b 320 $t; done'

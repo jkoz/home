@@ -9,7 +9,7 @@
 if empty(glob('~/.vim/bundle/Vundle.vim'))
     sil !mkdir -p ~/.vim/bundle
     sil !git clone http://github.com/VundleVim/Vundle.Vim ~/.vim/bundle/Vundle.vim
-endif
+en
 
 set nocompatible
 filetype off
@@ -124,6 +124,9 @@ if has("multi_byte")
     se encoding=utf-8
     setg fileencoding=utf-8
     se fileencodings=ucs-bom,utf-8,latin1
+    se fillchars+=vert:\│
+el
+    se fillchars+=vert:\|
 en
 
 
@@ -365,7 +368,7 @@ el
     " need to load first!
     " Hack Disable tilder column "~" by change its color
     hi! EndOfBuffer ctermbg=bg ctermfg=bg guibg=bg guifg=bg
-endif
+en
 " }}}
 " vimspector{{{
 let g:vimspector_enable_mappings = 'HUMAN'
@@ -385,4 +388,15 @@ map <Leader>s <Plug>(easymotion-bd-f)
  let g:UltiSnipsJumpForwardTrigger = "<tab>"
  let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 " }}}
+" {{{ teaks split window border
+hi VertSplit ctermbg=NONE guibg=NONE
+"se foldcolumn=1
+" }}}
+" python3/dyn {{{
+"
+"$ ls /usr/local/Cellar/python@3.8/3.8.6/Frameworks/Python.framework/Versions/3.8
+"Headers   Python    Resources bin       include   lib       share
+"
+se pythonthreehome=/usr/local/Cellar/python@3.8/3.8.6/Frameworks/Python.framework/Versions/3.8
+se pythonthreedll=/usr/local/Cellar/python@3.8/3.8.6/Frameworks/Python.framework/Versions/3.8/lib/python3.8/config-3.8-darwin/libpython3.8.dylib
 " }}}
