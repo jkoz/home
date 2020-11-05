@@ -35,7 +35,6 @@ Plugin 'tpope/vim-dispatch'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'dhruvasagar/vim-table-mode'
-Plugin 'itchyny/lightline.vim'
 Plugin 'liuchengxu/vista.vim'
 Plugin 'prabirshrestha/vim-lsp'
 Plugin 'mattn/vim-lsp-settings'
@@ -45,15 +44,8 @@ Plugin 'easymotion/vim-easymotion'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'ervandew/supertab'
+Plugin 'chrisbra/unicode.vim'
 
-"Plugin 'lgranie/vim-lsp-java'
-"let g:vim_lsp_java = {
-  "\ 'eclipse_jdtls' : {
-    "\ 'repository': expand('/Users/taitran/Downloads/jdt'),
-    "\ 'config': 'config_linux',
-    "\ 'workspace': expand('/Users/taitran/github/test-maven-app'),
-  "\ },
-  "\ }
 
 call vundle#end()
 filetype plugin indent on
@@ -124,11 +116,7 @@ if has("multi_byte")
     se encoding=utf-8
     setg fileencoding=utf-8
     se fileencodings=ucs-bom,utf-8,latin1
-    se fillchars+=vert:\│
-el
-    se fillchars+=vert:\|
 en
-
 
 "se relativenumber
 se t_Co=256
@@ -137,6 +125,7 @@ se autowrite
 se title
 se list
 set listchars=tab:\|\ ,extends:>,precedes:<,nbsp:~,trail:.
+se signcolumn=no
 
 se ttyfast
 se ttyscroll=3
@@ -165,6 +154,20 @@ se copyindent " copy the previous indentation on autoindenting
 se equalalways
 "se eadirection
 
+" windows splits
+nn <C-w>\| <C-w>v
+nn <C-w>" <C-w>s
+
+" windows moving
+nn <C-J> <C-W><C-J>
+nn <C-K> <C-W><C-K>
+nn <C-L> <C-W><C-L>
+nn <C-H> <C-W><C-H>
+
+"ctrl + w _ : Max out the height of the current split
+"ctrl + w | : Max out the width of the current split
+"ctrl + w =  Normalize all split sizes, which is very handy when resizing terminal
+
 se backspace=indent,eol,start " allow backspacing over everything in insert mode
 se showmode " always show what mode we're currently editing in
 se showcmd "
@@ -176,7 +179,6 @@ se pastetoggle=<F2> " when in insert mode, press <F2> to go to paste mode, where
 se fileformats="unix,dos,mac"
 se wildmenu " make tab completion for files/buffers act like bash
 se ruler " Show the cursor position all the time
-se laststatus=2
 se gdefault " :%s/foo/bar/g by default
 
 se history=700 " remember more commands and search history
@@ -192,13 +194,6 @@ se shiftround " use multiple of shiftwidth when indenting with '<' and '>'
 se cursorline " highlight current light
 "se cursorcolumn
 
-" statusline
-"se stl=Current:\ %4l\ Total:\ %4L
-se statusline=%f         " Path to the file
-se statusline+=%=        " Switch to the right side
-se statusline+=%l        " Current line
-se statusline+=/         " Separator
-se statusline+=%L        " Total lines
 
 " paragraph
 se nowrap
@@ -232,6 +227,28 @@ se background=dark
 colo solarized
 
 "}}}
+" fillchars {{{
+" open :UnicodeTable
+" in insert mode <C-v> and type U00B7
+se fcs=vert:\|
+se fcs+=fold:·
+se fcs+=diff:\ "the leading space is used
+se fcs+=stl:-
+se fcs+=stlnc:-
+" }}}
+" Statusline {{{
+se ls=2
+se stl=-
+"se stl=[%f]\ " Path to the file
+"se stl+=%=        " Switch to the right side
+"se stl+=[%l]        " Current line
+"se stl+=/         " Separator
+"se stl+=[%L]        " Total lines
+
+hi StatusLine ctermbg=NONE cterm=NONE ctermfg=2
+hi StatusLineNC ctermbg=NONE cterm=NONE ctermfg=11
+
+" }}}
 " Auto Groups {{{
 aug configgroup
     au!
@@ -294,7 +311,7 @@ let g:tagbar_type_tex = {
 nn <leader>no :NERDTreeToggle<CR>
 nn <leader>nf :NERDTreeFind<CR>
 
-let g:NERDTreeDirArrows=0
+"let g:NERDTreeDirArrows=0
 let NERDTreeBookmarksFile=expand("$HOME/.vim/NERDTreeBookmarks") " Store the bookmarks file
 let NERDTreeShowBookmarks=1 " Show the bookmarks table on startup
 let NERDTreeShowFiles=1 " Show hidden files, too
@@ -305,6 +322,8 @@ let NERDTreeHighlightCursorline=1 " Highlight the selected entry in the tree
 let NERDTreeMouseMode=2 " Use a single click to fold/unfold directories and a double click to open files
 let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$',
             \ '\.o$', '\.so$', '\.egg$', '^\.git$', '\.svn$', '^target$', '^\.settings$', '^\.classpath$', '^\.project$', '^\.hg', '.pydevproject'  ]
+
+let g:NERDTreeStatusline = '%#NonText#'
 " }}}
 " FZF {{{
 nn <silent> <c-p>     :FZF<CR>
@@ -378,18 +397,19 @@ nmap <leader>jd :YcmCompleter GoTo<CR>
 map <Leader>s <Plug>(easymotion-bd-f)
 " }}}
 " supertab {{{
- " make YCM compatible with UltiSnips (using supertab)
- let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
- let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
- let g:SuperTabDefaultCompletionType = '<C-n>'
-
- " better key bindings for UltiSnipsExpandTrigger
- let g:UltiSnipsExpandTrigger = "<tab>"
- let g:UltiSnipsJumpForwardTrigger = "<tab>"
- let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+let g:SuperTabDefaultCompletionType    = '<C-n>'
+let g:SuperTabCrMapping                = 0
+let g:UltiSnipsExpandTrigger           = '<tab>'
+let g:UltiSnipsJumpForwardTrigger      = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger     = '<s-tab>'
+let g:ycm_key_list_select_completion   = ['<C-j>', '<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-k>', '<C-p>', '<Up>']
 " }}}
 " {{{ teaks split window border
 hi VertSplit ctermbg=NONE guibg=NONE
+hi ErrorMsg term=NONE cterm=NONE  ctermbg=NONE ctermfg=12
+hi Error cterm=NONE  ctermbg=NONE ctermfg=7 ctermbg=9
+
 "se foldcolumn=1
 " }}}
 " python3/dyn {{{
@@ -399,4 +419,18 @@ hi VertSplit ctermbg=NONE guibg=NONE
 "
 se pythonthreehome=/usr/local/Cellar/python@3.8/3.8.6/Frameworks/Python.framework/Versions/3.8
 se pythonthreedll=/usr/local/Cellar/python@3.8/3.8.6/Frameworks/Python.framework/Versions/3.8/lib/python3.8/config-3.8-darwin/libpython3.8.dylib
+" }}}
+" {{{ foldtext
+fu! _foldtext()
+    let line = ' ' . substitute(getline(v:foldstart), '^\s*"\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g') . ' '
+    let lines_count = v:foldend - v:foldstart + 1
+    let lines_count_text = '| ' . printf("%10s", lines_count . ' lines') . ' |'
+    let foldchar = matchstr(&fillchars, 'fold:\zs.')
+    let foldtextstart = strpart('+' . repeat(foldchar, v:foldlevel*2) . line, 0, (winwidth(0)*2)/3)
+    let foldtextend = lines_count_text . repeat(foldchar, 8)
+    let foldtextlength = strlen(substitute(foldtextstart . foldtextend, '.', 'x', 'g')) + &foldcolumn
+    retu foldtextstart . repeat(foldchar, winwidth(0)-foldtextlength) . foldtextend
+endf
+set foldtext=_foldtext()
+hi Folded term=bold,underline cterm=bold ctermfg=12 ctermbg=0 guifg=Cyan guibg=DarkGrey
 " }}}
