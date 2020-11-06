@@ -112,11 +112,14 @@ set envelope_from = yes
 # default
 set spoolfile = '~/Mail/phuoctaitp@gmail.com/Inbox'
 
-mailboxes `find ~/Mail -maxdepth 1 -mindepth 1 -type d -printf "'%h/%f/Inbox' "`
+#mailboxes `find ~/Mail -maxdepth 1 -mindepth 1 -type d -printf "'%h/%f/Inbox' "`
+mailboxes `ls -d ~/Mail/*/Inbox`
+
+
 
 folder-hook 'Mail' \
         'set folder = ~/Mail; \
-         mailboxes `find ~/Mail -maxdepth 1 -mindepth 1 -type d -printf "'%h/%f/Inbox' "`'
+         mailboxes `ls -d ~/Mail/*/Inbox`
 
 # phuoctaitp@gmail.com
 folder-hook 'phuoctaitp@gmail.com' \
