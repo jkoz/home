@@ -1,3 +1,5 @@
+default: mac
+
 all:
 	install -Dm600 vimrc ~/.vimrc
 	install -Dm644 ctags ~/.ctags
@@ -96,3 +98,12 @@ apps:
 	rm -f ~/.config/config.h && sudo make -C ~/.config/tabbed clean install
 	rm -f ~/.config/config.h && sudo make -C ~/.config/surf clean install
 
+mac:
+	install zshrc ~/.zshrc
+	install mutt/muttrc ~/.muttrc
+	install mbsyncrc ~/.mbsyncrc
+	install vimrc ~/.vimrc
+	install mailcap ~/.mailcap
+	install tmux.conf ~/.zhsrc
+	install fonts/ter-x14n.bdf ~/.fonts
+	install fonts/xbmicons.bdf ~/.fonts
