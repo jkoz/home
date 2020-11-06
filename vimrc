@@ -4,6 +4,7 @@
 " search PLUS-MINUS
 " c^k +-
 " }}}
+
 " Bundles {{{
 
 if empty(glob('~/.vim/bundle/Vundle.vim'))
@@ -45,13 +46,15 @@ Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'ervandew/supertab'
 Plugin 'chrisbra/unicode.vim'
-
+Plugin 'simeji/winresizer'
+Plugin 'jceb/vim-orgmode'
 
 call vundle#end()
 filetype plugin indent on
 syntax on
 
 " }}}
+
 " Mappings {{{
 let mapleader = ","
 
@@ -99,6 +102,7 @@ nma Q gqap
 nn <leader>y :%s/\s\+$//<cr>
 
 " }}}
+
 " Options {{{
 if v:version >= 600
     se autoread
@@ -149,24 +153,6 @@ se hlsearch " highlight search terms
 se noai " always set autoindenting on
 se nosi " no smart indenting
 se copyindent " copy the previous indentation on autoindenting
-
-" windows stuffs
-se equalalways
-"se eadirection
-
-" windows splits
-nn <C-w>\| <C-w>v
-nn <C-w>" <C-w>s
-
-" windows moving
-nn <C-J> <C-W><C-J>
-nn <C-K> <C-W><C-K>
-nn <C-L> <C-W><C-L>
-nn <C-H> <C-W><C-H>
-
-"ctrl + w _ : Max out the height of the current split
-"ctrl + w | : Max out the width of the current split
-"ctrl + w =  Normalize all split sizes, which is very handy when resizing terminal
 
 se backspace=indent,eol,start " allow backspacing over everything in insert mode
 se showmode " always show what mode we're currently editing in
@@ -227,17 +213,19 @@ se background=dark
 colo solarized
 
 "}}}
+
 " fillchars {{{
 " open :UnicodeTable
 " in insert mode <C-v> and type U00B7
-se fcs=vert:\|
+se fcs=vert:│
 se fcs+=fold:·
 se fcs+=diff:\ "the leading space is used
 se fcs+=stl:-
 se fcs+=stlnc:-
 " }}}
+
 " Statusline {{{
-se ls=2
+se ls=0
 se stl=-
 "se stl=[%f]\ " Path to the file
 "se stl+=%=        " Switch to the right side
@@ -249,6 +237,7 @@ hi StatusLine ctermbg=NONE cterm=NONE ctermfg=2
 hi StatusLineNC ctermbg=NONE cterm=NONE ctermfg=11
 
 " }}}
+
 " Auto Groups {{{
 aug configgroup
     au!
@@ -282,6 +271,7 @@ aug pencil
                 \ | setl spell spl=en_us et sw=2 ts=2 noai nonu nornu
 aug END
 " }}}
+
 " Tag bar {{{
 let g:tagbar_autofocus = 1
 nn <silent> <leader>t :TagbarToggle<cr>
@@ -307,6 +297,7 @@ let g:tagbar_type_tex = {
 \ }
 
 " }}}
+
 " Nerd Tree {{{
 nn <leader>no :NERDTreeToggle<CR>
 nn <leader>nf :NERDTreeFind<CR>
@@ -325,6 +316,7 @@ let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$',
 
 let g:NERDTreeStatusline = '%#NonText#'
 " }}}
+
 " FZF {{{
 nn <silent> <c-p>     :FZF<CR>
 nn <silent> <leader>z :Buffers<CR>
@@ -334,6 +326,7 @@ nn <silent> <leader>g :Command<CR>
 nn <silent> <leader>l :Lines<CR>
 nn <silent> <leader>f :History:<cr>
 " }}}
+
 " Drag visuals {{{
 " TODO: tempory disable visual effect as we need to use J for join multiple lines
 vm <expr> <c-h> DVB_Drag('left')
@@ -342,17 +335,21 @@ vm <expr> <c-j>  DVB_Drag('down')
 vm <expr> <c-k>  DVB_Drag('up')
 "vm <expr> D DVB_Duplicate()
 " }}}
+
 " Syntastic {{{
 let g:syntastic_error_symbol = '✗'
 let g:syntastic_warning_symbol = '⚠'
 " }}}
+
 " Pencil {{{
 " soft mode use 1 line even if it is long line
 let g:pencil#mode_indicators = {'hard': 'PH', 'soft': 'PS', 'off': ''}
 " }}}
+
 " Dispatch {{{
 nn <leader>r :silent Dispatch!<CR>
 " }}}
+
 " {{{ fugitive
 nnoremap <leader>ga :Git add %:p<CR><CR>
 nnoremap <leader>gs :Gstatus<CR>
@@ -370,6 +367,7 @@ nnoremap <leader>go :Git checkout<Space>
 nnoremap <leader>gps :Gpush<CR>
 nnoremap <leader>gpl :Gpull<CR>
 " }}}
+
 " Gui {{{
 if has('gui_running')
     se guioptions-=m  "remove menu bar
@@ -389,13 +387,52 @@ el
     hi! EndOfBuffer ctermbg=bg ctermfg=bg guibg=bg guifg=bg
 en
 " }}}
+
 " vimspector{{{
 let g:vimspector_enable_mappings = 'HUMAN'
+func! CustomiseUI()
+    call win_gotoid( g:vimspector_session_windows.code )
+    nunmenu WinBar
+    "nnoremenu WinBar.Kill :call vimspector#Stop()<CR>
+    "nnoremenu WinBar.Continue :call vimspector#Continue()<CR>
+    "nnoremenu WinBar.Pause :call vimspector#Pause()<CR>
+    "nnoremenu WinBar.Step\ Over  :call vimspector#StepOver()<CR>
+    "nnoremenu WinBar.Step\ In :call vimspector#StepInto()<CR>
+    "nnoremenu WinBar.Step\ Out :call vimspector#StepOut()<CR>
+    "nnoremenu WinBar.Restart :call vimspector#Restart()<CR>
+    "nnoremenu WinBar.Exit :call vimspector#Reset()<CR>
+endfunction
+
+augroup MyVimspectorUICustomistaion
+    autocmd!
+    autocmd User VimspectorUICreated call CustomiseUI()
+augroup END
+
+let g:ycm_semantic_triggers =  {'VimspectorPrompt': [ '.', '->', ':', '<' ]}
+
+nn <leader>vl :call vimspector#Launch()<cr>
+nn <leader>ve :call vimspector#Reset()<cr>
+nm <leader>vc   <Plug>VimspectorContinue
+nm <leader>vs   <Plug>VimspectorStop
+nm <leader>vt   <Plug>VimspectorRestart
+nm <leader>vp   <Plug>VimspectorPause
+nm <leader>vb   <Plug>VimspectorToggleBreakpoint
+nm <leader>vbc  <Plug>VimspectorToggleConditionalBreakpoint
+nm <leader>vbf  <Plug>VimspectorAddFunctionBreakpoint
+nm <leader>vbr  <Plug>VimspectorRunToCursor
+nm <leader>vn   <Plug>VimspectorStepOver
+nm <leader>vs   <Plug>VimspectorStepInto
+nm <leader>vo   <Plug>VimspectorStepOut
+" }}}
+
+" Ycm {{{
 nmap <leader>jd :YcmCompleter GoTo<CR>
 " }}}
+
 " easymotion {{{
 map <Leader>s <Plug>(easymotion-bd-f)
 " }}}
+
 " supertab {{{
 let g:SuperTabDefaultCompletionType    = '<C-n>'
 let g:SuperTabCrMapping                = 0
@@ -405,6 +442,7 @@ let g:UltiSnipsJumpBackwardTrigger     = '<s-tab>'
 let g:ycm_key_list_select_completion   = ['<C-j>', '<C-n>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-k>', '<C-p>', '<Up>']
 " }}}
+
 " {{{ teaks split window border
 hi VertSplit ctermbg=NONE guibg=NONE
 hi ErrorMsg term=NONE cterm=NONE  ctermbg=NONE ctermfg=12
@@ -412,6 +450,7 @@ hi Error cterm=NONE  ctermbg=NONE ctermfg=7 ctermbg=9
 
 "se foldcolumn=1
 " }}}
+
 " python3/dyn {{{
 "
 "$ ls /usr/local/Cellar/python@3.8/3.8.6/Frameworks/Python.framework/Versions/3.8
@@ -420,6 +459,7 @@ hi Error cterm=NONE  ctermbg=NONE ctermfg=7 ctermbg=9
 se pythonthreehome=/usr/local/Cellar/python@3.8/3.8.6/Frameworks/Python.framework/Versions/3.8
 se pythonthreedll=/usr/local/Cellar/python@3.8/3.8.6/Frameworks/Python.framework/Versions/3.8/lib/python3.8/config-3.8-darwin/libpython3.8.dylib
 " }}}
+
 " {{{ foldtext
 fu! _foldtext()
     let line = ' ' . substitute(getline(v:foldstart), '^\s*"\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g') . ' '
@@ -433,4 +473,34 @@ fu! _foldtext()
 endf
 set foldtext=_foldtext()
 hi Folded term=bold,underline cterm=bold ctermfg=12 ctermbg=0 guifg=Cyan guibg=DarkGrey
+" }}}
+
+" windows {{{
+nn <C-w>\| <C-w>v
+nn <C-w>" <C-w>s
+" windows stuffs
+se equalalways
+"se eadirection
+
+" windows moving
+nn <C-J> <C-W><C-J>
+nn <C-K> <C-W><C-K>
+nn <C-L> <C-W><C-L>
+nn <C-H> <C-W><C-H>
+
+" window resize
+"C-w _ : Max out the height of the current split
+"C-w | : Max out the width of the current split
+"C-w =  Normalize all split sizes, which is very handy when resizing terminal
+"C-w - : reduce horizontal size
+"C-w + : increase horizontal size
+"C-w > : increate vertical size
+"C-w < : increate vertical size
+
+" }}}
+
+" Use man page inside vim {{{
+ru! ftplugin/man.vim
+" C-] to following link
+" C-t to go back
 " }}}
