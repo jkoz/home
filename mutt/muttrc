@@ -6,6 +6,7 @@
 # $ - commit changes (deleted messages)
 # sheet.shiar.nl/mutt
 # }}}
+
 # General {{{
 push <show-version> #show version
 set nomark_old #avoid marking unread msgs as old ones
@@ -44,28 +45,35 @@ set status_format = "───[ Folder: %f ]───[%r%m messages%?n? (%n new)
 #set alias_file = ~/.muttrc.d/aliases
 #source ~/.muttrc.d/aliases
 
-#ignore "Authentication-Results:"
-#ignore "DomainKey-Signature:"
-#ignore "DKIM-Signature:"
-hdr_order Date From To Cc
+set mailcap_path = ~/.mailcap
+
+# dont need help top bar
+set help=no
 auto_view text/html
 alternative_order text/plain text/enriched text/html
+
+#}}}
+
+# Headers {{{
+ignore *
+unignore from: to: cc: bcc: date: subject:
+unhdr_order *
+hdr_order From: Subject: To: Cc: Date:
 # }}}
+
 # Sidebar{{{
-#set sidebar_delim   = '    |'
+set sidebar_divider_char= '│'
 set sidebar_visible = no
 set sidebar_width   = 30
 #color sidebar_new color221 color233
-color sidebar_new yellow default
+#color sidebar_new yellow default
 set status_chars  = " *%A"
-ignore *                                # ignore all headers
-unignore from: to: cc: date: subject:   # show only these
-unhdr_order *                           # some distros order things by default
 bind index,pager \ek sidebar-prev
 bind index,pager \ej sidebar-next
 bind index,pager \eo sidebar-open
 macro index,pager b '<enter-command>toggle sidebar_visible<enter>'
 # }}}
+
 # Formats {{{
 set date_format         = "%d/%m/%y at %I:%M%P"
 #set index_format        = "%3C %Z %D %-15.15L (%?l?%4l&%4c?) %s"
@@ -74,7 +82,8 @@ set alias_format        = "%4n %t %-20a  %r"
 set reply_regexp = "^(([Rr][Ee]?(\[[0-9]+\])?: *)?(\[[^]]+\] *)?)*"
 set quote_regexp = "^( {0,4}[>|:#%]| {0,4}[a-z0-9]+[>|]+)+"
 # }}}
-#Mapping {{{
+
+# Mapping {{{
 bind index,pager   \t          next-unread
 bind index,pager  ,\t      previous-unread
 
@@ -105,6 +114,7 @@ bind  pager J           next-undeleted
 bind editor \t          complete-query
 #bind editor           complete
 # }}}
+
 # Accounts {{{
 set use_from = yes
 set envelope_from = yes
@@ -192,25 +202,43 @@ macro index,pager c "<change-folder>?<toggle-mailboxes>" "open a different folde
 
 
 #}}}
+
 # Colors {{{
-color hdrdefault cyan default
-color attachment yellow default
-color header brightyellow default "From: "
-color header brightyellow default "Subject: "
-color header brightyellow default "Date: "
-color quoted green default
+color hdrdefault color245 color0
+color attachment color245 color0
+#color header yellow color0 "^(Subject):"
+#color header green default "^(From|To|Date|Cc):"
 color quoted1 cyan default
 color quoted2 green default
 color quoted3 cyan default
 color error     red             default         # error messages
 color message   white           default         # message  informational messages
-color indicator white           red             # indicator for the "current message"
+color indicator green color0 # indicator for the "current message"
 color status    white           blue            # status lines in the folder index sed for the mini-help line
-color tree      red             default         # the "tree" display of threads within the folder index
+color tree      color241        default         # the "tree" display of threads within the folder index
 color search    white           blue            # search matches found with search within the internal pager
 color markers   red             default         # The markers indicate a wrapped line hen showing messages with looong lines
 color index     yellow default  '~O'
 color index     yellow default  '~N'
 color index     brightred       default '~F'    # Flagged Messages are important!
 color index     blue default    '~D'            # Deleted Mails - use dark color as these are already "dealt with"
+
+#SOLARIZED HEX     16/8 TERMCOL  XTERM/HEX   L*A*B      sRGB        HSB
+#--------- ------- ---- -------  ----------- ---------- ----------- -----------
+#base03    #002b36  8/4 brblack  234 #1c1c1c 15 -12 -12   0  43  54 193 100  21
+#base02    #073642  0/4 black    235 #262626 20 -12 -12   7  54  66 192  90  26
+#base01    #586e75 10/7 brgreen  240 #4e4e4e 45 -07 -07  88 110 117 194  25  46
+#base00    #657b83 11/7 bryellow 241 #585858 50 -07 -07 101 123 131 195  23  51
+#base0     #839496 12/6 brblue   244 #808080 60 -06 -03 131 148 150 186  13  59
+#base1     #93a1a1 14/4 brcyan   245 #8a8a8a 65 -05 -02 147 161 161 180   9  63
+#base2     #eee8d5  7/7 white    254 #d7d7af 92 -00  10 238 232 213  44  11  93
+#base3     #fdf6e3 15/7 brwhite  230 #ffffd7 97  00  10 253 246 227  44  10  99
+#yellow    #b58900  3/3 yellow   136 #af8700 60  10  65 181 137   0  45 100  71
+#orange    #cb4b16  9/3 brred    166 #d75f00 50  50  55 203  75  22  18  89  80
+#red       #dc322f  1/1 red      160 #d70000 50  65  45 220  50  47   1  79  86
+#magenta   #d33682  5/5 magenta  125 #af005f 50  65 -05 211  54 130 331  74  83
+#violet    #6c71c4 13/5 brmagenta 61 #5f5faf 50  15 -45 108 113 196 237  45  77
+#blue      #268bd2  4/4 blue      33 #0087ff 55 -10 -45  38 139 210 205  82  82
+#cyan      #2aa198  6/6 cyan      37 #00afaf 60 -35 -05  42 161 152 175  74  63
+#green     #859900  2/2 green     64 #5f8700 60 -20  65 133 153   0  68 100  60
 # }}}
