@@ -1,94 +1,21 @@
-# thunderchief3000@yahoo.com
-IMAPAccount yahoo-thunderchief3000
-Host imap.mail.yahoo.com
-User thunderchief3000@yahoo.com
-PassCmd "oauth2 --feed thunderchief3000"
-Port 993
-SSLType IMAPS
-AuthMechs "XOAUTH2"
-CertificateFile /etc/ssl/certs/ca-certificates.crt
-
-IMAPStore yahoo-thunderchief3000-remote
-Account yahoo-thunderchief3000
-
-MaildirStore yahoo-thunderchief3000-local
-Path  ~/Mail/thunderchief3000@yahoo.com/
-Inbox ~/Mail/thunderchief3000@yahoo.com/Inbox
-
-Channel yahoo-thunderchief3000
-Master :yahoo-thunderchief3000-remote:
-Slave :yahoo-thunderchief3000-local:
-Patterns *
-Create Both
-SyncState *
-
-# phuoctaitp@gmail.com
 IMAPAccount gmail-phuoctaitp
 Host imap.gmail.com
 User phuoctaitp@gmail.com
-PassCmd "oauth2 phuoctaitp@gmail.com"
-Port 993
-SSLType IMAPS
+PassCmd "$HOME/bin/gmail-phuoctaitp"
 AuthMechs "XOAUTH2"
-CertificateFile /etc/ssl/certs/ca-certificates.crt
+SSLType IMAPS
 
 IMAPStore gmail-phuoctaitp-remote
 Account gmail-phuoctaitp
 
 MaildirStore gmail-phuoctaitp-local
-Path  ~/Mail/phuoctaitp@gmail.com/
+SubFolders Verbatim
+Path ~/Mail/phuoctaitp@gmail.com
 Inbox ~/Mail/phuoctaitp@gmail.com/Inbox
 
 Channel gmail-phuoctaitp
 Master :gmail-phuoctaitp-remote:
 Slave :gmail-phuoctaitp-local:
-Patterns *
-Create Both
-SyncState *
-
-# ctphung1987@gmail.com
-IMAPAccount gmail-ctphung1987
-Host imap.gmail.com
-User ctphung1987@gmail.com
-PassCmd "oauth2 ctphung1987@gmail.com"
-Port 993
-SSLType IMAPS
-AuthMechs "XOAUTH2"
-CertificateFile /etc/ssl/certs/ca-certificates.crt
-
-IMAPStore gmail-ctphung1987-remote
-Account gmail-ctphung1987
-
-MaildirStore gmail-ctphung1987-local
-Path  ~/Mail/ctphung1987@gmail.com/
-Inbox ~/Mail/ctphung1987@gmail.com/Inbox
-
-Channel gmail-ctphung1987
-Master :gmail-ctphung1987-remote:
-Slave :gmail-ctphung1987-local:
-Patterns *
-Create Both
-SyncState *
-
-# tai.t@hotmail.com
-IMAPAccount hotmail-tait
-Host imap-mail.outlook.com
-User tai.t@hotmail.com
-PassCmd "passcmdtest"
-Port 993
-SSLType IMAPS
-CertificateFile /etc/ssl/certs/ca-certificates.crt
-
-IMAPStore hotmail-tait-remote
-Account hotmail-tait
-
-MaildirStore hotmail-tait-local
-Path  ~/Mail/tai.t@hotmail.com/
-Inbox ~/Mail/tai.t@hotmail.com/Inbox
-
-Channel hotmail-tait
-Master :hotmail-tait-remote:
-Slave :hotmail-tait-local:
 Patterns *
 Create Both
 SyncState *
