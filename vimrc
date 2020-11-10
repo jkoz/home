@@ -1,8 +1,9 @@
 " Notes {{{
-"set digraph
+" set digraph
 " help digraph-table
 " search PLUS-MINUS
 " c^k +-
+" C-o to jump back previous location
 " }}}
 
 " Bundles {{{
@@ -36,18 +37,30 @@ Plugin 'tpope/vim-dispatch'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'dhruvasagar/vim-table-mode'
-Plugin 'liuchengxu/vista.vim'
-Plugin 'prabirshrestha/vim-lsp'
-Plugin 'mattn/vim-lsp-settings'
-Plugin 'ycm-core/YouCompleteMe'
 Plugin 'puremourning/vimspector'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
-Plugin 'ervandew/supertab'
 Plugin 'chrisbra/unicode.vim'
 Plugin 'simeji/winresizer'
 Plugin 'jceb/vim-orgmode'
+Plugin 'itchyny/calendar.vim'
+Plugin 'liuchengxu/vim-which-key'
+
+Plugin 'ycm-core/YouCompleteMe'
+Plugin 'ervandew/supertab'
+
+"Plugin 'liuchengxu/vista.vim'
+"Plugin 'wellle/tmux-complete.vim'
+"Plugin 'prabirshrestha/async.vim'
+"Plugin 'prabirshrestha/vim-lsp'
+"Plugin 'mattn/vim-lsp-settings'
+"Plugin 'prabirshrestha/asyncomplete.vim'
+"Plugin 'prabirshrestha/asyncomplete-lsp.vim'
+"Plugin 'prabirshrestha/asyncomplete-ultisnips.vim'
+"Plugin 'ctrlpvim/ctrlp.vim'
+"Plugin 'mattn/ctrlp-lsp'
+"Plugin 'lokikl/vim-ctrlp-ag'
 
 call vundle#end()
 filetype plugin indent on
@@ -81,7 +94,7 @@ nn <silent> <leader><space> :nohl<cr>
 
 " Quick quit
 nn <silent> q :q<cr>
-nn <silent> - :bd<cr>
+nn <silent> - :bp\|bd \#<cr>
 
 " Quick save
 nn <leader>w :update<cr>
@@ -205,8 +218,7 @@ se wildignore+=*_build/*,*/coverage/*,*/target/*,*/tmp/*,*/lib/*,*/.settings/*,*
 se dict=/usr/share/dict/cracklib-small
 se complete=.,b,u,]
 se wildmode=longest,list:longest
-"set completeopt=menu,preview
-set completeopt=menuone,menu,longest
+set completeopt=menuone,menu,longest,preview
 
 " color
 se background=dark
@@ -225,7 +237,7 @@ se fcs+=stlnc:-
 " }}}
 
 " Statusline {{{
-se ls=0
+se ls=2
 se stl=-
 "se stl=[%f]\ " Path to the file
 "se stl+=%=        " Switch to the right side
@@ -298,6 +310,17 @@ let g:tagbar_type_tex = {
 
 " }}}
 
+" Vista {{{
+"let g:vista_executive_for = {
+        "\ 'cpp': 'vim_lsp',
+        "\ 'c': 'vim_lsp',
+        "\ 'python': 'vim_lsp',
+        "\ 'java': 'vim_lsp',
+        "\ }
+"let g:vista_ignore_kinds = ['Variable']
+"nn <silent> <leader>o :Vista finder<CR>
+" }}}
+
 " Nerd Tree {{{
 nn <leader>no :NERDTreeToggle<CR>
 nn <leader>nf :NERDTreeFind<CR>
@@ -321,10 +344,37 @@ let g:NERDTreeStatusline = '%#NonText#'
 nn <silent> <c-p>     :FZF<CR>
 nn <silent> <leader>z :Buffers<CR>
 nn <silent> <leader>m :History<CR>
-nn <silent> <leader>o :Tags<CR>
-nn <silent> <leader>g :Command<CR>
-nn <silent> <leader>l :Lines<CR>
-nn <silent> <leader>f :History:<cr>
+nn <silent> <leader>x :Command<CR>
+nn <silent> <leader>fo :BTags<CR>
+nn <silent> <leader>fh :History:<cr>
+nn <silent> <leader>f/ :History/<cr>
+nn <silent> <leader>fl :BLines<CR>
+nn <silent> <leader>fw :Windows<CR>
+nn <silent> <leader>ff :GFiles<CR>
+nn <silent> <leader>fc :Commits<CR>
+nn <leader>fa :Ag
+
+" indicate how fzf buffer is opened
+
+" open in popup windows
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+
+function! s:build_quickfix_list(lines)
+    call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
+    copen
+    cc
+endfunction
+
+let g:fzf_action = {
+            \ 'ctrl-q': function('s:build_quickfix_list'),
+            \ 'ctrl-t': 'tab split',
+            \ 'ctrl-x': 'split',
+            \ 'ctrl-v': 'vsplit' }
+
+" On FZF popup
+" - C-t to open file in a new tab
+" - C-x to split
+" - C-v to v split
 " }}}
 
 " Drag visuals {{{
@@ -334,6 +384,7 @@ vm <expr> <c-l> DVB_Drag('right')
 vm <expr> <c-j>  DVB_Drag('down')
 vm <expr> <c-k>  DVB_Drag('up')
 "vm <expr> D DVB_Duplicate()
+hi Visual cterm=NONE ctermbg=0 ctermfg=NONE term=NONE
 " }}}
 
 " Syntastic {{{
@@ -366,6 +417,17 @@ nnoremap <leader>gb :Git branch<Space>
 nnoremap <leader>go :Git checkout<Space>
 nnoremap <leader>gps :Gpush<CR>
 nnoremap <leader>gpl :Gpull<CR>
+" some vim diff command here for remind
+"
+" do: get changes from other window into the current window
+" dp: put the changes from current window into the other window
+" ]c: jump to the next change
+" [c: jump to the previous change
+" zo: open fold
+" zc: close fold
+" zr: reducing folding level
+" zm: one more folding level, please
+
 " }}}
 
 " Gui {{{
@@ -411,10 +473,10 @@ augroup END
 let g:ycm_semantic_triggers =  {'VimspectorPrompt': [ '.', '->', ':', '<' ]}
 
 nn <leader>vl :call vimspector#Launch()<cr>
-nn <leader>ve :call vimspector#Reset()<cr>
+nn <leader>vk :call vimspector#Reset()<cr>
 nm <leader>vc   <Plug>VimspectorContinue
 nm <leader>vs   <Plug>VimspectorStop
-nm <leader>vt   <Plug>VimspectorRestart
+nm <leader>vr   <Plug>VimspectorRestart
 nm <leader>vp   <Plug>VimspectorPause
 nm <leader>vb   <Plug>VimspectorToggleBreakpoint
 nm <leader>vbc  <Plug>VimspectorToggleConditionalBreakpoint
@@ -425,22 +487,56 @@ nm <leader>vs   <Plug>VimspectorStepInto
 nm <leader>vo   <Plug>VimspectorStepOut
 " }}}
 
-" Ycm {{{
-nmap <leader>jd :YcmCompleter GoTo<CR>
+" ultisnip {{{
+let g:UltiSnipsExpandTrigger           = '<tab>'
+let g:UltiSnipsJumpForwardTrigger      = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger     = '<s-tab>'
+"}}}
+
+" supertab {{{
+let g:SuperTabCrMapping                = 0
+let g:SuperTabDefaultCompletionType    = '<C-n>'
+" }}}
+
+" asyncomplete {{{
+"cal asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
+            "\ 'name': 'ultisnips',
+            "\ 'allowlist': ['*'],
+            "\ 'completor': function('asyncomplete#sources#ultisnips#completor'),
+            "\ }))
+" make popup menu looks nicer
+"hi Pmenu cterm=nocombine ctermfg=12 ctermbg=0
+" }}}
+
+" vim-lsp {{{
+"nn <leader>kn :LspNextError<cr>
+"nn <leader>kp :LspPreviousError<cr>
+"nn <leader>ko :LspWorkspaceSymbol<cr>
+"nn <leader>kt :LspImplementation<cr>
+"nn <leader>kh :LspTypeHierarchy<cr>
+"nn <leader>kr :LspRename<cr>
+"nn <leader>kj :LspDefinition<cr>
+"set foldmethod=expr
+  "\ foldexpr=lsp#ui#vim#folding#foldexpr()
+  "\ foldtext=lsp#ui#vim#folding#foldtext()
+
+"let g:asyncomplete_auto_popup = 1
+"im <c-space> <Plug>(asyncomplete_force_refresh)
+
+" enable diagnostics for cursor
+"let g:lsp_diagnostics_enable = 1
+"let g:lsp_diagnostics_echo_cursor = 1
+
+"let g:lsp_log_verbose = 1
+"let g:lsp_log_file = expand('~/.vim-lsp.log')
+"let g:asyncomplete_log_file = expand('~/.asyncomplete.log')
+
+"let g:lsp_highlight_references_enabled = 1
+"hi lspReference cterm=bold,underline ctermbg=NONE ctermfg=187
 " }}}
 
 " easymotion {{{
 map <Leader>s <Plug>(easymotion-bd-f)
-" }}}
-
-" supertab {{{
-let g:SuperTabDefaultCompletionType    = '<C-n>'
-let g:SuperTabCrMapping                = 0
-let g:UltiSnipsExpandTrigger           = '<tab>'
-let g:UltiSnipsJumpForwardTrigger      = '<tab>'
-let g:UltiSnipsJumpBackwardTrigger     = '<s-tab>'
-let g:ycm_key_list_select_completion   = ['<C-j>', '<C-n>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<C-k>', '<C-p>', '<Up>']
 " }}}
 
 " {{{ teaks split window border
@@ -503,4 +599,54 @@ nn <C-H> <C-W><C-H>
 ru! ftplugin/man.vim
 " C-] to following link
 " C-t to go back
+" }}}
+
+" fzf hack for quick fix {{{
+function! s:format_qf_line(line)
+  let parts = split(a:line, ':')
+  return { 'filename': parts[0]
+         \,'lnum': parts[1]
+         \,'col': parts[2]
+         \,'text': join(parts[3:], ':')
+         \ }
+endfunction
+
+function! s:qf_to_fzf(key, line) abort
+  let l:filepath = expand('#' . a:line.bufnr . ':p')
+  return l:filepath . ':' . a:line.lnum . ':' . a:line.col . ':' . a:line.text
+endfunction
+
+function! s:fzf_to_qf(filtered_list) abort
+  let list = map(a:filtered_list, 's:format_qf_line(v:val)')
+  if len(list) > 0
+    call setqflist(list)
+    copen
+  endif
+endfunction
+
+command! FzfQF call fzf#run(fzf#wrap({
+      \ 'source': map(getqflist(), function('<sid>qf_to_fzf')),
+      \ 'sink*':   function('<sid>fzf_to_qf'),
+      \ 'options': '--reverse --multi --bind=ctrl-a:select-all,ctrl-d:deselect-all --prompt "quickfix> "',
+      \ }))
+nn <leader>fq :FzfQF<cr>
+"}}}
+
+" YCM {{{
+let g:ycm_key_list_select_completion   = ['<C-j>', '<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-k>', '<C-p>', '<Up>']
+.
+let g:ycm_always_populate_location_list = 1
+
+nn <leader>jd :YcmCompleter GoToDefinition<cr>
+nn <leader>js :YcmCompleter GoToSymbol *<cr> " load all symbol of the workspace
+nn <leader>jj :YcmDiags<cr>
+nn <leader>j] :lnext<cr>
+nn <leader>j[ :lprevious<cr>
+nn <leader>jr :YcmCompleter RefactorRename<cr>
+nn <leader>jc :YcmCompleter FixIt<cr>
+" }}}
+
+" vim-which-key {{{
+autocmd FileType which_key highlight WhichKeyFloating ctermbg=0 ctermfg=12
 " }}}
