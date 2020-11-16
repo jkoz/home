@@ -10,6 +10,15 @@ export TERMINAL="st"
 # fix java problem in dwm, used with wmname LG3D set in xinitrc
 export _JAVA_AWT_WM_NONREPARENTING=1
 
+# java stuff
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-15.jdk/Contents/Home
+#export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_271.jdk/Contents/Home
+export M2_HOME=/usr/local/Cellar/maven/3.6.3_1/libexec
+export M2=${M2_HOME}/bin
+export M2_REPO=$HOME/.m2/repository
+export MAVEN_OPTS="-Xms256m -Xmx512m"
+export PATH=${M2_HOME}/bin:${JAVA_HOME}/bin:${PATH}
+
 export LESS_TERMCAP_mb=$'\E[01;31m'
 export LESS_TERMCAP_md=$'\E[01;38;5;74m'
 export LESS_TERMCAP_me=$'\E[0m'
@@ -55,7 +64,7 @@ export PROJECT="$HOME/data/projects"
 export CATALINA_HOME="${PROJECT}/apache-tomcat-8.0.5/"
 export AXS_HOME="${PROJECT}/axs"
 export MEDIA_HOME="$HOME/media"
-export GEM_HOME=$HOME/.gem/ruby/2.3.0
+export GEM_HOME=$HOME/.gem/ruby/2.6.0
 
 #export GTK_MODULES=rgba
 export GTK_RGBA_APPS="allbut:firefox-bin:gnome-mplayer:totem:soffice:<unknown>:exe"
@@ -65,7 +74,7 @@ export GTK_IM_MODULE=ibus
 export QT_IM_MODULE=ibus
 
 export MPD_HOST=~/.mpd/socket
-PATH=${GEM_HOME}/bin:${PATH}
+PATH=${HOME}/bin:${GEM_HOME}/bin:${PATH}
 
 # history
 HISTSIZE=10000
@@ -101,10 +110,49 @@ setopt MULTIBYTE
 unsetopt FLOW_CONTROL
 setopt NO_HUP # jobs background will not be kill if exit its session
 unsetopt HUP
+
 stty -ixon # Map Ctrl-S to sth usefull other than XOFF (interrupt data flow).
+
+# for the sake of all terminal base programs, undef C-y which suspend the programs
+stty dsusp undef
 
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
+
+# fzf
+_gen_fzf_default_opts() {
+  local base03="234"
+  local base02="235"
+  #local base02="0"
+  local base01="240"
+  local base00="241"
+  local base0="244"
+  local base1="245"
+  local base2="254"
+  local base3="230"
+  local yellow="136"
+  local orange="166"
+  local red="160"
+  local magenta="125"
+  local violet="61"
+  local blue="33"
+  local cyan="37"
+  local green="64"
+
+  # Solarized Dark color scheme for fzf
+  export FZF_DEFAULT_OPTS="
+    --layout=reverse
+    --height=80%
+    --info=inline
+    --multi
+    --color fg:-1,bg:-1,gutter:-1,hl:$blue,fg+:$base2,bg+:$base02,hl+:$blue
+    --color info:$yellow,prompt:$yellow,pointer:$base3,marker:$base3,spinner:$yellow
+    --bind '?:toggle-preview'
+    --preview-window=:hidden
+    --preview '([[ -f {} ]] && (bat --style=numbers --color=always {} || cat {})) || ([[ -d {} ]] && (tree -C {} | less)) || echo {} 2> /dev/null | head -200'
+  "
+}
+_gen_fzf_default_opts
 
 autoload -U promptinit; promptinit;  prompt walters # prompt
 autoload -U colors && colors
@@ -220,6 +268,7 @@ alias e='mvn eclipse:clean eclipse:eclipse'
 alias XTR='xrdb -merge ~/.Xresources'
 alias se='sudo vim'
 alias e='vim'
+alias m='mutt'
 alias eX='vim ${DOTFILES_HOME}/.Xresources; uD'
 alias eZ='vim ${DOTFILES_HOME}/zshrc; uD'
 alias eI='vim ${DOTFILES_HOME}/i3/config; uD'
