@@ -4,7 +4,6 @@
 # u - undo delete
 # 123 - jump to msg 123
 # $ - commit changes (deleted messages)
-# sheet.shiar.nl/mutt
 # }}}
 
 # General {{{
@@ -26,8 +25,15 @@ set pager_stop # don't go to the next message automatically
 set menu_scroll
 set menu_context = 5
 set fast_reply # dont ask too much
-set include = yes #automatically quote message
+
+
+# compose mail
 set editor = "vim -c 'set ft=mail spell spelllang=en'"
+set markers=no
+set signature=~/.sig
+set include = yes #automatically quote message
+set forward_format="Fwd: %s"
+
 set edit_headers = yes #you can add cc, bcc, or change ur from input
 set query_command = "goobook query '%s'" #autocomplete addresses, TODO
 set header_cache = ~/.cache/mutt/headers # Store message headers locally to speed things up.
@@ -40,10 +46,22 @@ set pipe_decode # strip headers and eval mimes when piping
 set thorough_search # strip headers and eval mimes before searching
 set mask = * # Gmail have hidden files .All Mail ....
 #set crypt_autosign = yes
-set status_format = "───[ Folder: %f ]───[%r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? ]───%>─%?p?( %p postponed )?───"
+set status_format = "───[%f]───[%r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? ]───%>─%?p?( %p postponed )?───"
+
+set display_filter="sed -e '/\\[-- Type: text.* --\\]/d' \
+                        -e '/\\[-- Autoview.* --\\]/d' \
+                        -e '/\\[-- Type.* --\\]/d' \
+                        -e '/\\[-- .*unsupported.* --\\]/d' \
+                        -e '/\\[-- Attachment #[0-9] --\\]/d' \
+                        -e 's/Attachment #[0-9]: //g' \
+                        -e '/./,/^$/!d'"
 
 #set alias_file = ~/.muttrc.d/aliases
 #source ~/.muttrc.d/aliases
+set query_command= "abook --mutt-query '%s'"
+macro index,pager A "<pipe-message>abook --add-email-quiet<return>"
+
+set timeout=30
 
 set mailcap_path = ~/.mailcap
 
@@ -68,51 +86,33 @@ set sidebar_width   = 30
 #color sidebar_new color221 color233
 #color sidebar_new yellow default
 set status_chars  = " *%A"
-bind index,pager \ek sidebar-prev
-bind index,pager \ej sidebar-next
-bind index,pager \eo sidebar-open
+
 macro index,pager b '<enter-command>toggle sidebar_visible<enter>'
+
+macro index,pager \cb 'urlview' 'Follow links with urlview'
+
+ # Color of the highlighted, but not open, mailbox.
+color sidebar_highlight green color0 # indicator for the "current message"
+
+# Color of the divider separating the Sidebar from Mutt panels
+color sidebar_divider green default
+
+# Color to give mailboxes containing flagged mail
+color sidebar_flagged red black
+
+# Color to give mailboxes containing new mail
+color sidebar_new green black
 # }}}
 
 # Formats {{{
 set date_format         = "%d/%m/%y at %I:%M%P"
 #set index_format        = "%3C %Z %D %-15.15L (%?l?%4l&%4c?) %s"
-set index_format        = " %Z  %-15.15L       %s"
-set alias_format        = "%4n %t %-20a  %r"
+#set index_format        = " %Z  %-15.15L       %s"
+#set index_format="%3C %Z %[!%m.%d.%y] %-19.19n  %?X?(%1X)&   ? %?M?(%02M)&    ? %s%> %?y?[%Y]?"
+set index_format = "%3C %{%b %d} %-20.20n %Z %s"
+set alias_format = "%4n %t %-20a  %r"
 set reply_regexp = "^(([Rr][Ee]?(\[[0-9]+\])?: *)?(\[[^]]+\] *)?)*"
 set quote_regexp = "^( {0,4}[>|:#%]| {0,4}[a-z0-9]+[>|]+)+"
-# }}}
-
-# Mapping {{{
-bind index,pager   \t          next-unread
-bind index,pager  ,\t      previous-unread
-
-bind index gg           first-entry
-bind index G            last-entry
-bind index K            previous-thread
-bind index J            next-thread
-bind index,pager r      group-reply
-bind index,pager \#     noop
-bind index i            noop
-# Remap bounce-message function to "B"
-bind index B bounce-message
-#bind index I            noop
-
-bind  pager k           previous-line
-bind  pager j           next-line
-bind  pager i           exit
-bind  pager /           search
-bind  pager <up>        previous-line
-bind  pager <down>      next-line
-bind  pager gg          top
-bind  pager G           bottom
-bind  pager K           previous-undeleted
-bind  pager J           next-undeleted
-#bind pager n           next-undeleted
-#bind pager p           previous-undeleted
-
-bind editor \t          complete-query
-#bind editor           complete
 # }}}
 
 # Accounts {{{
@@ -122,38 +122,52 @@ set envelope_from = yes
 # default
 set spoolfile = '~/Mail/phuoctaitp@gmail.com/Inbox'
 
-#mailboxes `find ~/Mail -maxdepth 1 -mindepth 1 -type d -printf "'%h/%f/Inbox' "`
-mailboxes `ls -d ~/Mail/*/Inbox`
-
-
+mailboxes `find ~/Mail -maxdepth 1 -mindepth 1 | xargs printf "%s/Inbox "`
 
 folder-hook 'Mail' \
         'set folder = ~/Mail; \
-         mailboxes `ls -d ~/Mail/*/Inbox`
+         mailboxes `find ~/Mail -maxdepth 1 -mindepth 1 | xargs printf "%s/Inbox "`;'
 
 # phuoctaitp@gmail.com
 folder-hook 'phuoctaitp@gmail.com' \
         'set folder = '~/Mail/phuoctaitp@gmail.com'; \
          set spoolfile = '~/Mail/phuoctaitp@gmail.com/Inbox'; \
          set mbox = '~/Mail/phuoctaitp@gmail.com/archive'; \
-         set record = '+[Gmail]/.Sent\\ Mail'; \
-         set postponed = '+[Gmail]/.Drafts'; \
-         set realname = "Tai Tran"; \
+         set record = '+[Gmail]/Sent\\ Mail'; \
+         set postponed = '+[Gmail]/Drafts'; \
+         set realname = "Phuoc Tai Tran"; \
          set from = "phuoctaitp@gmail.com"; \
-         set sendmail = "sendm"; \
+         set sendmail = "msmtp -a gmail-phuoctaitp"; \
          macro index \cF "!tmux split-window -v -l 3 \"mbsync gmail-phuoctaitp \"<enter>"; \
-         macro index d '<save-message>=[Gmail]/.Trash<enter>'; \
+         macro index d '<save-message>+[Gmail]/Trash<enter>'; \
          unmailboxes *; \
-         mailboxes `find ~/Mail/phuoctaitp@gmail.com -maxdepth 5 -mindepth 1 -type d ! -regex ".*\[Gmail\]$\|.*/cur$\|.*/new$\|.*/tmp$" | sed "s/ /\\\\ /g" | awk 1 ORS=" "`; \
+         mailboxes `find ~/Mail/phuoctaitp@gmail.com* -maxdepth 5 -mindepth 1 -type d | grep -vE "\[Gmail\]$|tmp$|new$|cur$" | sed "s/ /\\\\ /g" | awk 1 ORS=" "`; \
          color status yellow default;'
+
+# tai.t@hotmail.com
+folder-hook 'tai.t@hotmail.com' \
+        'set folder = '~/Mail/tai.t@hotmail.com'; \
+         set spoolfile = '~/Mail/tai.t@hotmail.com/Inbox'; \
+         set mbox = '+Archives'; \
+         set record = '+Sent'; \
+         set postponed = '+Drafts'; \
+         set realname = "Phuoc Tai Tran"; \
+         set from = "tai.t@hotmail.com"; \
+         set sendmail = "msmtp -a hotmail-tait"; \
+         macro index \cF "!tmux split-window -v -l 3 \"mbsync hotmail-tait\"<enter>"; \
+         macro index d '<save-message>+Deleted<enter>'; \
+         unmailboxes *; \
+         mailboxes `find ~/Mail/tai.t@hotmail.com* -maxdepth 5 -mindepth 1 -type d | grep -vE "tmp$|new$|cur$" | sed "s/ /\\\\ /g" | awk 1 ORS=" "`; \
+         color status blue default;'
+
 
 # ctphung1987@gmail.com
 folder-hook 'ctphung1987@gmail.com' \
         'set folder = '~/Mail/ctphung1987@gmail.com'; \
          set spoolfile = '~/Mail/ctphung1987@gmail.com/Inbox'; \
          set mbox = '~/Mail/ctphung1987@gmail.com/archive'; \
-         set record = '+[Gmail]/.Sent\\ Mail'; \
-         set postponed = '+[Gmail]/.Drafts'; \
+         set record = '+[Gmail]/Sent\\ Mail'; \
+         set postponed = '+[Gmail]/Drafts'; \
          set realname = "Phung Chau"; \
          set from = "ctphung1987@gmail.com"; \
          set sendmail = "sendm"; \
@@ -162,23 +176,6 @@ folder-hook 'ctphung1987@gmail.com' \
          unmailboxes *; \
          mailboxes `find ~/Mail/ctphung1987@gmail.com -maxdepth 5 -mindepth 1 -type d ! -regex ".*\[Gmail\]$\|.*/cur$\|.*/new$\|.*/tmp$" | sed "s/ /\\\\ /g" | awk 1 ORS=" "`; \
          color status yellow default;'
-
-# tai.t@hotmail.com
-folder-hook 'tai.t@hotmail.com' \
-        'set folder = '~/Mail/tai.t@hotmail.com'; \
-         set spoolfile = '~/Mail/tai.t@hotmail.com/Inbox'; \
-         set mbox = '~/Mail/tai.t@hotmail.com/archive'; \
-         set record = '+[Gmail]/.Sent\\ Mail'; \
-         set postponed = '+[Gmail]/.Drafts'; \
-         set realname = "Phung Chau"; \
-         set from = "tai.t@hotmail.com"; \
-         set sendmail = "sendm"; \
-         macro index \cF "!tmux split-window -v -l 3 \"mbsync gmail-phuoctaitp\"<enter>"; \
-         macro index d '<save-message>=[Gmail]/.Trash<enter>'; \
-         unmailboxes *; \
-         mailboxes `find ~/Mail/tai.t@gmail.com -maxdepth 5 -mindepth 1 -type d ! -regex ".*\[Gmail\]$\|.*/cur$\|.*/new$\|.*/tmp$" | sed "s/ /\\\\ /g" | awk 1 ORS=" "`; \
-         color status yellow default;'
-
 
 # thunderchief3000@yahoo.com {{{
 folder-hook 'phuoctaitp@gmail.com/[Gmail]/.Trash' 'macro index d "<delete-message><enter>"'
@@ -213,32 +210,62 @@ color quoted2 green default
 color quoted3 cyan default
 color error     red             default         # error messages
 color message   white           default         # message  informational messages
-color indicator green color0 # indicator for the "current message"
+color indicator default color0 # indicator for the "current message"
 color status    white           blue            # status lines in the folder index sed for the mini-help line
 color tree      color241        default         # the "tree" display of threads within the folder index
 color search    white           blue            # search matches found with search within the internal pager
 color markers   red             default         # The markers indicate a wrapped line hen showing messages with looong lines
-color index     yellow default  '~O'
-color index     yellow default  '~N'
-color index     brightred       default '~F'    # Flagged Messages are important!
-color index     blue default    '~D'            # Deleted Mails - use dark color as these are already "dealt with"
+color index yellow default '~O'
+color index blue default '~N'
+color index color6 default '~F'    # Flagged Messages are important!
+color index color10 default   '~D'            # Deleted Mails - use dark color as these are already "dealt with"
 
-#SOLARIZED HEX     16/8 TERMCOL  XTERM/HEX   L*A*B      sRGB        HSB
-#--------- ------- ---- -------  ----------- ---------- ----------- -----------
-#base03    #002b36  8/4 brblack  234 #1c1c1c 15 -12 -12   0  43  54 193 100  21
-#base02    #073642  0/4 black    235 #262626 20 -12 -12   7  54  66 192  90  26
-#base01    #586e75 10/7 brgreen  240 #4e4e4e 45 -07 -07  88 110 117 194  25  46
-#base00    #657b83 11/7 bryellow 241 #585858 50 -07 -07 101 123 131 195  23  51
-#base0     #839496 12/6 brblue   244 #808080 60 -06 -03 131 148 150 186  13  59
-#base1     #93a1a1 14/4 brcyan   245 #8a8a8a 65 -05 -02 147 161 161 180   9  63
-#base2     #eee8d5  7/7 white    254 #d7d7af 92 -00  10 238 232 213  44  11  93
-#base3     #fdf6e3 15/7 brwhite  230 #ffffd7 97  00  10 253 246 227  44  10  99
-#yellow    #b58900  3/3 yellow   136 #af8700 60  10  65 181 137   0  45 100  71
-#orange    #cb4b16  9/3 brred    166 #d75f00 50  50  55 203  75  22  18  89  80
-#red       #dc322f  1/1 red      160 #d70000 50  65  45 220  50  47   1  79  86
-#magenta   #d33682  5/5 magenta  125 #af005f 50  65 -05 211  54 130 331  74  83
-#violet    #6c71c4 13/5 brmagenta 61 #5f5faf 50  15 -45 108 113 196 237  45  77
-#blue      #268bd2  4/4 blue      33 #0087ff 55 -10 -45  38 139 210 205  82  82
-#cyan      #2aa198  6/6 cyan      37 #00afaf 60 -35 -05  42 161 152 175  74  63
-#green     #859900  2/2 green     64 #5f8700 60 -20  65 133 153   0  68 100  60
+# binding {{{
+
+bind index,pager \t next-unread
+bind index,pager ,\t previous-unread
+
+bind index,pager p sidebar-prev
+bind index,pager n sidebar-next
+bind index,pager o sidebar-open
+
+bind generic z noop
+bind index,pager,attach g noop
+bind index,pager s noop
+bind generic,pager t noop
+bind generic,pager \cy  noop
+
+bind index,pager \# noop
+bind index i noop
+bind index B bounce-message
+
+bind pager / search
+bind index,pager r group-reply
+
+bind generic,index,pager \Cf next-page
+bind generic,index,pager \Cb previous-page
+bind generic gg first-entry
+bind generic,index G last-entry
+bind pager gg top
+bind pager G bottom
+
+bind generic,index,pager \Cy previous-line
+bind generic,index,pager \Ce next-line
+
+bind pager k previous-line
+bind pager j next-line
+
+bind generic,index,pager \Cd       half-down
+bind generic,index,pager \Cu       half-up
+bind pager K previous-undeleted
+bind pager J next-undeleted
+bind editor \t complete-query
+bind pager i           exit
+
+bind generic zt current-top
+bind generic zz current-middle
+bind generic zb current-bottom
+bind index za collapse-thread
+bind index zA collapse-all
+bind index,pager ? search-opposite
 # }}}
