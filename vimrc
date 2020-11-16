@@ -1,9 +1,21 @@
 " Notes {{{
+" open all fold: zr, close all: zm
 " set digraph
 " help digraph-table
 " search PLUS-MINUS
 " c^k +-
 " C-o to jump back previous location
+" C-e: scroll up
+" C-y: scroll down
+" do: get changes from other window into the current window
+" dp: put the changes from current window into the other window
+" ]c: jump to the next change
+" [c: jump to the previous change
+" zo: open fold
+" zc: close fold
+" zr: reducing folding level
+" zm: one more folding level, please
+" zR: unfold everything
 " }}}
 
 " Bundles {{{
@@ -18,7 +30,10 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
+Plugin 'morhetz/gruvbox'
 Plugin 'altercation/vim-colors-solarized'
+Plugin 'jaxbot/semantic-highlight.vim'
+Plugin 'jeaye/color_coded'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/nerdtree'
 Plugin 'tpope/vim-surround'
@@ -46,21 +61,24 @@ Plugin 'simeji/winresizer'
 Plugin 'jceb/vim-orgmode'
 Plugin 'itchyny/calendar.vim'
 Plugin 'liuchengxu/vim-which-key'
-
-Plugin 'ycm-core/YouCompleteMe'
+Plugin 'ryanoasis/vim-devicons'
 Plugin 'ervandew/supertab'
+Plugin 'tpope/vim-speeddating'
 
+"Plugin 'ycm-core/YouCompleteMe'
 "Plugin 'liuchengxu/vista.vim'
 "Plugin 'wellle/tmux-complete.vim'
-"Plugin 'prabirshrestha/async.vim'
-"Plugin 'prabirshrestha/vim-lsp'
-"Plugin 'mattn/vim-lsp-settings'
-"Plugin 'prabirshrestha/asyncomplete.vim'
-"Plugin 'prabirshrestha/asyncomplete-lsp.vim'
-"Plugin 'prabirshrestha/asyncomplete-ultisnips.vim'
-"Plugin 'ctrlpvim/ctrlp.vim'
-"Plugin 'mattn/ctrlp-lsp'
-"Plugin 'lokikl/vim-ctrlp-ag'
+"
+Plugin 'prabirshrestha/async.vim'
+Plugin 'prabirshrestha/vim-lsp'
+Plugin 'mattn/vim-lsp-settings'
+Plugin 'prabirshrestha/asyncomplete.vim'
+Plugin 'prabirshrestha/asyncomplete-lsp.vim'
+Plugin 'prabirshrestha/asyncomplete-ultisnips.vim'
+Plugin 'machakann/asyncomplete-ezfilter.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'mattn/ctrlp-lsp'
+Plugin 'tsufeki/asyncomplete-fuzzy-match'
 
 call vundle#end()
 filetype plugin indent on
@@ -135,13 +153,12 @@ if has("multi_byte")
     se fileencodings=ucs-bom,utf-8,latin1
 en
 
-"se relativenumber
 se t_Co=256
 se sw=4
 se autowrite
 se title
 se list
-set listchars=tab:\|\ ,extends:>,precedes:<,nbsp:~,trail:.
+se listchars=tab:\|\ ,extends:>,precedes:\ ,nbsp:~,trail:.
 se signcolumn=no
 
 se ttyfast
@@ -188,7 +205,8 @@ se softtabstop=4 shiftwidth=4 tabstop=4 " not tabs, but spaces
 se expandtab
 se shiftround " use multiple of shiftwidth when indenting with '<' and '>'
 
-"se number " turn on number
+se relativenumber
+se number " turn on number
 "se nonumber " turn on number
 se cursorline " highlight current light
 "se cursorcolumn
@@ -218,7 +236,7 @@ se wildignore+=*_build/*,*/coverage/*,*/target/*,*/tmp/*,*/lib/*,*/.settings/*,*
 se dict=/usr/share/dict/cracklib-small
 se complete=.,b,u,]
 se wildmode=longest,list:longest
-set completeopt=menuone,menu,longest,preview
+se completeopt=menuone,menu,longest,preview
 
 " color
 se background=dark
@@ -255,7 +273,7 @@ aug configgroup
     au!
     au BufRead,BufNewFile *.html,*.xhtml,*.xml setl foldmethod=indent foldlevel=0
     au BufRead,BufNewFile *.vim setl shiftwidth=2 tabstop=2 foldmethod=marker foldlevel=0
-    au BufNewFile,BufRead *.otl setl listchars=tab:\|\ ,extends:>,precedes:<,nbsp:~,trail:.
+    au BufNewFile,BufRead *.otl setl listchars=tab:\|\ ,extends:>,precedes:\ ,nbsp:~,trail:.
     au BufRead,BufNewFile *rc setl foldmethod=marker
     au BufRead,BufNewFile *.c,*.h,*.hh setl tabstop=4 softtabstop=4 expandtab foldmethod=manual foldlevel=0
     au BufRead,BufNewFile *.h,*.hpp,*.cc,*.cpp setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=manual foldlevel=0
@@ -280,9 +298,10 @@ aug pencil
     autocmd Filetype mail
                 \   call pencil#init({'wrap': 'soft', 'textwidth': 60})
                 \ | call litecorrect#init()
-                \ | setl spell spl=en_us et sw=2 ts=2 noai nonu nornu
+                \ | setl spell spl=en_us spf=~/.vim/spellfile.add et sw=2 ts=2 noai nonu nornu
 aug END
-" }}}
+
+"}}}
 
 " Tag bar {{{
 let g:tagbar_autofocus = 1
@@ -311,21 +330,25 @@ let g:tagbar_type_tex = {
 " }}}
 
 " Vista {{{
-"let g:vista_executive_for = {
-        "\ 'cpp': 'vim_lsp',
-        "\ 'c': 'vim_lsp',
-        "\ 'python': 'vim_lsp',
-        "\ 'java': 'vim_lsp',
-        "\ }
-"let g:vista_ignore_kinds = ['Variable']
-"nn <silent> <leader>o :Vista finder<CR>
+let g:vista_executive_for = {
+        \ 'cpp': 'vim_lsp',
+        \ 'c': 'vim_lsp',
+        \ 'python': 'vim_lsp',
+        \ 'java': 'vim_lsp',
+        \ }
+let g:vista_ignore_kinds = ['Variable']
+nn <silent> <leader>o :Vista finder<CR>
 " }}}
 
 " Nerd Tree {{{
 nn <leader>no :NERDTreeToggle<CR>
 nn <leader>nf :NERDTreeFind<CR>
 
-"let g:NERDTreeDirArrows=0
+"on mac to display correct use nerd font
+"brew tap homebrew/cask-fonts
+"brew cask install font-hack-nerd-font
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1
 let NERDTreeBookmarksFile=expand("$HOME/.vim/NERDTreeBookmarks") " Store the bookmarks file
 let NERDTreeShowBookmarks=1 " Show the bookmarks table on startup
 let NERDTreeShowFiles=1 " Show hidden files, too
@@ -334,8 +357,8 @@ let NERDTreeQuitOnOpen=2 " Quit on opening files from the tree
 let NERDTreeWinSize = 40
 let NERDTreeHighlightCursorline=1 " Highlight the selected entry in the tree
 let NERDTreeMouseMode=2 " Use a single click to fold/unfold directories and a double click to open files
-let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$',
-            \ '\.o$', '\.so$', '\.egg$', '^\.git$', '\.svn$', '^target$', '^\.settings$', '^\.classpath$', '^\.project$', '^\.hg', '.pydevproject'  ]
+"let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$',
+            "\ '\.o$', '\.so$', '\.egg$', '^\.git$', '\.svn$', '^target$', '^\.settings$', '^\.classpath$', '^\.project$', '^\.hg', '.pydevproject'  ]
 
 let g:NERDTreeStatusline = '%#NonText#'
 " }}}
@@ -344,7 +367,7 @@ let g:NERDTreeStatusline = '%#NonText#'
 nn <silent> <c-p>     :FZF<CR>
 nn <silent> <leader>z :Buffers<CR>
 nn <silent> <leader>m :History<CR>
-nn <silent> <leader>x :Command<CR>
+nn <silent> <leader>xx :Command<CR>
 nn <silent> <leader>fo :BTags<CR>
 nn <silent> <leader>fh :History:<cr>
 nn <silent> <leader>f/ :History/<cr>
@@ -358,6 +381,9 @@ nn <leader>fa :Ag
 
 " open in popup windows
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+
+" dont open fzf in some special buffer
+"au BufEnter * if bufname('#') =~ 'NERD_tree' && bufname('%') !~ 'NERD_tree' && winnr('$') > 1 | b# | exe "normal! \<c-w>\<c-w>" | :blast | endif
 
 function! s:build_quickfix_list(lines)
     call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
@@ -417,17 +443,6 @@ nnoremap <leader>gb :Git branch<Space>
 nnoremap <leader>go :Git checkout<Space>
 nnoremap <leader>gps :Gpush<CR>
 nnoremap <leader>gpl :Gpull<CR>
-" some vim diff command here for remind
-"
-" do: get changes from other window into the current window
-" dp: put the changes from current window into the other window
-" ]c: jump to the next change
-" [c: jump to the previous change
-" zo: open fold
-" zc: close fold
-" zr: reducing folding level
-" zm: one more folding level, please
-
 " }}}
 
 " Gui {{{
@@ -453,16 +468,13 @@ en
 " vimspector{{{
 let g:vimspector_enable_mappings = 'HUMAN'
 func! CustomiseUI()
+    " close all windows console windows
+    call win_gotoid( g:vimspector_session_windows.output ) | q
+    " dont use winbar
+    call win_gotoid( g:vimspector_session_windows.watches )
+    nunmenu WinBar
     call win_gotoid( g:vimspector_session_windows.code )
     nunmenu WinBar
-    "nnoremenu WinBar.Kill :call vimspector#Stop()<CR>
-    "nnoremenu WinBar.Continue :call vimspector#Continue()<CR>
-    "nnoremenu WinBar.Pause :call vimspector#Pause()<CR>
-    "nnoremenu WinBar.Step\ Over  :call vimspector#StepOver()<CR>
-    "nnoremenu WinBar.Step\ In :call vimspector#StepInto()<CR>
-    "nnoremenu WinBar.Step\ Out :call vimspector#StepOut()<CR>
-    "nnoremenu WinBar.Restart :call vimspector#Restart()<CR>
-    "nnoremenu WinBar.Exit :call vimspector#Reset()<CR>
 endfunction
 
 augroup MyVimspectorUICustomistaion
@@ -470,7 +482,8 @@ augroup MyVimspectorUICustomistaion
     autocmd User VimspectorUICreated call CustomiseUI()
 augroup END
 
-let g:ycm_semantic_triggers =  {'VimspectorPrompt': [ '.', '->', ':', '<' ]}
+" to see sign, uncomment below line
+se signcolumn=number
 
 nn <leader>vl :call vimspector#Launch()<cr>
 nn <leader>vk :call vimspector#Reset()<cr>
@@ -485,6 +498,31 @@ nm <leader>vbr  <Plug>VimspectorRunToCursor
 nm <leader>vn   <Plug>VimspectorStepOver
 nm <leader>vs   <Plug>VimspectorStepInto
 nm <leader>vo   <Plug>VimspectorStepOut
+
+
+hi WarningMsg term=NONE cterm=NONE ctermfg=136 guifg=Red
+hi MatchParen term=NONE cterm=NONE ctermfg=136 ctermbg=NONE
+
+sign define vimspectorBP         text=o texthl=WarningMsg
+sign define vimspectorBPCond     text=o? texthl=WarningMsg
+sign define vimspectorBPDisabled text=o! texthl=LineNr
+sign define vimspectorPC         text=\ > texthl=MatchParen linehl=CursorLine
+sign define vimspectorPCBP       text=o>  texthl=MatchParen linehl=CursorLine
+
+fu! s:JavaStartDebugCallback(data)
+  cal vimspector#LaunchWithSettings( { 'DAPPort':
+      \ has_key(a:data['response'], 'result') ? a:data['response']['result']  : 0 } )
+endf
+
+fu JavaStartDebug()
+  cal lsp#send_request('eclipse-jdt-ls', {'method':
+      \ 'workspace/executeCommand', 'params': {'command':
+      \ 'vscode.java.startDebugSession'}, 'on_notification':
+      \ function('s:JavaStartDebugCallback')}
+      \)
+endf
+nn<silent> <buffer> <Leader>vlj :call JavaStartDebug()<CR>
+
 " }}}
 
 " ultisnip {{{
@@ -496,43 +534,72 @@ let g:UltiSnipsJumpBackwardTrigger     = '<s-tab>'
 " supertab {{{
 let g:SuperTabCrMapping                = 0
 let g:SuperTabDefaultCompletionType    = '<C-n>'
+let g:SuperTabMappingForward='<c-j>'
+let g:SuperTabMappingBackward='<c-k>'
+" c-h to delete character
 " }}}
 
 " asyncomplete {{{
-"cal asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
-            "\ 'name': 'ultisnips',
-            "\ 'allowlist': ['*'],
-            "\ 'completor': function('asyncomplete#sources#ultisnips#completor'),
-            "\ }))
-" make popup menu looks nicer
-"hi Pmenu cterm=nocombine ctermfg=12 ctermbg=0
+inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
+cal asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
+            \ 'name': 'ultisnips',
+            \ 'allowlist': ['*'],
+            \ 'completor': function('asyncomplete#sources#ultisnips#completor'),
+            \ }))
+
+let g:asyncomplete_auto_completeopt = 1
+let g:asyncomplete_auto_popup = 1
+inoremap <c-space> <Plug>(asyncomplete_force_refresh)
+
+" }}}
+
+" YCM {{{
+"let g:ycm_semantic_triggers =  {'VimspectorPrompt': [ '.', '->', ':', '<' ]}
+"let g:ycm_key_list_select_completion   = ['<C-j>', '<C-n>', '<Down>']
+"let g:ycm_key_list_previous_completion = ['<C-k>', '<C-p>', '<Up>']
+"let g:ycm_always_populate_location_list = 1
+
+"nn <leader>jf :YcmCompleter GoToReferences<cr>
+"nn <leader>ji :YcmCompleter GoToImplementation<cr>
+"nn <leader>jd :YcmCompleter GoToDefinition<cr>
+"nn <leader>js :YcmCompleter GoToSymbol *<cr> " load all symbol of the workspace
+"nn <leader>jj :YcmDiags<cr>
+"nn <leader>j] :lnext<cr>
+"nn <leader>j[ :lprevious<cr>
+"nn <leader>jr :YcmCompleter RefactorRename<cr>
+"nn <leader>jc :YcmCompleter FixIt<cr>
+
+"let g:ycm_enable_diagnostic_signs = 1
+"let g:ycm_log_level = 'info'
+"let g:ycm_autoclose_preview_window_after_completion = 1
+"se completeopt-=preview
 " }}}
 
 " vim-lsp {{{
-"nn <leader>kn :LspNextError<cr>
-"nn <leader>kp :LspPreviousError<cr>
-"nn <leader>ko :LspWorkspaceSymbol<cr>
-"nn <leader>kt :LspImplementation<cr>
-"nn <leader>kh :LspTypeHierarchy<cr>
-"nn <leader>kr :LspRename<cr>
-"nn <leader>kj :LspDefinition<cr>
+
+nn <leader>jd :LspDefinition<cr>
+nn <leader>jf :LspReferences<cr>
+nn <leader>ji :LspImplementation<cr>
+nn <leader>jn :LspNextError<cr>
+nn <leader>jp :LspPreviousError<cr>
+nn <leader>js :LspWorkspaceSymbol<cr>
+nn <leader>ji :LspImplementation<cr>
+nn <leader>jh :LspTypeHierarchy<cr>
+nn <leader>jr :LspRename<cr>
+nn <leader>jc :LspCodeAction<cr>
 "set foldmethod=expr
   "\ foldexpr=lsp#ui#vim#folding#foldexpr()
   "\ foldtext=lsp#ui#vim#folding#foldtext()
 
-"let g:asyncomplete_auto_popup = 1
-"im <c-space> <Plug>(asyncomplete_force_refresh)
-
 " enable diagnostics for cursor
-"let g:lsp_diagnostics_enable = 1
-"let g:lsp_diagnostics_echo_cursor = 1
+let g:lsp_diagnostics_enable = 1
+let g:lsp_diagnostics_echo_cursor = 1
 
 "let g:lsp_log_verbose = 1
-"let g:lsp_log_file = expand('~/.vim-lsp.log')
-"let g:asyncomplete_log_file = expand('~/.asyncomplete.log')
-
-"let g:lsp_highlight_references_enabled = 1
-"hi lspReference cterm=bold,underline ctermbg=NONE ctermfg=187
+let g:lsp_log_file = expand('~/.vim-lsp.log')
+let g:asyncomplete_log_file = expand('~/.asyncomplete.log')
+let g:lsp_highlight_references_enabled = 1
+hi lspReference cterm=underline
 " }}}
 
 " easymotion {{{
@@ -542,7 +609,7 @@ map <Leader>s <Plug>(easymotion-bd-f)
 " {{{ teaks split window border
 hi VertSplit ctermbg=NONE guibg=NONE
 hi ErrorMsg term=NONE cterm=NONE  ctermbg=NONE ctermfg=12
-hi Error cterm=NONE  ctermbg=NONE ctermfg=7 ctermbg=9
+hi Error cterm=bold ctermbg=NONE ctermfg=2 ctermbg=NONE
 
 "se foldcolumn=1
 " }}}
@@ -579,10 +646,14 @@ se equalalways
 "se eadirection
 
 " windows moving
-nn <C-J> <C-W><C-J>
-nn <C-K> <C-W><C-K>
-nn <C-L> <C-W><C-L>
-nn <C-H> <C-W><C-H>
+"nn <C-J> <C-W><C-J>
+"nn <C-K> <C-W><C-K>
+"nn <C-L> <C-W><C-L>
+"nn <C-H> <C-W><C-H>
+nn <C-H> 2zh
+nn <C-L> 2zl
+nn <C-J> <C-E>
+nn <C-K> <C-Y>
 
 " window resize
 "C-w _ : Max out the height of the current split
@@ -592,11 +663,12 @@ nn <C-H> <C-W><C-H>
 "C-w + : increase horizontal size
 "C-w > : increate vertical size
 "C-w < : increate vertical size
-
+let g:winresizer_start_key='<C-w>e'
 " }}}
 
 " Use man page inside vim {{{
 ru! ftplugin/man.vim
+" :se nolist | Man mbsync
 " C-] to following link
 " C-t to go back
 " }}}
@@ -632,21 +704,25 @@ command! FzfQF call fzf#run(fzf#wrap({
 nn <leader>fq :FzfQF<cr>
 "}}}
 
-" YCM {{{
-let g:ycm_key_list_select_completion   = ['<C-j>', '<C-n>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<C-k>', '<C-p>', '<Up>']
-.
-let g:ycm_always_populate_location_list = 1
-
-nn <leader>jd :YcmCompleter GoToDefinition<cr>
-nn <leader>js :YcmCompleter GoToSymbol *<cr> " load all symbol of the workspace
-nn <leader>jj :YcmDiags<cr>
-nn <leader>j] :lnext<cr>
-nn <leader>j[ :lprevious<cr>
-nn <leader>jr :YcmCompleter RefactorRename<cr>
-nn <leader>jc :YcmCompleter FixIt<cr>
-" }}}
-
 " vim-which-key {{{
 autocmd FileType which_key highlight WhichKeyFloating ctermbg=0 ctermfg=12
 " }}}
+
+" let personalize color override everything {{{
+hi SignColumn ctermfg=12 ctermbg=NONE
+hi Search cterm=underline ctermbg=0 ctermfg=NONE
+
+"make popup menu looks nicer
+hi Pmenu cterm=NONE ctermfg=12 ctermbg=0
+" }}}
+
+" semantic highlighting {{{
+nn<Leader>xs :SemanticHighlightToggle<cr>
+let g:semanticTermColors = [28,1,2,3,4,5,6,7,25,9,10,34,12,13,14,15,16,125,124,19]
+" }}}
+
+" quick fix buffer {{{
+nn <leader>j] :lnext<cr>
+nn <leader>j[ :lprevious<cr>
+" }}}
+
