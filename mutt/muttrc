@@ -269,3 +269,4 @@ bind index za collapse-thread
 bind index zA collapse-all
 bind index,pager ? search-opposite
 # }}}
+
