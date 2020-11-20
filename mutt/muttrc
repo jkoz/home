@@ -4,6 +4,8 @@
 # u - undo delete
 # 123 - jump to msg 123
 # $ - commit changes (deleted messages)
+
+# in attach view, press B to open in browser
 # }}}
 
 # General {{{
@@ -12,25 +14,25 @@ set nomark_old #avoid marking unread msgs as old ones
 set nobeep #plz dont be noisy
 set confirmappend=no
 set wait_key=no # do not wait new key "Press any key to continue..."
-set delete = yes #don't confirm
-set quit = yes #don't confirm
+set delete #don't confirm
+set quit #don't confirm
 set sort = "threads"
 set sort_aux = "reverse-last-date-received" #like gmail
 set sort_re # thread based on regex
 set followup_to = no #http://larve.net/people/hugo/2000/07/ml-mutt
 set honor_followup_to = no
-#set pager_index_lines = 10 # number of index lines to show
+set pager_index_lines = 10 # number of index lines to show
 set pager_context = 5 # number of context lines to show
 set pager_stop # don't go to the next message automatically
 set menu_scroll
 set menu_context = 5
 set fast_reply # dont ask too much
-
+#set mail_check_stats
+#set mail_check_stats_interval=60
 
 # compose mail
 set editor = "vim -c 'set ft=mail spell spelllang=en'"
 set markers=no
-set signature=~/.sig
 set include = yes #automatically quote message
 set forward_format="Fwd: %s"
 
@@ -47,14 +49,16 @@ set thorough_search # strip headers and eval mimes before searching
 set mask = * # Gmail have hidden files .All Mail ....
 #set crypt_autosign = yes
 set status_format = "───[%f]───[%r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? ]───%>─%?p?( %p postponed )?───"
+set status_chars  = " *%A"
 
-set display_filter="sed -e '/\\[-- Type: text.* --\\]/d' \
-                        -e '/\\[-- Autoview.* --\\]/d' \
-                        -e '/\\[-- Type.* --\\]/d' \
-                        -e '/\\[-- .*unsupported.* --\\]/d' \
-                        -e '/\\[-- Attachment #[0-9] --\\]/d' \
-                        -e 's/Attachment #[0-9]: //g' \
-                        -e '/./,/^$/!d'"
+# this crash on some mail from rbc, comment it for now
+#set display_filter="sed -e '/\\[-- Type: text.* --\\]/d' \
+                        #-e '/\\[-- Autoview.* --\\]/d' \
+                        #-e '/\\[-- Type.* --\\]/d' \
+                        #-e '/\\[-- .*unsupported.* --\\]/d' \
+                        #-e '/\\[-- Attachment #[0-9] --\\]/d' \
+                        #-e 's/Attachment #[0-9]: //g' \
+                        #-e '/./,/^$/!d'"
 
 #set alias_file = ~/.muttrc.d/aliases
 #source ~/.muttrc.d/aliases
@@ -81,35 +85,34 @@ hdr_order From: Subject: To: Cc: Date:
 
 # Sidebar{{{
 set sidebar_divider_char= '│'
-set sidebar_visible = no
-set sidebar_width   = 30
-#color sidebar_new color221 color233
-#color sidebar_new yellow default
-set status_chars  = " *%A"
+set sidebar_folder_indent
+set sidebar_short_path
+set sidebar_indent_string='·'
+set sidebar_visible
+set sidebar_sort_method=alpha
+set sidebar_width   = 22
+#set sidebar_format = " %B%?F? [%F]?%* %?N?%N/?%S "
+set sidebar_format = " %B"
 
 macro index,pager b '<enter-command>toggle sidebar_visible<enter>'
 
-macro index,pager \cb 'urlview' 'Follow links with urlview'
-
- # Color of the highlighted, but not open, mailbox.
 color sidebar_highlight green color0 # indicator for the "current message"
+color sidebar_divider green default  # Color of the divider separating the Sidebar from Mutt panels
+color sidebar_flagged yellow default # Color to give mailboxes containing flagged mail
+color sidebar_new blue default # Color to give mailboxes containing new mail
+color sidebar_indicator yellow color0
+color sidebar_spoolfile default default
+color sidebar_flagged yellow default
 
-# Color of the divider separating the Sidebar from Mutt panels
-color sidebar_divider green default
-
-# Color to give mailboxes containing flagged mail
-color sidebar_flagged red black
-
-# Color to give mailboxes containing new mail
-color sidebar_new green black
 # }}}
 
 # Formats {{{
 set date_format         = "%d/%m/%y at %I:%M%P"
 #set index_format        = "%3C %Z %D %-15.15L (%?l?%4l&%4c?) %s"
 #set index_format        = " %Z  %-15.15L       %s"
-#set index_format="%3C %Z %[!%m.%d.%y] %-19.19n  %?X?(%1X)&   ? %?M?(%02M)&    ? %s%> %?y?[%Y]?"
-set index_format = "%3C %{%b %d} %-20.20n %Z %s"
+#set index_format = "  %{%b %d}   %-30.30n %s"
+#set index_format = "%3C  %[!%d.%m.%y]  %-30.30n %s"
+set index_format="%3C  %[!%d.%m.%y]  %-30.30n  %?X?(%1X)& ? %?M?(%02M)& ? %s%> %?y?[%Y]?"
 set alias_format = "%4n %t %-20a  %r"
 set reply_regexp = "^(([Rr][Ee]?(\[[0-9]+\])?: *)?(\[[^]]+\] *)?)*"
 set quote_regexp = "^( {0,4}[>|:#%]| {0,4}[a-z0-9]+[>|]+)+"
@@ -122,60 +125,76 @@ set envelope_from = yes
 # default
 set spoolfile = '~/Mail/phuoctaitp@gmail.com/Inbox'
 
+# mindepth to exclude current find directory
 mailboxes `find ~/Mail -maxdepth 1 -mindepth 1 | xargs printf "%s/Inbox "`
 
 folder-hook 'Mail' \
         'set folder = ~/Mail; \
          mailboxes `find ~/Mail -maxdepth 1 -mindepth 1 | xargs printf "%s/Inbox "`;'
 
-# phuoctaitp@gmail.com
+# phuoctaitp@gmail.com {{{
 folder-hook 'phuoctaitp@gmail.com' \
         'set folder = '~/Mail/phuoctaitp@gmail.com'; \
          set spoolfile = '~/Mail/phuoctaitp@gmail.com/Inbox'; \
-         set mbox = '~/Mail/phuoctaitp@gmail.com/archive'; \
+         set mbox = '~/Mail/phuoctaitp@gmail.com/Archive'; \
          set record = '+[Gmail]/Sent\\ Mail'; \
+         set signature= '~/Mail/phuoctaitp@gmail.com/sig'; \
          set postponed = '+[Gmail]/Drafts'; \
          set realname = "Phuoc Tai Tran"; \
          set from = "phuoctaitp@gmail.com"; \
          set sendmail = "msmtp -a gmail-phuoctaitp"; \
-         macro index \cF "!tmux split-window -v -l 3 \"mbsync gmail-phuoctaitp \"<enter>"; \
-         macro index d '<save-message>+[Gmail]/Trash<enter>'; \
+         macro index \cF "!mbsync gmail-phuoctaitp > /dev/null 2>&1 &<enter>"; \
+         macro index ,ki  "<change-folder> =Inbox"<enter>; \
+         macro index ,kd  "<change-folder> =[Gmail]/Trash"<enter>; \
+         macro index ,km  "<change-folder> =[Gmail]/Spam"<enter>; \
+         macro index,pager ,m "<enter-command>\`cd ~/Mail/phuoctaitp@gmail.com && find . -maxdepth 5 -mindepth 1 -type d | sed -Ee \"/\\[Gmail\\]$|new$|cur$|tmp$/d\" -e \"s/^\\.//g\" -e \"s/\\//./g\" | fzf-tmux | sed -e \"s/ /\\<quote-char\\>\\<space\\>/g\" -e \"s/^\./=/g\" -e \"s/\\./\\//g\" -e \"s/^/push c/\" -e \"s/$/\\<enter\\>/g\" \` <enter>"; \
          unmailboxes *; \
-         mailboxes `find ~/Mail/phuoctaitp@gmail.com* -maxdepth 5 -mindepth 1 -type d | grep -vE "\[Gmail\]$|tmp$|new$|cur$" | sed "s/ /\\\\ /g" | awk 1 ORS=" "`; \
+         mailboxes `find ~/Mail/phuoctaitp@gmail.com -maxdepth 5 -mindepth 1 -type d | sed -Ee "/\[Gmail\]$|tmp$|new$|cur$/d" -e "s/ /\\\\ /g" | awk 1 ORS=" "`; \
          color status yellow default;'
+#}}}
 
-# tai.t@hotmail.com
+# tai.t@hotmail.com {{{
 folder-hook 'tai.t@hotmail.com' \
         'set folder = '~/Mail/tai.t@hotmail.com'; \
          set spoolfile = '~/Mail/tai.t@hotmail.com/Inbox'; \
+         set signature= '~/Mail/tai.t@ghotmail.com/sig'; \
          set mbox = '+Archives'; \
          set record = '+Sent'; \
          set postponed = '+Drafts'; \
          set realname = "Phuoc Tai Tran"; \
          set from = "tai.t@hotmail.com"; \
          set sendmail = "msmtp -a hotmail-tait"; \
-         macro index \cF "!tmux split-window -v -l 3 \"mbsync hotmail-tait\"<enter>"; \
-         macro index d '<save-message>+Deleted<enter>'; \
+         macro index \cF "!mbsync hotmail-tait > /dev/null 2>&1 &<enter>"; \
+         macro index ,ki  "<change-folder> =Inbox"<enter>; \
+         macro index ,kd  "<change-folder> =Deleted"<enter>; \
+         macro index ,km  "<change-folder> =Junk"<enter>; \
+         macro index ,ks  "<change-folder> =Sent"<enter>; \
+         macro index,pager ,m "<enter-command>\`cd ~/Mail/tai.t@hotmail.com && find . -maxdepth 5 -mindepth 1 -type d | sed -Ee \"/\\[Gmail\\]$|new$|cur$|tmp$/d\" -e \"s/^\\.//g\" -e \"s/\\//./g\" | fzf-tmux | sed -e \"s/ /\\<quote-char\\>\\<space\\>/g\" -e \"s/^\./=/g\" -e \"s/\\./\\//g\" -e \"s/^/push c/\" -e \"s/$/\\<enter\\>/g\" \` <enter>"; \
          unmailboxes *; \
-         mailboxes `find ~/Mail/tai.t@hotmail.com* -maxdepth 5 -mindepth 1 -type d | grep -vE "tmp$|new$|cur$" | sed "s/ /\\\\ /g" | awk 1 ORS=" "`; \
+         mailboxes `find ~/Mail/tai.t@hotmail.com -maxdepth 5 -mindepth 1 -type d | sed -Ee "/\[Gmail\]$|tmp$|new$|cur$/d" -e "s/ /\\\\ /g" | awk 1 ORS=" "`; \
          color status blue default;'
+#}}}
 
-
-# ctphung1987@gmail.com
+# ctphung1987@gmail.com {{{
 folder-hook 'ctphung1987@gmail.com' \
         'set folder = '~/Mail/ctphung1987@gmail.com'; \
          set spoolfile = '~/Mail/ctphung1987@gmail.com/Inbox'; \
          set mbox = '~/Mail/ctphung1987@gmail.com/archive'; \
+         set signature= '~/Mail/ctphung1987@ghotmail.com/sig'; \
          set record = '+[Gmail]/Sent\\ Mail'; \
          set postponed = '+[Gmail]/Drafts'; \
-         set realname = "Phung Chau"; \
+         set realname = "Thu Phung Chau"; \
          set from = "ctphung1987@gmail.com"; \
-         set sendmail = "sendm"; \
-         macro index \cF "!tmux split-window -v -l 3 \"mbsync gmail-ctphung1987 \"<enter>"; \
-         macro index d '<save-message>=[Gmail]/.Trash<enter>'; \
+         set sendmail = "msmtp -a gmail-ctphung1987"; \
+         macro index \cF "!mbsync gmail-ctphung1987> /dev/null 2>&1 &<enter>"; \
+         macro index ,ki  "<change-folder> =Inbox"<enter>; \
+         macro index ,kd  "<change-folder> =[Gmail]/Trash"<enter>; \
+         macro index ,km  "<change-folder> =[Gmail]/Spam"<enter>; \
+         macro index,pager ,m "<enter-command>\`cd ~/Mail/ctphung1987@gmail.com && find . -maxdepth 5 -mindepth 1 -type d | sed -Ee \"/\\[Gmail\\]$|new$|cur$|tmp$/d\" -e \"s/^\\.//g\" -e \"s/\\//./g\" | fzf-tmux | sed -e \"s/ /\\<quote-char\\>\\<space\\>/g\" -e \"s/^\./=/g\" -e \"s/\\./\\//g\" -e \"s/^/push c/\" -e \"s/$/\\<enter\\>/g\" \` <enter>"; \
          unmailboxes *; \
-         mailboxes `find ~/Mail/ctphung1987@gmail.com -maxdepth 5 -mindepth 1 -type d ! -regex ".*\[Gmail\]$\|.*/cur$\|.*/new$\|.*/tmp$" | sed "s/ /\\\\ /g" | awk 1 ORS=" "`; \
-         color status yellow default;'
+         mailboxes `find ~/Mail/ctphung1987@gmail.com -maxdepth 5 -mindepth 1 -type d | sed -Ee "/\[Gmail\]$|tmp$|new$|cur$/d" -e "s/ /\\\\ /g" | awk 1 ORS=" "`; \
+         color status cyan default;'
+#}}}
 
 # thunderchief3000@yahoo.com {{{
 folder-hook 'phuoctaitp@gmail.com/[Gmail]/.Trash' 'macro index d "<delete-message><enter>"'
@@ -195,9 +214,6 @@ folder-hook 'thunderchief3000@yahoo.com' \
          color status blue default;'
 # }}}
 
-macro index,pager c "<change-folder>?<toggle-mailboxes>" "open a different folder"
-
-
 #}}}
 
 # Colors {{{
@@ -210,7 +226,7 @@ color quoted2 green default
 color quoted3 cyan default
 color error     red             default         # error messages
 color message   white           default         # message  informational messages
-color indicator default color0 # indicator for the "current message"
+color indicator color64 color0 # indicator for the "current message"
 color status    white           blue            # status lines in the folder index sed for the mini-help line
 color tree      color241        default         # the "tree" display of threads within the folder index
 color search    white           blue            # search matches found with search within the internal pager
@@ -219,21 +235,42 @@ color index yellow default '~O'
 color index blue default '~N'
 color index color6 default '~F'    # Flagged Messages are important!
 color index color10 default   '~D'            # Deleted Mails - use dark color as these are already "dealt with"
+# }}}
 
 # binding {{{
+
+#macro index \cx ":source ~/bin/fzfo|<enter>"
+macro index,pager ,u "<enter-command>set pipe_decode = yes<enter><pipe-message>urlview<enter><enter-command>set pipe_decode = no<enter>" "view URLs"
+
+# search all mailboxes under ~/Mail
+# :`find ~/Mail -type d | grep -vE "\[Gmail\]$|tmp$|new$|cur$" | fzf-tmux | xargs printf "push c%s<enter>"`
+#macro index,pager ,m "<enter-command>\`find ~/Mail -type d | grep -vE \"[Gmail]$|tmp$|new$|cur$\" | fzf-tmux | xargs printf \"push c%s\\<enter\\>\"\`<enter>"
+
+# pick 1 account under ~/Mail
+# :`find ~/Mail -maxdepth 1 -mindepth 1 -type d -exec basename {} \; | fzf-tmux | xargs printf "push c$HOME/Mail/%s/Inbox<enter>"`
+macro index,pager ,a "<enter-command>\`find ~/Mail -maxdepth 1 -mindepth 1 -type d -exec basename {} \\; | fzf-tmux | xargs printf \"push c$HOME/Mail/%s/Inbox\\<enter\\>\" \`<enter>"
+
+macro attach B "<pipe-message>cat > /tmp/mutt.html; open /tmp/mutt.html<enter>"
+macro index,pager ,jh  "<change-folder> $HOME/Mail/phuoctaitp@gmail.com/Inbox"<enter>
+macro index,pager ,jj  "<change-folder> $HOME/Mail/tai.t@hotmail.com/Inbox"<enter>
+macro index,pager ,jk  "<change-folder> $HOME/Mail/ctphung1987@gmail.com/Inbox"<enter>
+
+macro generic,index,pager \; "<enter-command>"
+
 
 bind index,pager \t next-unread
 bind index,pager ,\t previous-unread
 
-bind index,pager p sidebar-prev
-bind index,pager n sidebar-next
-bind index,pager o sidebar-open
+bind index,pager ,,k sidebar-prev
+bind index,pager ,,j sidebar-next
+bind index,pager ,,o sidebar-open
 
+bind generic,pager,index <space> noop
 bind generic z noop
 bind index,pager,attach g noop
 bind index,pager s noop
-bind generic,pager t noop
 bind generic,pager \cy  noop
+bind generic,index,pager : noop
 
 bind index,pager \# noop
 bind index i noop
@@ -244,7 +281,7 @@ bind index,pager r group-reply
 
 bind generic,index,pager \Cf next-page
 bind generic,index,pager \Cb previous-page
-bind generic gg first-entry
+bind generic,index gg first-entry
 bind generic,index G last-entry
 bind pager gg top
 bind pager G bottom
@@ -252,6 +289,8 @@ bind pager G bottom
 bind generic,index,pager \Cy previous-line
 bind generic,index,pager \Ce next-line
 
+#bind pager k previous-line
+#bind pager j next-line
 bind pager k previous-line
 bind pager j next-line
 
@@ -267,6 +306,8 @@ bind generic zz current-middle
 bind generic zb current-bottom
 bind index za collapse-thread
 bind index zA collapse-all
-bind index,pager ? search-opposite
-# }}}
+#bind index,pager ? search-opposite
 
+
+
+# }}}
