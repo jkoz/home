@@ -100,14 +100,11 @@ apps:
 
 mac:
 	install zshrc ~/.zshrc
-	install mutt/muttrc ~/.muttrc
-	install mbsyncrc ~/.mbsyncrc
 	install vimrc ~/.vimrc
-	install mailcap ~/.mailcap
 	install tmux.conf ~/.tmux.conf
 	install fonts/ter-x14n.bdf ~/.fonts
 	install fonts/xbmicons.bdf ~/.fonts
 	install -m755 scripts/newpost ~/bin/newpost
-	install -m755 scripts/sendm ~/bin/sendm
 	install -m755 scripts/256cl ~/bin/256cl
-	install -m600 msmtprc ~/.msmtprc
+	install -m644 newsbeuter/config ~/.newsbeuter/config
+	install -m644 newsbeuter/urls ~/.newsbeuter/urls

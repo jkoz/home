@@ -167,7 +167,11 @@ bindkey '^r' history-incremental-pattern-search-backward
 bindkey '^s' history-incremental-pattern-search-forward
 # }}}
 
-# prompt {{{
+# prompt and vi-mode {{{
+#
+
+# Make Vi mode transitions faster (KEYTIMEOUT is in hundredths of a second)
+export KEYTIMEOUT=1
 
 reset_color="%F{white}"
 _prompt_git_info() { git rev-parse --abbrev-ref HEAD 2> /dev/null | xargs printf '%%F{cyan}[%s] ';  }
@@ -194,28 +198,6 @@ goc() {
     c99 -xc - -g -O2 -Wall -I/usr/include -lm -include math.h -include stdio.h -include stdlib.h -o /tmp/a.out; /tmp/a.out;
 }
 # }}}
-
-# fd() - quick open file in terminal {{{
-fd () {
-    f="$(pwd)"
-    comm=""
-    while test -n "$f"; do
-        val=$(ls -1la --group-directories-first | tail -n +3 | dmenu -i -l 5)
-        if [ $? != 0 ]; then
-            unset f
-        else
-            val=$(echo $val | awk '{$1=$2=$3=$4=$5=$6=$7=$8=""; gsub(/^[ \t]+|[ \t]+$/,""); print}')
-            test -d "$val" && { cd $val; f="$(pwd)"; }|| {
-                echo "Open $f/$val with: "
-                comm="$(dmenu_path | dmenu -l 5) \"$f/$val\""
-                unset f
-            }
-        fi
-    done
-
-    test ! -z $comm && tmux new-window "$comm"
-}
-#}}}
 
 #}}}
 
@@ -269,6 +251,7 @@ alias XTR='xrdb -merge ~/.Xresources'
 alias se='sudo vim'
 alias e='vim'
 alias m='mutt'
+alias r='rem -n | sort'
 alias eX='vim ${DOTFILES_HOME}/.Xresources; uD'
 alias eZ='vim ${DOTFILES_HOME}/zshrc; uD'
 alias eI='vim ${DOTFILES_HOME}/i3/config; uD'
@@ -285,10 +268,11 @@ alias twit='turses'
 alias irc='weechat-curses'
 alias M='mplayer -vo x11 -fs -zoom'
 alias Vids='cd ~/Downloads/.blackbox && ranger'
-alias gcal-week='gcalcli --width 12 calw'
-alias gcal='gcalcli --width 12 calm'
-alias gcal-add='gcalcli quick'
-alias gcal-agenda='gcalcli agenda'
+#alias gcal-week='gcalcli --width 12 calw'
+#alias gcal='gcalcli --width 12 calm'
+#alias gcal-add='gcalcli quick'
+#alias gcal-agenda='gcalcli agenda'
+alias c='calcurse'
 alias gitone='git --git-dir=.gitone'
 alias gittwo='git --git-dir=.gittwo'
 # }}}

@@ -7,6 +7,7 @@
 " C-o to jump back previous location
 " C-e: scroll up
 " C-y: scroll down
+
 " do: get changes from other window into the current window
 " dp: put the changes from current window into the other window
 " ]c: jump to the next change
@@ -16,6 +17,15 @@
 " zr: reducing folding level
 " zm: one more folding level, please
 " zR: unfold everything
+
+" urlview
+" gx: open cursor url
+
+" spell
+"zg to add a word to the word list.
+"zw to reverse.
+"zug to remove a word from the word list.
+"z= to get list of possible spellings.
 " }}}
 
 " Bundles {{{
@@ -205,9 +215,8 @@ se softtabstop=4 shiftwidth=4 tabstop=4 " not tabs, but spaces
 se expandtab
 se shiftround " use multiple of shiftwidth when indenting with '<' and '>'
 
-se relativenumber
-se number " turn on number
-"se nonumber " turn on number
+se nornu
+se nonu" turn on number
 se cursorline " highlight current light
 "se cursorcolumn
 
@@ -277,6 +286,7 @@ aug configgroup
     au BufRead,BufNewFile *rc setl foldmethod=marker
     au BufRead,BufNewFile *.c,*.h,*.hh setl tabstop=4 softtabstop=4 expandtab foldmethod=manual foldlevel=0
     au BufRead,BufNewFile *.h,*.hpp,*.cc,*.cpp setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=manual foldlevel=0
+    au BufRead,BufNewFile *.conf setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=marker foldlevel=0
 aug END
 aug pencil
     autocmd!
@@ -607,7 +617,7 @@ map <Leader>s <Plug>(easymotion-bd-f)
 " }}}
 
 " {{{ teaks split window border
-hi VertSplit ctermbg=NONE guibg=NONE
+hi VertSplit ctermfg=64 ctermbg=NONE guibg=NONE
 hi ErrorMsg term=NONE cterm=NONE  ctermbg=NONE ctermfg=12
 hi Error cterm=bold ctermbg=NONE ctermfg=2 ctermbg=NONE
 
@@ -627,7 +637,7 @@ se pythonthreedll=/usr/local/Cellar/python@3.8/3.8.6/Frameworks/Python.framework
 fu! _foldtext()
     let line = ' ' . substitute(getline(v:foldstart), '^\s*"\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g') . ' '
     let lines_count = v:foldend - v:foldstart + 1
-    let lines_count_text = '| ' . printf("%10s", lines_count . ' lines') . ' |'
+    let lines_count_text = '[' . printf("%10s", lines_count . ' lines') . ' ]'
     let foldchar = matchstr(&fillchars, 'fold:\zs.')
     let foldtextstart = strpart('+' . repeat(foldchar, v:foldlevel*2) . line, 0, (winwidth(0)*2)/3)
     let foldtextend = lines_count_text . repeat(foldchar, 8)
@@ -711,6 +721,7 @@ autocmd FileType which_key highlight WhichKeyFloating ctermbg=0 ctermfg=12
 " let personalize color override everything {{{
 hi SignColumn ctermfg=12 ctermbg=NONE
 hi Search cterm=underline ctermbg=0 ctermfg=NONE
+hi IncSearch cterm=underline ctermbg=0 ctermfg=229
 
 "make popup menu looks nicer
 hi Pmenu cterm=NONE ctermfg=12 ctermbg=0
@@ -726,3 +737,24 @@ nn <leader>j] :lnext<cr>
 nn <leader>j[ :lprevious<cr>
 " }}}
 
+"calendar {{{
+" to be autoground
+
+"autocmd FileType calendar
+    "\ cal calendar#color#syntax('Sunday', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
+    "\ | cal calendar#color#syntax('Saturday', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
+    "\ | cal calendar#color#syntax('DayTitle', has('gui') ? '#ff0000' : 64, 'NONE', 'NONE')
+    "\ | cal calendar#color#syntax('SundayTitle', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
+    "\ | cal calendar#color#syntax('SaturdayTitle', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
+    "\ | cal calendar#color#syntax('Today', has('gui') ? '#ff0000' : 33, '0', 'NONE')
+    "\ | cal calendar#color#syntax('TodaySunday', has('gui') ? '#ff0000' : 33, 'NONE', 'NONE')
+    "\ | cal calendar#color#syntax('TodaySaturday', has('gui') ? '#ff0000' : 33, 'NONE', 'NONE')
+    "\ | cal calendar#color#syntax('Select', has('gui') ? '#ff0000' : 33, '0', 'NONE')
+    "\ | cal calendar#color#syntax('OtherMonth', has('gui') ? '#ff0000' : 245, '0', 'NONE')
+    "\ | cal calendar#color#syntax('OtherMonthSelect', has('gui') ? '#ff0000' : 245, '0', 'NONE')
+    "\ | cal calendar#color#syntax('NormalSpace', has('gui') ? '#ff0000' : 255, '0', 'NONE')
+    "\ | cal calendar#color#syntax('CommentSelect', has('gui') ? '#ff0000' : 232, '0', 'NONE')
+
+"let g:calendar_google_calendar = 1
+"let g:calendar_google_task = 1
+"}}}
