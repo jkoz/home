@@ -1,28 +1,47 @@
-#!/bin/sh
+#!/bin/bash
 # mutt call with options -f phuoctaitp@gmail.com -- phuoctaitp@gmail.com
-echo $@ > /tmp/sendm.log
+#echo $@ > /tmp/sendm.log
 
-args=$(getopt -q -o f: -l "from" -n "$(basename $0)" -- "$@")
-eval set -- "$args"; while true; do
-    case "$1" in
-        -f|--from) shift; from="$1"; shift ;;
-        --) shift; break ;;
+args=`getopt s:p:f: $*`
+if [ $? != 0 ]
+then
+    echo 'Usage: cat <path-to-mail-file> | sendm -f <from-email> -- <to-email>'
+    exit 2
+fi
+
+set -- $args
+for i; do
+    case "$i" in
+    -f)
+        from="$2"; shift;
+        shift;;
+    -s)
+        smtp_server="$2"; shift;
+        shift;;
+    -p)
+        pass_cmd=`$2`; shift;
+        shift;;
+    --)
+        shift; break;;
     esac
-done # $@ will store all remaing args
+done
 
-#echo $from
-#echo $@
-user=$(echo $from | cut -d'@' -f1)
+user=$from
+from_stmt='';
 
-from_stmt=
 for to in $@; do
     from_stmt="${from_stmt}--mail-rcpt $to "
 done
 
-#echo $from_stmt
+ssl_cert=/etc/ssl/cert.pem
+#smtp_server="smtp.outlook.com:587"
+#pass_cmd=`hotmail-tait`
 
-
-# Required my patched curl version https://github.com/jkoz/curl
-while read a;do echo $a; done | curl -v -silent --sasl-ir --ssl-reqd --user "$user"  \
-    --cacert /etc/ssl/certs/ca-certificates.crt --oauth2-bearer "$(oauth2 $user 2>/dev/null)" \
-    --url "smtp.gmail.com:587" --mail-from "$from" $from_stmt --upload-file -
+while read a;do echo $a; done | \
+     curl -v --silent --sasl-ir --ssl-reqd --user "${user}"  \
+    --cacert ${ssl_cert} \
+    --oauth2-bearer ${pass_cmd} \
+    --url ${smtp_server} \
+    --mail-from "$from" \
+    ${from_stmt} \
+    --upload-file -
