@@ -82,7 +82,6 @@ all:
 	install -Dm755 scripts/zathura-tabbed ~/bin
 	install -Dm755 scripts/newpost ~/bin
 	install -Dm755 scripts/status ~/bin
-	install -Dm755 scripts/batt ~/bin
 
 ui:
 	[ -d ~/.config/surf ] && git -C ~/.config/surf pull || { git clone http://git.suckless.org/surf ~/.config/surf && git -C ~/.config/surf apply ~/home/config/surf/surf-space-search.diff;}

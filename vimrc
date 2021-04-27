@@ -75,6 +75,7 @@ Plugin 'ryanoasis/vim-devicons'
 Plugin 'ervandew/supertab'
 Plugin 'tpope/vim-speeddating'
 Plugin 'airblade/vim-rooter'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
 
 "Plugin 'ycm-core/YouCompleteMe'
 "Plugin 'liuchengxu/vista.vim'
@@ -732,9 +733,18 @@ let g:semanticTermColors = [28,1,2,3,4,5,6,7,25,9,10,34,12,13,14,15,16,125,124,1
 " }}}
 
 " quick fix buffer {{{
+nn <leader>] :cnext<cr>
+nn <leader>[ :cprev<cr>
 nn <leader>j] :lnext<cr>
 nn <leader>j[ :lprevious<cr>
 " }}}
+
+"devicons {{{
+
+let g:WebDevIconsNerdTreeGitPluginForceVAlign=1
+
+" }}}
+
 
 "calendar {{{
 " to be autoground
