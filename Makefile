@@ -2,6 +2,8 @@ default: mac
 
 all:
 	install -Dm600 vimrc ~/.vimrc
+	install -Dm600 emacs.d/_init.org ~/.emacs.d/_init.org
+	install -Dm600 emacs.d/init.el ~/.emacs.d/init.el
 	install -Dm644 ctags ~/.ctags
 	install -Dm644 config/sxhkd/sxhkdrc ~/.config/sxhkd/sxhkdrc
 	install -Dm644 config/gtk-2.0/gtkfilechooser.ini ~/.config/gtk-2.0/gtkfilechooser.ini
