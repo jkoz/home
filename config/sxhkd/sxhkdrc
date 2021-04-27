@@ -3,7 +3,7 @@ mod4 + Return
     st
 # Terminal Dropdown
 mod4 + i
-    xdotool search --maxdept 1 --onlyvisible --class "terminaldropdown" windowunmap || xdotool search --maxdept 1 --class "terminaldropdown" windowmap windowraise windowmove 0 20 windowsize 100% 97% || st -c terminaldropdown -e tmux a &
+    xdotool search --maxdept 1 --onlyvisible --class "terminaldropdown" windowunmap || xdotool search --maxdept 1 --class "terminaldropdown" windowmap windowraise windowmove 6 20 windowsize 99% 97% || st -c terminaldropdown -e tmux a &
 # Terminal
 #mod4 + t
     #xdotool search --maxdept 1 --onlyvisible --class "st-256color" windowunmap || xdotool search --maxdept 1 --class "st-256color" windowmap windowraise windowmove 0 20 || st &
@@ -33,7 +33,7 @@ mod4 + Left
     amixer -c 0 set Master 1-
 # Zathura pdf
 mod4 + p
-    xdotool search --maxdept 1 --onlyvisible --classname "tabbed-zathura" windowunmap || xdotool search --maxdept 1 --classname "tabbed-zathura" windowmap windowraise windowmove 0 20 windowsize 100% 97% || zathura-tabbed &
+    xdotool search --maxdept 1 --onlyvisible --classname "zathura-tabbed" windowunmap || xdotool search --maxdept 1 --classname "zathura-tabbed" windowmap windowraise windowmove 6 20 windowsize 99% 97% || zathura-tabbed &
 # Kill process
 mod4 + u
     st -c Fzf -e sh -c "xdotool search 'Fzf' ; dm ps"
@@ -48,13 +48,13 @@ mod4 + shift + s
     systemctl poweroff
 # Browser
 mod4 + b
-    xdotool search --maxdept 1 --onlyvisible --classname "VimbT" windowunmap || xdotool search --maxdept 1 --classname "VimbT" windowmap windowraise windowmove 0 20 windowsize 100% 97% || vimb-tabbed &
-mod4 + h
-    st -c Fzf -e sh -c "dm bh | xargs -r vimb-tabbed"
+    xdotool search --maxdept 1 --onlyvisible --classname "VimbT" windowunmap || xdotool search --maxdept 1 --classname "VimbT" windowmap windowraise windowmove 6 20 windowsize 99% 97% || vimb-tabbed &
+#mod4 + h
+    #st -c Fzf -e sh -c "dm bh | xargs -r vimb-tabbed"
 mod4 + m
     st -c Fzf -e sh -c "dm bm | xargs -r vimb-tabbed"
 mod4 + shift + b
-    xdotool search --maxdept 1 --onlyvisible --name "\- Google Chrome" windowunmap || xdotool search --maxdept 1 "\- Google Chrome" windowmap windowraise windowmove 0 20 windowsize 100% 97% || google-chrome-stable &
+    xdotool search --maxdept 1 --onlyvisible --name "\- Google Chrome" windowunmap || xdotool search --maxdept 1 "\- Google Chrome" windowmap windowraise windowmove 6 20 windowsize 99% 97% || google-chrome-stable &
 # Screen print
 Print
     scrot -e 'mv $f /tmp/ && gimp /tmp/$f'
@@ -106,8 +106,8 @@ mod4 + shift + q
     bspc quit
 
 # alternate tiled and monocle
-mod4 + j
-    bspc desktop -l next
+#mod4 + j
+    #bspc desktop -l next
 
 ### Focus
 

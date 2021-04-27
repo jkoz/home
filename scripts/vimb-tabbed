@@ -2,9 +2,17 @@
 histfile=~/.config/vimb/history
 histsize=1000
 
+# to play youtube need following package
+#pacman -S gst-libav
+#pacman -S gst-plugin-bad
+#pacman -S gst-plugins-bad
+#pacman -S gst-plugins-base
+#pacman -S gst-plugins-ugly
+
 
 if xdotool search -classname 'VimbT'; then
     echo "<Esc>;tabopen $@<CR>" | socat - unix-connect:$(grep 'socket' /tmp/vimb.socket)
 else
-    tabbed -c -n 'VimbT' vimb --socket --dump --embed $@ > /tmp/vimb.socket
+    #tabbed -c -n 'VimbT' vimb --socket --dump --embed $@ > /tmp/vimb.socket
+    tabbed -n 'VimbT' -c vimb -e
 fi

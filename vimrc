@@ -43,7 +43,7 @@ call vundle#begin()
 Plugin 'morhetz/gruvbox'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'jaxbot/semantic-highlight.vim'
-Plugin 'jeaye/color_coded'
+"Plugin 'jeaye/color_coded'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/nerdtree'
 Plugin 'tpope/vim-surround'
@@ -74,6 +74,7 @@ Plugin 'liuchengxu/vim-which-key'
 Plugin 'ryanoasis/vim-devicons'
 Plugin 'ervandew/supertab'
 Plugin 'tpope/vim-speeddating'
+Plugin 'airblade/vim-rooter'
 
 "Plugin 'ycm-core/YouCompleteMe'
 "Plugin 'liuchengxu/vista.vim'
@@ -86,8 +87,8 @@ Plugin 'prabirshrestha/asyncomplete.vim'
 Plugin 'prabirshrestha/asyncomplete-lsp.vim'
 Plugin 'prabirshrestha/asyncomplete-ultisnips.vim'
 Plugin 'machakann/asyncomplete-ezfilter.vim'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'mattn/ctrlp-lsp'
+"Plugin 'ctrlpvim/ctrlp.vim'
+"Plugin 'mattn/ctrlp-lsp'
 Plugin 'tsufeki/asyncomplete-fuzzy-match'
 
 call vundle#end()
@@ -629,8 +630,6 @@ hi Error cterm=bold ctermbg=NONE ctermfg=2 ctermbg=NONE
 "$ ls /usr/local/Cellar/python@3.8/3.8.6/Frameworks/Python.framework/Versions/3.8
 "Headers   Python    Resources bin       include   lib       share
 "
-se pythonthreehome=/usr/local/Cellar/python@3.8/3.8.6/Frameworks/Python.framework/Versions/3.8
-se pythonthreedll=/usr/local/Cellar/python@3.8/3.8.6/Frameworks/Python.framework/Versions/3.8/lib/python3.8/config-3.8-darwin/libpython3.8.dylib
 " }}}
 
 " {{{ foldtext

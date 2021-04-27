@@ -64,7 +64,7 @@ export PROJECT="$HOME/data/projects"
 export CATALINA_HOME="${PROJECT}/apache-tomcat-8.0.5/"
 export AXS_HOME="${PROJECT}/axs"
 export MEDIA_HOME="$HOME/media"
-export GEM_HOME=$HOME/.gem/ruby/2.6.0
+export GEM_HOME=$HOME/.gem/ruby/3.0.0
 
 #export GTK_MODULES=rgba
 export GTK_RGBA_APPS="allbut:firefox-bin:gnome-mplayer:totem:soffice:<unknown>:exe"
@@ -114,7 +114,7 @@ unsetopt HUP
 stty -ixon # Map Ctrl-S to sth usefull other than XOFF (interrupt data flow).
 
 # for the sake of all terminal base programs, undef C-y which suspend the programs
-stty dsusp undef
+#stty dsusp undef
 
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8

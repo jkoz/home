@@ -15,7 +15,7 @@ all:
 	install -Dm644 local/share/applications/vim.desktop ~/.local/share/applications/vim.desktop
 	install -Dm644 local/share/applications/zathura-tabbed.desktop ~/.local/share/applications/zathura-tabbed.desktop
 	install -Dm644 dircolors ~/.dircolors
-	#install -Dm644 zshrc ~/.zshrc
+	install -Dm644 zshrc ~/.zshrc
 	install -Dm644 bashrc ~/.bashrc
 	install -Dm644 bashrc.d/aliases.bash ~/.bashrc.d/aliases.bash
 	install -Dm644 bashrc.d/functions.bash ~/.bashrc.d/functions.bash
@@ -59,7 +59,7 @@ all:
 	install -Dm644 ideskrc ~/.ideskrc
 	install -Dm644 idesktop/launcher.lnk ~/.idesktop/launcher.lnk
 	install -Dm644 idesktop/icons/terminal-32x32.png ~/.idesktop/icons/terminal-32x32.png
-	install -Dm644 fonts/ter-x14n.bdf ~/.fonts/ter-x14n.bdf
+	install -Dm644 fonts/ter-x14n.bdf ~/.local/share/fonts/ter-x14n.bdf
 	install -Dm644 fonts/xbmicons.bdf ~/.fonts/xbmicons.bdf
 	#mkfontscale ~/.fonts
 	#mkfontdir ~/.fonts
@@ -69,8 +69,8 @@ all:
 	sort -u ~/.config/vimb/bookmark config/vimb/bookmark > /tmp/bookmark
 	install -Dm644 /tmp/bookmark  ~/.config/vimb/bookmark
 	install -Dm644 /tmp/bookmark  config/vimb/bookmark
-	#install -Dm644 config/bspwm/bspwmrc ~/.config/bspwm/bspwmrc
-	#chmod +x ~/.config/bspwm/bspwmrc
+	install -Dm644 config/bspwm/bspwmrc ~/.config/bspwm/bspwmrc
+	chmod +x ~/.config/bspwm/bspwmrc
 	install -Dm644 texmf/tex/latex/shading/shading.sty ~/texmf/tex/latex/shading/shading.sty
 	install -Dm644 texmf/tex/latex/shading/shading.tex ~/texmf/tex/latex/shading/shading.tex
 	#install -Dm644 config/tint2/tint2rc ~/.config/tint2/tint2rc
@@ -78,7 +78,11 @@ all:
 	install -Dm644 Xmodmap ~/.Xmodmap
 	install -m644 dircolors ~/.dircolors
 	install -Dm644 config/tabbed/config.def.h ~/.config/tabbed/config.h
-	sudo make install -C ~/home/scripts
+	install -Dm755 scripts/vimb-tabbed ~/bin
+	install -Dm755 scripts/zathura-tabbed ~/bin
+	install -Dm755 scripts/newpost ~/bin
+	install -Dm755 scripts/status ~/bin
+	install -Dm755 scripts/batt ~/bin
 
 ui:
 	[ -d ~/.config/surf ] && git -C ~/.config/surf pull || { git clone http://git.suckless.org/surf ~/.config/surf && git -C ~/.config/surf apply ~/home/config/surf/surf-space-search.diff;}

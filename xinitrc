@@ -11,7 +11,7 @@ xsetroot -solid "#002b36" -cursor_name left_ptr -name " "
 [ -f ~/.Xmodmap ] && xmodmap ~/.Xmodmap
 
 # bindkey, combine with dwm config.def.h now
-#sxhkd &
+sxhkd &
 
 # Composite
 #compton -b
@@ -39,11 +39,11 @@ feh --bg-scale ~/.config/Arch.jpg
 redshift &
 
 # Status
-#status | while read -r line; do echo "%{r}$line      "; done | lemonbar -f "Cousine-11" -B "#f0073643" -F"#ffffffff" &
+#
+slstatus -s | lemonbar -f "Terminus-12" -f "FontAwesome-10" -B "#f0073643" -F"#b58900" &
 #conky &
 #tint2&
-#slstatus&
-while true; do xsetroot -name "$(acpi | cut -d',' -f2)  $(date +'%b %d %l:%M%p  ')"; sleep 1; done &
+#while true; do xsetroot -name "$(acpi | cut -d',' -f2)  $(date +'%b %d %l:%M%p  ')"; sleep 1; done &
 
 #devmon --exec-on-drive "st -c Fzf -e sh -c \"xdotool search 'Fzf' windowsize 100% 50%; dm fm %d\"" &
 
@@ -83,4 +83,4 @@ while true; do xsetroot -name "$(acpi | cut -d',' -f2)  $(date +'%b %d %l:%M%p  
     #xrandr --output LVDS1 --auto --primary --on
 #fi
 
-exec dwm
+exec bspwm
