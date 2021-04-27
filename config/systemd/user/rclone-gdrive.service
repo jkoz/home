@@ -1,0 +1,22 @@
+[Unit]
+Description=Google Drive
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/rclone mount gdrive: /home/tait/googledrive
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Environment=DISPLAY=:0
+
+[Install]
+WantedBy=default.target
+
+# 1. create rclone config
+#   > rclone config
+# 2. check if it is working
+#   > rclone ls gdrive:
+# 3.try to mount manually
+#   > rclone mount gdrive: /home/tait/gdrive
+# 4. automatically mounted with systemd
+#   > systemctl --user start rclone-gdrive
+

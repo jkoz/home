@@ -59,8 +59,8 @@ all:
 	install -Dm644 ideskrc ~/.ideskrc
 	install -Dm644 idesktop/launcher.lnk ~/.idesktop/launcher.lnk
 	install -Dm644 idesktop/icons/terminal-32x32.png ~/.idesktop/icons/terminal-32x32.png
-	install -Dm644 fonts/ter-x14n.bdf ~/.local/share/fonts/ter-x14n.bdf
-	install -Dm644 fonts/xbmicons.bdf ~/.fonts/xbmicons.bdf
+	#install -Dm644 fonts/ter-x14n.bdf ~/.local/share/fonts/ter-x14n.bdf
+	#install -Dm644 fonts/xbmicons.bdf ~/.fonts/xbmicons.bdf
 	#mkfontscale ~/.fonts
 	#mkfontdir ~/.fonts
 	install -Dm644 config/vimb/style.css ~/.config/vimb/style.css
@@ -82,6 +82,7 @@ all:
 	install -Dm755 scripts/zathura-tabbed ~/bin
 	install -Dm755 scripts/newpost ~/bin
 	install -Dm755 scripts/status ~/bin
+	install -Dm600 config/systemd/user/rclone-gdrive.service ~/.config/systemd/user/rclone-gdrive.service
 
 ui:
 	[ -d ~/.config/surf ] && git -C ~/.config/surf pull || { git clone http://git.suckless.org/surf ~/.config/surf && git -C ~/.config/surf apply ~/home/config/surf/surf-space-search.diff;}
