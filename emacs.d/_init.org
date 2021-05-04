@@ -7,6 +7,8 @@
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
 	     '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives
+	     '("elpa" . "https://elpa.gnu.org/packages/"))
 (package-initialize)
 
 ;; use-package
@@ -19,12 +21,20 @@
 
 #+begin_src emacs-lisp
   (setq inhibit-startup-message t)
-  (menu-bar-mode 1)
+  (menu-bar-mode -1)
   (tool-bar-mode -1)
   (toggle-scroll-bar -1)
   (fset 'yes-or-no-p 'y-or-n-p)
 #+end_src
-
+* Imenu-list
+#+begin_src emacs-lisp
+(use-package imenu-list
+  :ensure t
+  :bind (("C-'" . imenu-list-smart-toggle))
+  :config
+  (setq imenu-list-focus-after-activation t
+        imenu-list-auto-resize nil))
+#+end_src
 * Builtin goodies
 
 #+begin_src emacs-lisp
@@ -60,27 +70,28 @@
 * Fuzzy search, counsel, ivy, helm, swipper
 
 #+begin_src emacs-lisp
-  (use-package helm
-    :ensure t
-    :bind
-      (("M-x" . 'helm-M-x)
-      ("C-x b" . 'helm-recentf)
-      ("C-x r b" . 'helm-bookmarks)
-      ("C-x C-f" . 'helm-find-files)
-      ("C-s" . 'helm-occur)
-      ("M-y" . helm-show-kill-ring))
-    :init
-      (helm-mode 1)
-      (setq helm-completion-style 'emacs)
-      (setq completion-styles '(flex))
-      (setq helm-buffers-fuzzy-matching t
-            helm-recentf-fuzzy-match t
-            helm-eshell-fuzzy-match t
-            helm-split-window-inside-p t
-            helm-move-to-line-cycle-in-source t
-            helm-ff-search-library-in-sexp t
-            helm-ff-file-name-history-use-recentf t
-            helm-display-buffer-default-height 0.25))
+    (use-package helm
+      :ensure t
+      :bind
+        (("M-x" . 'helm-M-x)
+        ("C-x b" . 'helm-recentf)
+        ("C-x r b" . 'helm-bookmarks)
+        ("C-x C-f" . 'helm-find-files)
+        ("C-s" . 'helm-occur)
+        ("M-y" . helm-show-kill-ring))
+      :init
+        (helm-mode 1)
+        (setq helm-completion-style 'emacs)
+        (setq completion-styles '(flex))
+        (setq helm-buffers-fuzzy-matching t
+              helm-recentf-fuzzy-match t
+              helm-eshell-fuzzy-match t
+              helm-split-window-inside-p t
+              helm-move-to-line-cycle-in-source t
+              helm-ff-search-library-in-sexp t
+              helm-ff-file-name-history-use-recentf t
+              helm-display-buffer-reuse-frame t
+              helm-use-undecorated-frame-option t))
 #+end_src
 
 - In helm M-x buffer, C-o to toggle search in command history
@@ -94,7 +105,7 @@
 * Theme
 
 #+begin_src emacs-lisp
-  (use-package gruvbox-theme
+  (use-package solarized-theme
     :ensure t
     :config
     (load-theme 'solarized-dark t))
@@ -220,6 +231,15 @@
            "* %?\nEntered on %U\n  %i\n  %a")
           ("s" "Screencast" entry (file "~/Dropbox/orgfiles/screencastnotes.org")
            "* %?\n%i\n")))
+#+end_src
+
+* Markdown mode
+
+#+begin_src emacs-lisp
+(use-package markdown-mode
+  :ensure t
+  :mode ("README\\.md\\'" . gfm-mode)
+  :init (setq markdown-command "multimarkdown"))
 #+end_src
 
 * Others
@@ -379,12 +399,6 @@
   (use-package hydra
     :ensure t)
 
-  #(use-package company-lsp
-    #:ensure t
-    #:init
-    #(setq company-lsp-enable-snippet nil))
-
-
   (use-package lsp-ui
     :ensure t)
 
@@ -473,7 +487,7 @@
     :ensure t
     :init
     (key-chord-mode 1)
-    (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
+    (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
     (key-chord-define evil-normal-state-map "qq" 'delete-window))
 
     ;; swap : to ;
@@ -485,6 +499,8 @@
   (global-evil-leader-mode)
   (evil-leader/set-leader ",")
   (evil-leader/set-key
+    "p" 'clipboard-yank
+    "y" 'clipboard-kill-ring-save
     "m" 'helm-recentf
     "z" 'helm-buffers-list
     "w" 'save-buffer
@@ -533,21 +549,21 @@
     :ensure t)
 #+end_src
 
-* Ansi-term
-
-- comint-clear-buffer : clear buffer in the terminal
+* Evil org mode
 
 #+begin_src emacs-lisp
-  (setq shell-file-name "/bin/zsh")
-
-  (add-hook 'emacs-startup-hook
-    (lambda ()
-      (kill-buffer "*scratch*")
-      (ansi-term "/bin/zsh")
-      (evil-normal-state)
-      ))
-  (eval-after-load "term" '(define-key term-raw-map (kbd "C-c C-y") 'term-paste))
+  (use-package evil-org
+    :ensure t
+    :after org
+    :config
+      (add-hook 'org-mode-hook 'evil-org-mode)
+      (add-hook 'evil-org-mode-hook
+      (lambda ()
+        (evil-org-set-key-theme)))
+      (require 'evil-org-agenda)
+      (evil-org-agenda-set-keys))
 #+end_src
+
 * Powerline
 
 #+begin_src emacs-lisp
@@ -575,9 +591,81 @@
   (use-package magit
     :ensure t)
 #+end_src
+
+* Exwm
+
+#+begin_src emacs-lisp
+  (use-package exwm
+    :config
+    (setq exwm-workspace-number 5)
+    ;; These keys should always pass through to Emacs
+    (setq exwm-input-prefix-keys
+          '(?\C-x
+            ?\C-u
+            ?\C-h
+            ?\M-x
+            ?\M-`
+            ?\M-&
+            ?\M-:
+            ?\C-\M-j  ;; Buffer list
+            ?\C-\ ))  ;; Ctrl+Space
+
+  ;; Ctrl+Q will enable the next key to be sent directly
+  (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
+
+  ;; Set up global key bindings.  These always work, no matter the input state!
+  ;; Keep in mind that changing this list after EXWM initializes has no effect.
+
+    (setq exwm-input-global-keys
+          `(
+            ;; Reset to line-mode (C-c C-k switches to char-mode via exwm-input-release-keyboard)
+            ([?\s-r] . exwm-reset)
+
+            ;; Move between windows
+            ([?\s-h] . windmove-left)
+            ([?\s-l] . windmove-right)
+            ([?\s-k] . windmove-up)
+            ([?\s-j] . windmove-down)
+
+            ;; Launch applications via shell command
+            ([?\s-&] . (lambda (command)
+                         (interactive (list (read-shell-command "$ ")))
+                         (start-process-shell-command command nil command)))
+
+            ;; Switch workspace
+            ([?\s-w] . exwm-workspace-switch)
+
+            ;; 's-N': Switch to certain workspace with Super (Win) plus a number key (0 - 9)
+            ,@(mapcar (lambda (i)
+                        `(,(kbd (format "s-%d" i)) .
+                          (lambda ()
+                            (interactive)
+                            (exwm-workspace-switch-create ,i))))
+                      (number-sequence 0 9))))
+
+    (exwm-enable))
+  (require 'exwm-systemtray)
+  (exwm-systemtray-enable)
+
+  ;;;; EXWM line mode bindings.
+  ;; C-x C-x to send C-x, C-c C-c to send C-c.
+  (define-key exwm-mode-map (kbd "C-x C-x")
+    (lambda () (interactive) (exwm-input--fake-key ?\C-x)))
+  (define-key exwm-mode-map (kbd "C-v C-v")
+    (lambda () (interactive) (exwm-input--fake-key ?\C-v)))
+  (define-key exwm-mode-map (kbd "C-c C-c")
+    (lambda () (interactive) (exwm-input--fake-key ?\C-c)))
+#+end_src
+
 * CMake
 
 #+begin_src emacs-lisp
   (use-package cmake-mode
+    :ensure t)
+#+end_src
+
+* Command log mode
+#+begin_src emacs-lisp 
+  (use-package command-log-mode
     :ensure t)
 #+end_src
