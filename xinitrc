@@ -83,4 +83,5 @@ slstatus -s | lemonbar -f "Terminus-12" -f "FontAwesome-10" -B "#f0073643" -F"#b
     #xrandr --output LVDS1 --auto --primary --on
 #fi
 
-exec bspwm
+#exec wm
+exec emacs -mm --debug-init --daemon
