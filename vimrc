@@ -387,6 +387,15 @@ let NERDTreeMouseMode=2 " Use a single click to fold/unfold directories and a do
             "\ '\.o$', '\.so$', '\.egg$', '^\.git$', '\.svn$', '^target$', '^\.settings$', '^\.classpath$', '^\.project$', '^\.hg', '.pydevproject'  ]
 
 let g:NERDTreeStatusline = '%#NonText#'
+
+" hide nerd tree first line
+aug nerdtreehidecwd
+	autocmd!
+	autocmd FileType nerdtree setlocal conceallevel=3 | syntax match NERDTreeHideCWD #^[</].*$# conceal
+aug end
+
+" automatically close nerd tree when it is the only one left
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 " }}}
 
 " FZF {{{
