@@ -38,6 +38,8 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
+Plug 'clarke/vim-renumber'
+Plug 'junegunn/goyo.vim'
 Plug 'morhetz/gruvbox'
 Plug 'itchyny/lightline.vim'
 Plug 'Yggdroot/indentLine'
@@ -51,10 +53,8 @@ Plug 'gavinbeatty/dragvisuals.vim'
 Plug 'kana/vim-metarw'
 Plug 'mattn/webapi-vim'
 Plug 'mattn/vim-metarw-gdrive'
-Plug 'majutsushi/tagbar'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
-Plug 'scrooloose/Syntastic'
 Plug 'reedes/vim-pencil'
 Plug 'reedes/vim-litecorrect'
 Plug 'tpope/vim-dispatch'
@@ -71,24 +71,38 @@ Plug 'jceb/vim-orgmode'
 Plug 'itchyny/calendar.vim'
 Plug 'liuchengxu/vim-which-key'
 Plug 'ryanoasis/vim-devicons'
-Plug 'ervandew/supertab'
 Plug 'tpope/vim-speeddating'
 Plug 'airblade/vim-rooter'
 Plug 'Xuyuanp/nerdtree-git-plugin'
+
+
+"Plug 'Shougo/deoplete.nvim'
+"Plug 'lighttiger2505/deoplete-vim-lsp'
+"Plug 'roxma/nvim-yarp'
+"Plug 'roxma/vim-hug-neovim-rpc'
+
+
+Plug 'dense-analysis/ale'
+Plug 'rhysd/vim-lsp-ale'
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'mattn/vim-lsp-settings'
+
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
 Plug 'machakann/asyncomplete-ezfilter.vim'
+Plug 'wellle/tmux-complete.vim'
+
+" go get -u github.com/high-moctane/nextword
+"Plug 'high-moctane/asyncomplete-nextword.vim'
+
+"Plug 'majutsushi/tagbar'
 Plug 'liuchengxu/vista.vim'
 
 "Plug 'ctrlpvim/ctrlp.vim'
 "Plug 'mattn/ctrlp-lsp'
 "Plug 'ycm-core/YouCompleteMe'
-"Plug 'liuchengxu/vista.vim'
-"Plug 'wellle/tmux-complete.vim'
 
 call plug#end()
 filetype plugin indent on
@@ -116,8 +130,8 @@ syntax on
 let mapleader = ","
 
 " disable jk as escape because it cause slow down in virtual selection mode.
-"ino jk <esc>
-"vn jk <esc>
+ino <leader><leader> <esc>
+vn <leader><leader> <esc>
 
 " change : to ;
 nn ; :
@@ -138,7 +152,11 @@ nn <silent> <leader><space> :nohl<cr>
 
 " Quick quit
 nn <silent> q :q<cr>
-nn <silent> - :bp\|bd \#<cr>
+nn <silent> - :bp\|bd #<cr>
+
+"com! BW :bp|:bd#
+"nn <silent> - :BW<cr>
+
 
 " Quick save
 nn <leader>w :update<cr>
@@ -304,58 +322,59 @@ aug configgroup
     au BufRead,BufNewFile *.h,*.hpp,*.cc,*.cpp setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=manual foldlevel=0
     au BufRead,BufNewFile *.conf setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=marker foldlevel=0
 aug END
-"aug pencil
-    "autocmd!
-    "autocmd FileType tex,latex
-                "\   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
-                "\ | call litecorrect#init()
-                "\ | setl spell spl=en_us noru nonu nornu
-                "\ | setl fdo+=search
-                "\ | setl nocursorcolumn
-    "autocmd FileType markdown,mkd,md
-                "\   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
-                "\ | call litecorrect#init()
-                "\ | setl spell spl=en_us noru nonu nornu
-                "\ | setl fdo+=search
-    "autocmd Filetype git,gitsendemail,*commit*,*COMMIT*
-                "\   call pencil#init({'wrap': 'soft', 'textwidth': 72})
-                "\ | call litecorrect#init()
-                "\ | setl spell spl=en_us et sw=2 ts=2 noai
-    "autocmd Filetype mail
-                "\   call pencil#init({'wrap': 'soft', 'textwidth': 60})
-                "\ | call litecorrect#init()
-                "\ | setl spell spl=en_us spf=~/.vim/spellfile.add et sw=2 ts=2 noai nonu nornu
-"aug END
+aug pencil
+    autocmd!
+    autocmd FileType tex,latex
+                \   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
+                \ | call litecorrect#init()
+                \ | setl spell spl=en_us noru nonu nornu
+                \ | setl fdo+=search
+                \ | setl nocursorcolumn
+    autocmd FileType markdown,mkd,md
+                \   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
+                \ | call litecorrect#init()
+                \ | setl spell spl=en_us
+                \ | setl fdo+=search
+    autocmd Filetype git,gitsendemail,*commit*,*COMMIT*
+                \   call pencil#init({'wrap': 'soft', 'textwidth': 72})
+                \ | call litecorrect#init()
+                \ | setl spell spl=en_us et sw=2 ts=2 noai
+    autocmd Filetype mail
+                \   call pencil#init({'wrap': 'soft', 'textwidth': 60})
+                \ | call litecorrect#init()
+                \ | setl spell spl=en_us spf=~/.vim/spellfile.add et sw=2 ts=2 noai nonu nornu
+aug END
 
 "}}}
 
 " Tag bar {{{
-let g:tagbar_autofocus = 1
-nn <silent> <leader>t :TagbarToggle<cr>
+"let g:tagbar_autofocus = 1
+"nn <silent> <leader>t :TagbarToggle<cr>
 
-let g:tagbar_type_markdown = {
-    \ 'ctagstype' : 'markdown',
-    \ 'kinds' : [
-        \ 'h:Heading_L1',
-        \ 'i:Heading_L2',
-        \ 'k:Heading_L3'
-    \ ]
-\ }
+"let g:tagbar_type_markdown = {
+    "\ 'ctagstype' : 'markdown',
+    "\ 'kinds' : [
+        "\ 'h:Heading_L1',
+        "\ 'i:Heading_L2',
+        "\ 'k:Heading_L3'
+    "\ ]
+"\ }
 
-let g:tagbar_type_tex = {
-    \ 'ctagstype' : 'latex',
-    \ 'kinds'     : [
-        \ 's:sections',
-        \ 'g:graphics:0:0',
-        \ 'l:labels',
-        \ 'r:refs:1:0',
-        \ 'p:pagerefs:1:0'
-    \ ]
-\ }
+"let g:tagbar_type_tex = {
+    "\ 'ctagstype' : 'latex',
+    "\ 'kinds'     : [
+        "\ 's:sections',
+        "\ 'g:graphics:0:0',
+        "\ 'l:labels',
+        "\ 'r:refs:1:0',
+        "\ 'p:pagerefs:1:0'
+    "\ ]
+"\ }
 
 " }}}
 
 " Vista {{{
+nn <silent> <leader>t :Vista<cr>
 let g:vista_executive_for = {
         \ 'cpp': 'vim_lsp',
         \ 'c': 'vim_lsp',
@@ -399,7 +418,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 " }}}
 
 " FZF {{{
-nn <silent> <c-p>     :FZF<CR>
+nn <silent> <c-p>     :History<CR>
 nn <silent> <leader>z :Buffers<CR>
 nn <silent> <leader>m :History<CR>
 nn <silent> <leader>xx :Command<CR>
@@ -410,12 +429,14 @@ nn <silent> <leader>fl :BLines<CR>
 nn <silent> <leader>fw :Windows<CR>
 nn <silent> <leader>ff :GFiles<CR>
 nn <silent> <leader>fc :Commits<CR>
-nn <leader>fa :Ag
+nn <silent> <leader>fa :Ag<CR>
+nn <silent> <leader>fg :Rg<CR>
 
 " indicate how fzf buffer is opened
 
 " open in popup windows
-let g:fzf_layout = { 'down': '20%' }
+"let g:fzf_layout = { 'down': '20%' }
+let g:fzf_layout = { 'window': { 'width': 1.0, 'height': 0.3, 'yoffset': 1.0, 'border': 'horizontal'} }
 
 " dont open fzf in some special buffer
 "au BufEnter * if bufname('#') =~ 'NERD_tree' && bufname('%') !~ 'NERD_tree' && winnr('$') > 1 | b# | exe "normal! \<c-w>\<c-w>" | :blast | endif
@@ -567,10 +588,10 @@ let g:UltiSnipsJumpBackwardTrigger     = '<s-tab>'
 "}}}
 
 " supertab {{{
-let g:SuperTabCrMapping                = 0
-let g:SuperTabDefaultCompletionType    = '<C-n>'
-let g:SuperTabMappingForward='<c-j>'
-let g:SuperTabMappingBackward='<c-k>'
+"let g:SuperTabCrMapping                = 0
+"let g:SuperTabDefaultCompletionType    = '<C-n>'
+"let g:SuperTabMappingForward='<c-j>'
+"let g:SuperTabMappingBackward='<c-k>'
 " c-h to delete character
 " }}}
 
@@ -579,11 +600,17 @@ inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
 
-cal asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
+autocmd User asyncomplete_setup cal asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
             \ 'name': 'ultisnips',
             \ 'allowlist': ['*'],
             \ 'completor': function('asyncomplete#sources#ultisnips#completor'),
             \ }))
+"call asyncomplete#register_source(asyncomplete#sources#nextword#get_source_options({
+            "\   'name': 'nextword',
+            "\   'allowlist': ['*'],
+            "\   'args': ['-n', '10000'],
+            "\   'completor': function('asyncomplete#sources#nextword#completor')
+            "\   }))
 
 
 let g:asyncomplete_auto_completeopt = 1
@@ -626,19 +653,19 @@ nn <leader>ji :LspImplementation<cr>
 nn <leader>jh :LspTypeHierarchy<cr>
 nn <leader>jr :LspRename<cr>
 nn <leader>jc :LspCodeAction<cr>
-"set foldmethod=expr
-  "\ foldexpr=lsp#ui#vim#folding#foldexpr()
-  "\ foldtext=lsp#ui#vim#folding#foldtext()
+set foldmethod=expr
+  \ foldexpr=lsp#ui#vim#folding#foldexpr()
+  \ foldtext=lsp#ui#vim#folding#foldtext()
 
 " enable diagnostics for cursor
 let g:lsp_diagnostics_enable = 1
 let g:lsp_diagnostics_echo_cursor = 1
 
-"let g:lsp_log_verbose = 1
+let g:lsp_log_verbose = 1
 let g:lsp_log_file = expand('~/.vim-lsp.log')
 let g:asyncomplete_log_file = expand('~/.asyncomplete.log')
 let g:lsp_highlight_references_enabled = 1
-hi lspReference cterm=underline
+hi lspReference cterm=underline ctermfg=33 ctermbg=0
 " }}}
 
 " easymotion {{{
@@ -649,14 +676,15 @@ map <Leader>s <Plug>(easymotion-bd-f)
 hi VertSplit ctermfg=3 ctermbg=NONE guibg=NONE
 hi ErrorMsg term=NONE cterm=NONE  ctermbg=NONE ctermfg=12
 hi Error cterm=bold ctermbg=NONE ctermfg=2 ctermbg=NONE
+hi Comment cterm=italic
 
 "se foldcolumn=1
 " }}}
 
 " python3/dyn {{{
 "
-"$ ls /usr/local/Cellar/python@3.8/3.8.6/Frameworks/Python.framework/Versions/3.8
-"Headers   Python    Resources bin       include   lib       share
+"se pythonthreehome=/usr/local/Cellar/python@3.9/3.9.5/Frameworks/Python.framework/Versions/3.9
+"se pythonthreedll=/usr/local/Cellar/python@3.9/3.9.5/Frameworks/Python.framework/Versions/3.9/lib/python3.9/config-3.9-darwin/libpython3.9.dylib
 "
 " }}}
 
@@ -752,6 +780,9 @@ hi IncSearch cterm=underline ctermbg=0 ctermfg=229
 
 "make popup menu looks nicer
 hi Pmenu cterm=NONE ctermfg=12 ctermbg=0
+
+" heading title looks better with yellow
+hi Title term=NONE cterm=NONE ctermfg=136
 " }}}
 
 " semantic highlighting {{{
@@ -793,3 +824,32 @@ let g:WebDevIconsNerdTreeGitPluginForceVAlign=1
 "let g:calendar_google_calendar = 1
 "let g:calendar_google_task = 1
 "}}}
+
+" vim-markdown {{{
+" disable of conceal regardless of conceallevel
+let g:vim_markdown_conceal = 0
+" }}}
+
+" Goyo {{{
+let g:goyo_width=100
+" }}}
+
+" Ale, deoplete {{{
+let g:ale_linters = {
+        \   'go': ['vim-lsp', 'golint'],
+    \ }
+"let g:ale_completion_enabled=1
+let g:deoplete#enable_at_startup = 1
+"nn <leader>jd :ALEGoToDefinition<cr>
+"nn <leader>jf :ALEFindReferences<cr>
+"nn <leader>js :ALESymbolSearch<cr>
+"nn <leader>jr :ALERename<cr>
+nn <leader>jn :ALENext<cr>
+nn <leader>jp :ALEPrevious<cr>
+
+"nn <leader>ji :LspImplementation<cr>
+"nn <leader>ji :LspImplementation<cr>
+"nn <leader>jh :LspTypeHierarchy<cr>
+"nn <leader>jc :LspCodeAction<cr>
+
+" }}}
