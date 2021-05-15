@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+sites="$HOME/github/jkoz.github.io"
+
+[ -d "$site" ] && echo "couldnt find sites directory: [$site]"
+
 if [ -z "$1" ]; then
   echo "Usage: provide a title argument."
   exit -1
@@ -11,7 +15,7 @@ d=$(date +"%Y-%m-%d")
 
 slug=$(echo $title | tr '[:upper:]' '[:lower:]' | tr '[:space:]' '-')
 slug="${slug:0:${#slug}-1}"
-post="./_posts/$d-$slug.md"
+post="$sites/_posts/$d-$slug.md"
 
 body=""
 read -d '' body <<EOF
