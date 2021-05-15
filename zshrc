@@ -64,7 +64,9 @@ export PROJECT="$HOME/data/projects"
 export CATALINA_HOME="${PROJECT}/apache-tomcat-8.0.5/"
 export AXS_HOME="${PROJECT}/axs"
 export MEDIA_HOME="$HOME/media"
-export GEM_HOME=$HOME/.gem/ruby/2.6.0
+
+# choose ruby environment with: rbenv global 2.7.0
+eval "$(rbenv init -)"
 
 #export GTK_MODULES=rgba
 export GTK_RGBA_APPS="allbut:firefox-bin:gnome-mplayer:totem:soffice:<unknown>:exe"
@@ -74,7 +76,7 @@ export GTK_IM_MODULE=ibus
 export QT_IM_MODULE=ibus
 
 export MPD_HOST=~/.mpd/socket
-PATH=${HOME}/bin:${GEM_HOME}/bin:${PATH}
+PATH=${HOME}/bin:${PATH}
 
 # history
 HISTSIZE=10000
@@ -114,12 +116,12 @@ unsetopt HUP
 stty -ixon # Map Ctrl-S to sth usefull other than XOFF (interrupt data flow).
 
 # for the sake of all terminal base programs, undef C-y which suspend the programs
-stty dsusp undef
+#stty dsusp undef
 
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
-# fzf
+# fzf {{{
 _gen_fzf_default_opts() {
   local base03="234"
   local base02="235"
@@ -142,7 +144,7 @@ _gen_fzf_default_opts() {
   # Solarized Dark color scheme for fzf
   export FZF_DEFAULT_OPTS="
     --layout=reverse
-    --height=80%
+    --height=40%
     --info=inline
     --multi
     --color fg:-1,bg:-1,gutter:-1,hl:$blue,fg+:$base2,bg+:$base02,hl+:$blue
@@ -153,6 +155,8 @@ _gen_fzf_default_opts() {
   "
 }
 _gen_fzf_default_opts
+
+# }}}
 
 autoload -U promptinit; promptinit;  prompt walters # prompt
 autoload -U colors && colors
@@ -197,6 +201,8 @@ goc() {
     # echo "int main() { printf(\"Hello from cmd\"); }" | goc
     c99 -xc - -g -O2 -Wall -I/usr/include -lm -include math.h -include stdio.h -include stdlib.h -o /tmp/a.out; /tmp/a.out;
 }
+
+wthr() { curl -s 'wttr.in/Edmonton?format=1'; }
 # }}}
 
 #}}}
@@ -276,3 +282,7 @@ alias c='calcurse'
 alias gitone='git --git-dir=.gitone'
 alias gittwo='git --git-dir=.gittwo'
 # }}}
+#
+# sourcing
+#source /usr/share/fzf/key-bindings.zsh
+

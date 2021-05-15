@@ -1,30 +1,35 @@
 #!/usr/bin/bash
 
-fifofile=/tmp/dwmstatus
+# to enable special character
+# 1. pacman -S awesome-terminal-fonts
+# 2. check in terminal echo -e "\uf2db"
+# 3. go to vim, type insert, then c-v, uf2db
+
+fifofile=/tmp/status-fifo
 rm -rf ${fifofile}; mkfifo ${fifofile}
 
+# B: battery
+while true; do batt | sed 's/^/B/' > $fifofile; sleep 1; done &
 
 # W: weather
-while true; do curl --silent 'http://weather.yahooapis.com/forecastrss?w=8676&u=c' | sed -ne '/Current Conditions/{n;p}' | sed -e 's/<BR \/>//' | xargs -r0 printf "W%s"; sleep 5; done > $fifofile &
+#while true; do curl --silent 'http://weather.yahooapis.com/forecastrss?w=8676&u=c' | sed -ne '/Current Conditions/{n;p}' | sed -e 's/<BR \/>//' | xargs -r0 printf "W%s"; sleep 5; done > $fifofile &
 
 # D: date
-while true; do date '+D%I:%M %p'; sleep 1; done > $fifofile &
-
-# B: battery
-while true; do acpi -b | cut -d',' -f2 | xargs -r0 printf "B%s"; sleep 2; done > $fifofile &
+while true; do date '+D%b %d  %I:%M %p' > $fifofile; sleep 1; done  &
 
 # C: cpu
-while true; do grep 'cpu ' /proc/stat | awk '{printf "CCPU %0.1f%\n\r", ($2+$4)*100/($2+$4+$5)}'; sleep 2; done > $fifofile &
+while true; do grep 'cpu ' /proc/stat | awk '{printf "C%0.1f%\n\r", ($2+$4)*100/($2+$4+$5)}' > $fifofile; sleep 1; done &
 
+sleep 1
 
 weather="" clock="" battery="" cpu="" sep="    "
-cat ${fifofile} | while read -r line; do
+tail -f ${fifofile} | while read -r line; do
     case "$line" in
         W*) weather="${line#?}${sep}";;
         D*) clock="${line#?}${sep}";;
         B*) battery="${line#?}${sep}";;
         C*) cpu="${line#?}${sep}";;
     esac
-    status=$(echo "${weather}${cpu}${clock}${battery}" | sed "s/$sep$//")
-    echo "$status"
+    stat=$(echo "${weather}${cpu}${battery}${clock}" | sed "s/$sep$//")
+    echo "$stat"
 done

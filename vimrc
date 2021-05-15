@@ -28,80 +28,96 @@
 "z= to get list of possible spellings.
 " }}}
 
-" Bundles {{{
+" Vimplug {{{
 
-if empty(glob('~/.vim/bundle/Vundle.vim'))
-    sil !mkdir -p ~/.vim/bundle
-    sil !git clone http://github.com/VundleVim/Vundle.Vim ~/.vim/bundle/Vundle.vim
-en
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+    silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
-set nocompatible
-filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+call plug#begin('~/.vim/plugged')
 
-Plugin 'morhetz/gruvbox'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'jaxbot/semantic-highlight.vim'
-Plugin 'jeaye/color_coded'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/nerdtree'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-fugitive'
-Plugin 'gavinbeatty/dragvisuals.vim'
-Plugin 'kana/vim-metarw'
-Plugin 'mattn/webapi-vim'
-Plugin 'mattn/vim-metarw-gdrive'
-Plugin 'majutsushi/tagbar'
-Plugin 'junegunn/fzf'
-Plugin 'junegunn/fzf.vim'
-Plugin 'scrooloose/Syntastic'
-Plugin 'reedes/vim-pencil'
-Plugin 'reedes/vim-litecorrect'
-Plugin 'tpope/vim-dispatch'
-Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
-Plugin 'dhruvasagar/vim-table-mode'
-Plugin 'puremourning/vimspector'
-Plugin 'easymotion/vim-easymotion'
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
-Plugin 'chrisbra/unicode.vim'
-Plugin 'simeji/winresizer'
-Plugin 'jceb/vim-orgmode'
-Plugin 'itchyny/calendar.vim'
-Plugin 'liuchengxu/vim-which-key'
-Plugin 'ryanoasis/vim-devicons'
-Plugin 'ervandew/supertab'
-Plugin 'tpope/vim-speeddating'
+Plug 'morhetz/gruvbox'
+Plug 'itchyny/lightline.vim'
+Plug 'Yggdroot/indentLine'
+Plug 'altercation/vim-colors-solarized'
+Plug 'jaxbot/semantic-highlight.vim'
+Plug 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdtree'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-fugitive'
+Plug 'gavinbeatty/dragvisuals.vim'
+Plug 'kana/vim-metarw'
+Plug 'mattn/webapi-vim'
+Plug 'mattn/vim-metarw-gdrive'
+Plug 'majutsushi/tagbar'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'scrooloose/Syntastic'
+Plug 'reedes/vim-pencil'
+Plug 'reedes/vim-litecorrect'
+Plug 'tpope/vim-dispatch'
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
+Plug 'dhruvasagar/vim-table-mode'
+Plug 'puremourning/vimspector'
+Plug 'easymotion/vim-easymotion'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'chrisbra/unicode.vim'
+Plug 'simeji/winresizer'
+Plug 'jceb/vim-orgmode'
+Plug 'itchyny/calendar.vim'
+Plug 'liuchengxu/vim-which-key'
+Plug 'ryanoasis/vim-devicons'
+Plug 'ervandew/supertab'
+Plug 'tpope/vim-speeddating'
+Plug 'airblade/vim-rooter'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'mattn/vim-lsp-settings'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
+Plug 'machakann/asyncomplete-ezfilter.vim'
+Plug 'liuchengxu/vista.vim'
 
-"Plugin 'ycm-core/YouCompleteMe'
-"Plugin 'liuchengxu/vista.vim'
-"Plugin 'wellle/tmux-complete.vim'
-"
-Plugin 'prabirshrestha/async.vim'
-Plugin 'prabirshrestha/vim-lsp'
-Plugin 'mattn/vim-lsp-settings'
-Plugin 'prabirshrestha/asyncomplete.vim'
-Plugin 'prabirshrestha/asyncomplete-lsp.vim'
-Plugin 'prabirshrestha/asyncomplete-ultisnips.vim'
-Plugin 'machakann/asyncomplete-ezfilter.vim'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'mattn/ctrlp-lsp'
-Plugin 'tsufeki/asyncomplete-fuzzy-match'
+"Plug 'ctrlpvim/ctrlp.vim'
+"Plug 'mattn/ctrlp-lsp'
+"Plug 'ycm-core/YouCompleteMe'
+"Plug 'liuchengxu/vista.vim'
+"Plug 'wellle/tmux-complete.vim'
 
-call vundle#end()
+call plug#end()
 filetype plugin indent on
 syntax on
+
+" }}}
+
+" Vundle {{{
+
+"if empty(glob('~/.vim/bundle/Vundle.vim'))
+    "sil !mkdir -p ~/.vim/bundle
+    "sil !git clone http://github.com/VundleVim/Vundle.Vim ~/.vim/bundle/Vundle.vim
+"en
+"set nocompatible
+"filetype off
+"set rtp+=~/.vim/bundle/Vundle.vim
+"call vundle#begin()
+"call vundle#end()
+"filetype plugin indent on
+"syntax on
 
 " }}}
 
 " Mappings {{{
 let mapleader = ","
 
-" jk as escape
-ino jk <esc>
-vn jk <esc>
+" disable jk as escape because it cause slow down in virtual selection mode.
+"ino jk <esc>
+"vn jk <esc>
 
 " change : to ;
 nn ; :
@@ -215,8 +231,8 @@ se softtabstop=4 shiftwidth=4 tabstop=4 " not tabs, but spaces
 se expandtab
 se shiftround " use multiple of shiftwidth when indenting with '<' and '>'
 
-se nornu
-se nonu" turn on number
+se rnu
+se nu" turn on number
 se cursorline " highlight current light
 "se cursorcolumn
 
@@ -256,11 +272,11 @@ colo solarized
 " fillchars {{{
 " open :UnicodeTable
 " in insert mode <C-v> and type U00B7
-se fcs=vert:│
+se fcs=vert:┊
 se fcs+=fold:·
 se fcs+=diff:\ "the leading space is used
-se fcs+=stl:-
-se fcs+=stlnc:-
+"se fcs+=stl:┈
+"se fcs+=stlnc:┈
 " }}}
 
 " Statusline {{{
@@ -272,7 +288,7 @@ se stl=-
 "se stl+=/         " Separator
 "se stl+=[%L]        " Total lines
 
-hi StatusLine ctermbg=NONE cterm=NONE ctermfg=2
+hi StatusLine ctermbg=NONE cterm=NONE ctermfg=3
 hi StatusLineNC ctermbg=NONE cterm=NONE ctermfg=11
 
 " }}}
@@ -288,28 +304,28 @@ aug configgroup
     au BufRead,BufNewFile *.h,*.hpp,*.cc,*.cpp setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=manual foldlevel=0
     au BufRead,BufNewFile *.conf setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=marker foldlevel=0
 aug END
-aug pencil
-    autocmd!
-    autocmd FileType tex,latex
-                \   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
-                \ | call litecorrect#init()
-                \ | setl spell spl=en_us noru nonu nornu
-                \ | setl fdo+=search
-                \ | setl nocursorcolumn
-    autocmd FileType markdown,mkd,md
-                \   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
-                \ | call litecorrect#init()
-                \ | setl spell spl=en_us noru nonu nornu
-                \ | setl fdo+=search
-    autocmd Filetype git,gitsendemail,*commit*,*COMMIT*
-                \   call pencil#init({'wrap': 'soft', 'textwidth': 72})
-                \ | call litecorrect#init()
-                \ | setl spell spl=en_us et sw=2 ts=2 noai
-    autocmd Filetype mail
-                \   call pencil#init({'wrap': 'soft', 'textwidth': 60})
-                \ | call litecorrect#init()
-                \ | setl spell spl=en_us spf=~/.vim/spellfile.add et sw=2 ts=2 noai nonu nornu
-aug END
+"aug pencil
+    "autocmd!
+    "autocmd FileType tex,latex
+                "\   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
+                "\ | call litecorrect#init()
+                "\ | setl spell spl=en_us noru nonu nornu
+                "\ | setl fdo+=search
+                "\ | setl nocursorcolumn
+    "autocmd FileType markdown,mkd,md
+                "\   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
+                "\ | call litecorrect#init()
+                "\ | setl spell spl=en_us noru nonu nornu
+                "\ | setl fdo+=search
+    "autocmd Filetype git,gitsendemail,*commit*,*COMMIT*
+                "\   call pencil#init({'wrap': 'soft', 'textwidth': 72})
+                "\ | call litecorrect#init()
+                "\ | setl spell spl=en_us et sw=2 ts=2 noai
+    "autocmd Filetype mail
+                "\   call pencil#init({'wrap': 'soft', 'textwidth': 60})
+                "\ | call litecorrect#init()
+                "\ | setl spell spl=en_us spf=~/.vim/spellfile.add et sw=2 ts=2 noai nonu nornu
+"aug END
 
 "}}}
 
@@ -364,13 +380,22 @@ let NERDTreeShowBookmarks=1 " Show the bookmarks table on startup
 let NERDTreeShowFiles=1 " Show hidden files, too
 let NERDTreeShowHidden=1
 let NERDTreeQuitOnOpen=2 " Quit on opening files from the tree
-let NERDTreeWinSize = 40
+let NERDTreeWinSize = 30
 let NERDTreeHighlightCursorline=1 " Highlight the selected entry in the tree
 let NERDTreeMouseMode=2 " Use a single click to fold/unfold directories and a double click to open files
 "let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$',
             "\ '\.o$', '\.so$', '\.egg$', '^\.git$', '\.svn$', '^target$', '^\.settings$', '^\.classpath$', '^\.project$', '^\.hg', '.pydevproject'  ]
 
 let g:NERDTreeStatusline = '%#NonText#'
+
+" hide nerd tree first line
+aug nerdtreehidecwd
+	autocmd!
+	autocmd FileType nerdtree setlocal conceallevel=3 | syntax match NERDTreeHideCWD #^[</].*$# conceal
+aug end
+
+" automatically close nerd tree when it is the only one left
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 " }}}
 
 " FZF {{{
@@ -390,7 +415,7 @@ nn <leader>fa :Ag
 " indicate how fzf buffer is opened
 
 " open in popup windows
-let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+let g:fzf_layout = { 'down': '20%' }
 
 " dont open fzf in some special buffer
 "au BufEnter * if bufname('#') =~ 'NERD_tree' && bufname('%') !~ 'NERD_tree' && winnr('$') > 1 | b# | exe "normal! \<c-w>\<c-w>" | :blast | endif
@@ -419,7 +444,7 @@ vm <expr> <c-h> DVB_Drag('left')
 vm <expr> <c-l> DVB_Drag('right')
 vm <expr> <c-j>  DVB_Drag('down')
 vm <expr> <c-k>  DVB_Drag('up')
-"vm <expr> D DVB_Duplicate()
+vm <expr> D DVB_Duplicate()
 hi Visual cterm=NONE ctermbg=0 ctermfg=NONE term=NONE
 " }}}
 
@@ -535,7 +560,7 @@ nn<silent> <buffer> <Leader>vlj :call JavaStartDebug()<CR>
 
 " }}}
 
-" ultisnip {{{
+" Utilsnip {{{
 let g:UltiSnipsExpandTrigger           = '<tab>'
 let g:UltiSnipsJumpForwardTrigger      = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger     = '<s-tab>'
@@ -550,12 +575,16 @@ let g:SuperTabMappingBackward='<c-k>'
 " }}}
 
 " asyncomplete {{{
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
+
 cal asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
             \ 'name': 'ultisnips',
             \ 'allowlist': ['*'],
             \ 'completor': function('asyncomplete#sources#ultisnips#completor'),
             \ }))
+
 
 let g:asyncomplete_auto_completeopt = 1
 let g:asyncomplete_auto_popup = 1
@@ -617,7 +646,7 @@ map <Leader>s <Plug>(easymotion-bd-f)
 " }}}
 
 " {{{ teaks split window border
-hi VertSplit ctermfg=64 ctermbg=NONE guibg=NONE
+hi VertSplit ctermfg=3 ctermbg=NONE guibg=NONE
 hi ErrorMsg term=NONE cterm=NONE  ctermbg=NONE ctermfg=12
 hi Error cterm=bold ctermbg=NONE ctermfg=2 ctermbg=NONE
 
@@ -629,8 +658,6 @@ hi Error cterm=bold ctermbg=NONE ctermfg=2 ctermbg=NONE
 "$ ls /usr/local/Cellar/python@3.8/3.8.6/Frameworks/Python.framework/Versions/3.8
 "Headers   Python    Resources bin       include   lib       share
 "
-se pythonthreehome=/usr/local/Cellar/python@3.8/3.8.6/Frameworks/Python.framework/Versions/3.8
-se pythonthreedll=/usr/local/Cellar/python@3.8/3.8.6/Frameworks/Python.framework/Versions/3.8/lib/python3.8/config-3.8-darwin/libpython3.8.dylib
 " }}}
 
 " {{{ foldtext
@@ -733,8 +760,16 @@ let g:semanticTermColors = [28,1,2,3,4,5,6,7,25,9,10,34,12,13,14,15,16,125,124,1
 " }}}
 
 " quick fix buffer {{{
+nn <leader>] :cnext<cr>
+nn <leader>[ :cprev<cr>
 nn <leader>j] :lnext<cr>
 nn <leader>j[ :lprevious<cr>
+" }}}
+
+"devicons {{{
+
+let g:WebDevIconsNerdTreeGitPluginForceVAlign=1
+
 " }}}
 
 "calendar {{{

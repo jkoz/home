@@ -1,0 +1,671 @@
+#+STARTUP: overview
+* Initialize MELPA and use package
+
+#+begin_src emacs-lisp
+
+(require 'package)
+(setq package-enable-at-startup nil)
+(add-to-list 'package-archives
+	     '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives
+	     '("elpa" . "https://elpa.gnu.org/packages/"))
+(package-initialize)
+
+;; use-package
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+#+end_src
+
+* Interface tweaks
+
+#+begin_src emacs-lisp
+  (setq inhibit-startup-message t)
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (toggle-scroll-bar -1)
+  (fset 'yes-or-no-p 'y-or-n-p)
+#+end_src
+* Imenu-list
+#+begin_src emacs-lisp
+(use-package imenu-list
+  :ensure t
+  :bind (("C-'" . imenu-list-smart-toggle))
+  :config
+  (setq imenu-list-focus-after-activation t
+        imenu-list-auto-resize nil))
+#+end_src
+* Builtin goodies
+
+#+begin_src emacs-lisp
+  ;; fuzzy search buffers
+  ;;(setq ido-enable-flex-matching t)
+  ;;(setq ido-everywhere t)
+  ;;(ido-mode 1)
+  ;; editable C-x C-b
+  ;;(defalias 'list-buffer 'ibuffer)
+  ;; high light current light
+  (global-hl-line-mode t)
+
+  (setq save-interprogram-paste-before-kill t)
+  (global-auto-revert-mode 1)
+  (setq auto-revert-verbose nil)
+  ;; (when (version<= "26.0.50" emacs-version)
+    ;; (global-display-line-numbers-mode))
+
+  (setq browse-url-generic-program "open -a 'Google Chrome'") 
+  ;; dont use backup files 
+  (setq make-backup-files nil)
+#+end_src
+
+* Quelpa allow build directly from source
+
+#+begin_src emacs-lisp
+    (use-package quelpa
+        :ensure t)
+    (use-package quelpa-use-package
+        :ensure t)
+#+end_src
+
+* Fuzzy search, counsel, ivy, helm, swipper
+
+#+begin_src emacs-lisp
+    (use-package helm
+      :ensure t
+      :bind
+        (("M-x" . 'helm-M-x)
+        ("C-x b" . 'helm-recentf)
+        ("C-x r b" . 'helm-bookmarks)
+        ("C-x C-f" . 'helm-find-files)
+        ("C-s" . 'helm-occur)
+        ("M-y" . helm-show-kill-ring))
+      :init
+        (helm-mode 1)
+        (setq helm-completion-style 'emacs)
+        (setq completion-styles '(flex))
+        (setq helm-buffers-fuzzy-matching t
+              helm-recentf-fuzzy-match t
+              helm-eshell-fuzzy-match t
+              helm-split-window-inside-p t
+              helm-move-to-line-cycle-in-source t
+              helm-ff-search-library-in-sexp t
+              helm-ff-file-name-history-use-recentf t
+              helm-display-buffer-reuse-frame t
+              helm-use-undecorated-frame-option t))
+#+end_src
+
+- In helm M-x buffer, C-o to toggle search in command history
+
+#+RESULTS:
+
+** helm commands
+- C-x c C-c f : helm-recent
+- C-x k : kill buffer
+
+* Theme
+
+#+begin_src emacs-lisp
+  (use-package solarized-theme
+    :ensure t
+    :config
+    (load-theme 'solarized-dark t))
+#+end_src
+
+* Auto complete, company
+
+#+begin_src emacs-lisp
+
+  ;;  (use-package auto-complete
+  ;;    :ensure t
+  ;;:init
+      ;;(progn
+      ;;  (ac-config-default)
+    ;;    (global-auto-complete-mode t)
+  ;;      ))
+  (use-package company
+    :ensure t
+    :config
+    (setq company-idle-delay 0)
+    (setq company-minimum-prefix-length 3)
+    (global-company-mode t))
+#+end_src
+
+* Windows
+- C-x + : equals all windows
+- C-x 2 : horizontally split
+#+begin_src emacs-lisp
+  ;; mark panel with number, then jump to it by typing the desired number
+  ;; (use-package ace-window
+    ;; :ensure t
+    ;; :init
+    ;; (progn
+    ;;   (global-set-key [remap other-window] 'ace-window)
+    ;;   (setq aw-dispatch-always t)))
+  (use-package winum
+    :ensure t
+    :init
+    (progn
+      (winum-mode)
+      (global-set-key [remap other-window] 'ace-window)
+      ))
+
+  ;; Auto focus to newly created window
+  ;;(global-set-key "\C-x2" (lambda () (interactive)(split-window-vertically) (other-window 1)))
+  ;;(global-set-key "\C-x3" (lambda () (interactive)(split-window-horizontally) (other-window 1)))
+
+  ;; Hold ctrl and shift, then press h or j to shrink windows, or k/l to enlarge
+  (global-set-key (kbd "S-C-h") 'shrink-window-horizontally)
+  (global-set-key (kbd "S-C-l") 'enlarge-window-horizontally)
+  (global-set-key (kbd "S-C-j") 'shrink-window)
+  (global-set-key (kbd "S-C-k") 'enlarge-window)
+
+  (global-set-key (kbd "C-x \"") 'split-window-vertically)
+  (global-set-key (kbd "C-x \|") 'split-window-horizontally)
+#+end_src
+
+* Org mode
+
+- high-sublevels : collapse all blocks
+
+** Org bullets
+
+#+begin_src emacs-lisp
+  (use-package org-bullets
+    :ensure t
+    :config
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+#+end_src
+
+** Org reveal.js
+
+#+begin_src emacs-lisp
+  (use-package ox-reveal
+    :ensure ox-reveal)
+  (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
+  (setq org-reveal-mathjax t)
+#+end_src
+
+** General configuration
+
+#+begin_src emacs-lisp
+  (custom-set-variables
+   '(org-directory "~/Dropbox/orgfiles")
+   '(org-default-notes-file (concat org-directory "/notes.org"))
+   '(org-hide-leading-stars t)
+   '(org-startup-folded (quote overview))
+   '(org-startup-indented t)
+   )
+#+end_src
+
+** Org Agenda
+
+- C-c c to start new documents system
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c a") 'org-agenda)
+
+  (use-package org-ac
+    :ensure t
+    :init
+    (progn
+          (require 'org-ac)
+          (org-ac/config-default)))
+
+  (global-set-key (kbd "C-c c") 'org-capture)
+  (setq org-agenda-files (list "~/Dropbox/orgfiles/gcal.org"
+                               "~/Dropbox/orgfiles/i.org"
+                               "~/Dropbox/orgfiles/schedule.org"))
+
+  (setq org-capture-templates
+        '(("a" "Appointment" entry (file  "~/Dropbox/orgfiles/gcal.org" )
+           "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
+          ("l" "Link" entry (file+headline "~/Dropbox/orgfiles/links.org" "Links")
+           "* %? %^L %^g \n%T" :prepend t)
+          ("b" "Blog idea" entry (file+headline "~/Dropbox/orgfiles/i.org" "Blog Topics:")
+           "* %?\n%T" :prepend t)
+          ("t" "To Do Item" entry (file+headline "~/Dropbox/orgfiles/i.org" "To Do")
+           "* TODO %?\n%u" :prepend t)
+          ("n" "Note" entry (file+headline "~/Dropbox/orgfiles/i.org" "Note space")
+           "* %?\n%u" :prepend t)
+          ("j" "Journal" entry (file+datetree "~/Dropbox/journal.org")
+           "* %?\nEntered on %U\n  %i\n  %a")
+          ("s" "Screencast" entry (file "~/Dropbox/orgfiles/screencastnotes.org")
+           "* %?\n%i\n")))
+#+end_src
+
+* Markdown mode
+
+#+begin_src emacs-lisp
+(use-package markdown-mode
+  :ensure t
+  :mode ("README\\.md\\'" . gfm-mode)
+  :init (setq markdown-command "multimarkdown"))
+#+end_src
+
+* Others
+
+#+begin_src emacs-lisp
+    (use-package try
+      :ensure t)
+
+    (use-package which-key
+      :ensure t
+      :config (which-key-mode))
+
+    ;; flashing cursor
+    ;; (use-package beacon
+      ;; :ensure t
+      ;; :config
+      ;; (beacon-mode 1)
+      ;; (setq beacon-color "#666600"))
+
+      ;; ;;seems interfere with lsp mode
+  ;;  (use-package hungry-delete
+  ;;    :ensure t
+  ;;    :config
+  ;;    (global-hungry-delete-mode))
+
+  ;;  (use-package aggressive-indent
+  ;;    :ensure t
+  ;;    :config
+  ;;    (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
+  ;;    (global-aggressive-indent-mode 1))
+
+#+end_src
+
+* Expand region and iedit
+
+  - use conjunction with expand-region to refactor  a word
+  - use narrow-to-region to isolate a specific area to do refactor
+  - use widen to get back to original file
+
+#+begin_src emacs-lisp
+
+  (use-package expand-region
+    :ensure t
+    :config
+    (global-set-key (kbd "C-=") 'er/expand-region))
+
+  (use-package iedit
+    :ensure t)
+
+#+end_src
+
+* Flycheck
+
+#+begin_src emacs-lisp
+  (use-package flycheck
+    :ensure t
+    :init
+    (global-flycheck-mode t))
+#+end_src
+
+* Avy navigate by searching for a letter on the screen and jump to it
+
+#+begin_src emacs-lisp
+  (use-package avy
+    :ensure t
+    :bind ("M-s" . avy-goto-char))
+#+end_src
+
+* Python
+
+#+begin_src emacs-lisp
+  ;; require virtualenv
+  (use-package jedi
+    :ensure t
+    :init
+    (add-hook 'python-mode-hook 'jedi:setup)
+    (add-hook 'python-mode-hook 'jedi:ac-setup))
+  (use-package elpy
+    :ensure t
+    :config
+    (elpy-enable))
+#+end_src
+
+* Yasnippet
+
+#+begin_src emacs-lisp
+(use-package yasnippet
+    :ensure t
+    :init
+    (progn
+      (yas-global-mode 1)))
+#+end_src
+
+* Undo tree
+#+begin_src emacs-lisp
+  (use-package undo-tree
+    :ensure t
+    :init
+    (global-undo-tree-mode))
+#+end_src
+
+* Load other files
+
+#+begin_src emacs-lisp
+  (defun load-if-exists (f)
+    "load elisp file if exists and readable"
+    (if (file-readable-p f)
+	(load-file f)))
+
+ (load-if-exists "~/Dropbox/mu4econfig.el")
+#+end_src
+
+* Web mode
+
+#+begin_src emacs-lisp
+  (use-package web-mode
+    :ensure t
+    :config
+    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+    (setq web-mode-engines-alist '(("django" . "\\.html\\'")))
+    (setq web-mode-ac-sources-alist '(("css" . (ac-source-css-property))
+				      ("html" . (ac-source-words-in-buffer
+						 ac-source-abbrev))))
+    (setq web-mode-enable-auto-closing t))
+#+end_src
+
+* TRAMP allow ssh to server to edit file remotely
+- C-x C-f /ssh:user@192.168.111.222
+* Org Gcal
+
+#+begin_src emacs-lisp
+  (setq package-check-signature nil)
+
+  (use-package org-gcal
+    :ensure t
+    :config
+    (setq org-gcal-client-id "793694504600-1evj79ie8uofvmrd8n300n26gtjvold3.apps.googleusercontent.com"
+          org-gcal-client-secret "om-dAQ_N10cUc0tfgedmuDun"
+          org-gcal-file-alist '(("phuoctaitp@gmail.com" .  "~/Dropbox/orgfiles/gcal.org"))))
+
+;;  (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
+ ;; (add-hook 'org-capture-after-finalaize-hook (lambda () (org-gcal-sync) ))
+#+end_src
+
+* Better shell
+
+#+begin_src emacs-lisp
+  (use-package better-shell
+    :ensure t
+    :bind (("C-'" . better-shell-shell)
+           ("C-;" . better-shell-remote-open)))
+#+end_src
+
+* Lsp Mode
+
+#+begin_src emacs-lisp
+  (use-package hydra
+    :ensure t)
+
+  (use-package lsp-ui
+    :ensure t)
+
+
+  (use-package helm-lsp
+    :ensure t)
+
+  (use-package lsp-treemacs
+    :ensure t)
+
+  (use-package lsp-mode
+    :ensure t
+    :hook ((lsp-mode . lsp-enable-which-key-integration))
+    :config (setq lsp-completion-enable-additional-text-edit nil))
+
+  (use-package lsp-java
+    :ensure t
+    :config (add-hook 'java-mode-hook 'lsp))
+
+  (use-package dap-mode
+    :ensure t
+    :after lsp-mode
+    :hook (dap-stopped . (lambda (arg) (call-interactively #'dap-hydra)))
+    :config
+    (dap-mode 1)
+    (require 'dap-ui)
+    (dap-ui-mode 1)
+    (require 'dap-lldb)
+    (require 'dap-cpptools))
+
+  (use-package dap-java
+    :ensure nil)
+
+  ;; (setq gc-cons-threshold (* 100 1024 1024)
+        ;; read-process-output-max (* 1024 1024)
+        ;; treemacs-space-between-root-nodes nil
+        ;; company-idle-delay 0.0
+        ;; company-minimum-prefix-length 1
+        ;; lsp-idle-delay 0.1
+        ;; lsp-headerline-breadcrumb-enable t)
+
+  (add-hook 'c-mode-hook 'lsp)
+  (add-hook 'cpp-mode-hook 'lsp)
+#+end_src
+
+- C-x c i : helm-mini show list of functions, field, macros, etc
+- ,lo : helm-lsp-workspace-symbol: show list of symbols in workspace, including the include header files
+- C-c p h : open projectile
+- C-c p f : open project files
+- lsp-treemacs-java-deps-list to show dependencies
+- lsp-treemacs-java-deps-refresh to refresh dependencies
+- ,lc : code action 
+- ,le : lsp-treemacs-error-list 
+
+* Projectile
+
+#+begin_src emacs-lisp
+  (use-package projectile
+    :ensure t
+    :init
+    (progn
+      (projectile-global-mode)
+      (global-set-key (kbd "C-c p") 'projectile-command-map)))
+
+  (use-package helm-projectile
+    :ensure t
+    :init
+    (progn
+      (global-set-key (kbd "C-c p f") 'helm-projectile-find-file)
+      (global-set-key (kbd "C-c p h") 'helm-projectile)
+      (global-set-key (kbd "C-c p p") 'helm-projectile-switch-project)))
+#+end_src
+
+* Evil mode
+
+#+begin_src emacs-lisp
+  (use-package evil
+    :ensure t
+    :init
+    (setq evil-want-keybinding nil)
+    (setq evil-want-C-u-scroll t)
+    :config
+    (evil-mode 1))
+
+  (use-package key-chord
+    :ensure t
+    :init
+    (key-chord-mode 1)
+    (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
+    (key-chord-define evil-normal-state-map "qq" 'delete-window))
+
+    ;; swap : to ;
+  (define-key evil-motion-state-map ";" #'evil-ex)
+  (define-key evil-motion-state-map ":" #'evil-repeat-find-char)
+
+  (use-package evil-leader
+    :ensure t)
+  (global-evil-leader-mode)
+  (evil-leader/set-leader ",")
+  (evil-leader/set-key
+    "p" 'clipboard-yank
+    "y" 'clipboard-kill-ring-save
+    "m" 'helm-recentf
+    "z" 'helm-buffers-list
+    "w" 'save-buffer
+    "k" 'kill-buffer
+    "q" 'save-buffers-kill-terminal
+    "g" 'helm-M-x
+    "e" 'mu4e
+    "ci" 'evilnc-comment-or-uncomment-lines
+    "SPC" 'evil-search-highlight-persist-remove-all
+    "s" 'avy-goto-char
+    "o" 'helm-imenu
+    "ln" 'flycheck-next-error
+    "lj" 'lsp-find-definition
+    "lo" 'helm-lsp-workspace-symbol
+    "lp" 'helm-projectile-switch-project
+    "lf" 'helm-projectile-find-file
+    "lc" 'helm-lsp-code-actions
+    "lr" 'lsp-rename
+    "le" 'lsp-treemacs-errors-list
+    "nt" 'treemacs
+    "nf" 'treemacs-select-window
+    "nc" 'treemacs-display-current-project-exclusively
+    "nr" 'treemacs-refresh
+    )
+
+  ;; additional vim key stroke collection
+  (use-package evil-collection
+    :after evil
+    :ensure t
+    :init
+    (evil-collection-init))
+
+  (use-package evil-nerd-commenter
+    :ensure t)
+
+  (use-package powerline-evil
+    :ensure t)
+
+  (use-package evil-search-highlight-persist
+    :ensure t
+    :init
+    (global-evil-search-highlight-persist t))
+  (use-package treemacs-evil
+    :ensure t)
+  (use-package treemacs-projectile
+    :ensure t)
+#+end_src
+
+* Evil org mode
+
+#+begin_src emacs-lisp
+  (use-package evil-org
+    :ensure t
+    :after org
+    :config
+      (add-hook 'org-mode-hook 'evil-org-mode)
+      (add-hook 'evil-org-mode-hook
+      (lambda ()
+        (evil-org-set-key-theme)))
+      (require 'evil-org-agenda)
+      (evil-org-agenda-set-keys))
+#+end_src
+
+* Powerline
+
+#+begin_src emacs-lisp
+  (use-package powerline
+    :ensure t
+    :init
+    (setq powerline-default-separator 'curve
+          powerline-default-separator-dir (quote (left . right))
+          powerline-height 28
+          powerline-display-buffer-size nil
+          powerline-display-hud nil
+          powerline-display-mule-info nil
+          powerline-gui-use-vcs-glyph t
+          powerline-inactive1 '((t (:background "grey11" :foreground "#c5c8c6")))
+          powerline-inactive2 '((t (:background "grey20" :foreground "#c5c8c6")))))
+  (powerline-evil-vim-theme)
+#+end_src
+
+* Mail
+#+begin_src emacs-lisp
+#+end_src
+
+* Magit
+#+begin_src emacs-lisp
+  (use-package magit
+    :ensure t)
+#+end_src
+
+* Exwm
+
+#+begin_src emacs-lisp
+  (use-package exwm
+    :config
+    (setq exwm-workspace-number 5)
+    ;; These keys should always pass through to Emacs
+    (setq exwm-input-prefix-keys
+          '(?\C-x
+            ?\C-u
+            ?\C-h
+            ?\M-x
+            ?\M-`
+            ?\M-&
+            ?\M-:
+            ?\C-\M-j  ;; Buffer list
+            ?\C-\ ))  ;; Ctrl+Space
+
+  ;; Ctrl+Q will enable the next key to be sent directly
+  (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
+
+  ;; Set up global key bindings.  These always work, no matter the input state!
+  ;; Keep in mind that changing this list after EXWM initializes has no effect.
+
+    (setq exwm-input-global-keys
+          `(
+            ;; Reset to line-mode (C-c C-k switches to char-mode via exwm-input-release-keyboard)
+            ([?\s-r] . exwm-reset)
+
+            ;; Move between windows
+            ([?\s-h] . windmove-left)
+            ([?\s-l] . windmove-right)
+            ([?\s-k] . windmove-up)
+            ([?\s-j] . windmove-down)
+
+            ;; Launch applications via shell command
+            ([?\s-&] . (lambda (command)
+                         (interactive (list (read-shell-command "$ ")))
+                         (start-process-shell-command command nil command)))
+
+            ;; Switch workspace
+            ([?\s-w] . exwm-workspace-switch)
+
+            ;; 's-N': Switch to certain workspace with Super (Win) plus a number key (0 - 9)
+            ,@(mapcar (lambda (i)
+                        `(,(kbd (format "s-%d" i)) .
+                          (lambda ()
+                            (interactive)
+                            (exwm-workspace-switch-create ,i))))
+                      (number-sequence 0 9))))
+
+    (exwm-enable))
+  (require 'exwm-systemtray)
+  (exwm-systemtray-enable)
+
+  ;;;; EXWM line mode bindings.
+  ;; C-x C-x to send C-x, C-c C-c to send C-c.
+  (define-key exwm-mode-map (kbd "C-x C-x")
+    (lambda () (interactive) (exwm-input--fake-key ?\C-x)))
+  (define-key exwm-mode-map (kbd "C-v C-v")
+    (lambda () (interactive) (exwm-input--fake-key ?\C-v)))
+  (define-key exwm-mode-map (kbd "C-c C-c")
+    (lambda () (interactive) (exwm-input--fake-key ?\C-c)))
+#+end_src
+
+* CMake
+
+#+begin_src emacs-lisp
+  (use-package cmake-mode
+    :ensure t)
+#+end_src
+
+* Command log mode
+#+begin_src emacs-lisp 
+  (use-package command-log-mode
+    :ensure t)
+#+end_src
