@@ -49,6 +49,9 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-speeddating'
+Plug 'tpope/vim-markdown'
+Plug 'masukomi/vim-markdown-folding'
 Plug 'gavinbeatty/dragvisuals.vim'
 Plug 'kana/vim-metarw'
 Plug 'mattn/webapi-vim'
@@ -57,9 +60,8 @@ Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'reedes/vim-pencil'
 Plug 'reedes/vim-litecorrect'
-Plug 'tpope/vim-dispatch'
 Plug 'godlygeek/tabular'
-Plug 'plasticboy/vim-markdown'
+"Plug 'plasticboy/vim-markdown'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'puremourning/vimspector'
 Plug 'easymotion/vim-easymotion'
@@ -71,7 +73,6 @@ Plug 'jceb/vim-orgmode'
 Plug 'itchyny/calendar.vim'
 Plug 'liuchengxu/vim-which-key'
 Plug 'ryanoasis/vim-devicons'
-Plug 'tpope/vim-speeddating'
 Plug 'airblade/vim-rooter'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
@@ -331,9 +332,11 @@ aug pencil
                 \ | setl fdo+=search
                 \ | setl nocursorcolumn
     autocmd FileType markdown,mkd,md
-                \   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
+                \   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 1})
                 \ | call litecorrect#init()
                 \ | setl spell spl=en_us
+                \ | setl foldtext=_foldtext()
+                \ | setl foldexpr=NestedMarkdownFolds()
                 \ | setl fdo+=search
     autocmd Filetype git,gitsendemail,*commit*,*COMMIT*
                 \   call pencil#init({'wrap': 'soft', 'textwidth': 72})
@@ -374,7 +377,7 @@ aug END
 " }}}
 
 " Vista {{{
-nn <silent> <leader>t :Vista<cr>
+nn <silent> <leader>l :Vista<cr>
 let g:vista_executive_for = {
         \ 'cpp': 'vim_lsp',
         \ 'c': 'vim_lsp',
@@ -418,7 +421,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 " }}}
 
 " FZF {{{
-nn <silent> <c-p>     :History<CR>
+nn <silent> <c-p>     :FZF<CR>
 nn <silent> <leader>z :Buffers<CR>
 nn <silent> <leader>m :History<CR>
 nn <silent> <leader>xx :Command<CR>
@@ -429,8 +432,9 @@ nn <silent> <leader>fl :BLines<CR>
 nn <silent> <leader>fw :Windows<CR>
 nn <silent> <leader>ff :GFiles<CR>
 nn <silent> <leader>fc :Commits<CR>
+nn <silent> <leader>ft :Helptags<CR>
 nn <silent> <leader>fa :Ag<CR>
-nn <silent> <leader>fg :Rg<CR>
+nn <silent> <leader>fr :Rg<CR>
 
 " indicate how fzf buffer is opened
 
@@ -653,9 +657,9 @@ nn <leader>ji :LspImplementation<cr>
 nn <leader>jh :LspTypeHierarchy<cr>
 nn <leader>jr :LspRename<cr>
 nn <leader>jc :LspCodeAction<cr>
-set foldmethod=expr
-  \ foldexpr=lsp#ui#vim#folding#foldexpr()
-  \ foldtext=lsp#ui#vim#folding#foldtext()
+"set foldmethod=expr
+  "\ foldexpr=lsp#ui#vim#folding#foldexpr()
+  "\ foldtext=lsp#ui#vim#folding#foldtext()
 
 " enable diagnostics for cursor
 let g:lsp_diagnostics_enable = 1
@@ -670,6 +674,7 @@ hi lspReference cterm=underline ctermfg=33 ctermbg=0
 
 " easymotion {{{
 map <Leader>s <Plug>(easymotion-bd-f)
+map <leader>e <Plug>(easymotion-prefix)
 " }}}
 
 " {{{ teaks split window border
@@ -694,13 +699,14 @@ fu! _foldtext()
     let lines_count = v:foldend - v:foldstart + 1
     let lines_count_text = '[' . printf("%10s", lines_count . ' lines') . ' ]'
     let foldchar = matchstr(&fillchars, 'fold:\zs.')
-    let foldtextstart = strpart('+' . repeat(foldchar, v:foldlevel*2) . line, 0, (winwidth(0)*2)/3)
+    "let foldtextstart = strpart('+' . repeat(foldchar, v:foldlevel*2) . line, 0, (winwidth(0)*2)/3)
+    let foldtextstart = strpart(line, 0, (winwidth(0)*2)/3)
     let foldtextend = lines_count_text . repeat(foldchar, 8)
     let foldtextlength = strlen(substitute(foldtextstart . foldtextend, '.', 'x', 'g')) + &foldcolumn
     retu foldtextstart . repeat(foldchar, winwidth(0)-foldtextlength) . foldtextend
 endf
-set foldtext=_foldtext()
-hi Folded term=bold,underline cterm=bold ctermfg=12 ctermbg=0 guifg=Cyan guibg=DarkGrey
+hi Folded cterm=italic ctermbg=NONE ctermfg=12 guifg=Cyan guibg=DarkGrey
+hi FoldColumn ctermbg=NONE
 " }}}
 
 " windows {{{
@@ -771,6 +777,7 @@ nn <leader>fq :FzfQF<cr>
 
 " vim-which-key {{{
 autocmd FileType which_key highlight WhichKeyFloating ctermbg=0 ctermfg=12
+nnoremap <silent> <leader> :WhichKey ','<CR>
 " }}}
 
 " let personalize color override everything {{{
@@ -782,7 +789,7 @@ hi IncSearch cterm=underline ctermbg=0 ctermfg=229
 hi Pmenu cterm=NONE ctermfg=12 ctermbg=0
 
 " heading title looks better with yellow
-hi Title term=NONE cterm=NONE ctermfg=136
+hi Title term=NONE cterm=italic ctermfg=136
 " }}}
 
 " semantic highlighting {{{
@@ -806,28 +813,30 @@ let g:WebDevIconsNerdTreeGitPluginForceVAlign=1
 "calendar {{{
 " to be autoground
 
-"autocmd FileType calendar
-    "\ cal calendar#color#syntax('Sunday', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
-    "\ | cal calendar#color#syntax('Saturday', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
-    "\ | cal calendar#color#syntax('DayTitle', has('gui') ? '#ff0000' : 64, 'NONE', 'NONE')
-    "\ | cal calendar#color#syntax('SundayTitle', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
-    "\ | cal calendar#color#syntax('SaturdayTitle', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
-    "\ | cal calendar#color#syntax('Today', has('gui') ? '#ff0000' : 33, '0', 'NONE')
-    "\ | cal calendar#color#syntax('TodaySunday', has('gui') ? '#ff0000' : 33, 'NONE', 'NONE')
-    "\ | cal calendar#color#syntax('TodaySaturday', has('gui') ? '#ff0000' : 33, 'NONE', 'NONE')
-    "\ | cal calendar#color#syntax('Select', has('gui') ? '#ff0000' : 33, '0', 'NONE')
-    "\ | cal calendar#color#syntax('OtherMonth', has('gui') ? '#ff0000' : 245, '0', 'NONE')
-    "\ | cal calendar#color#syntax('OtherMonthSelect', has('gui') ? '#ff0000' : 245, '0', 'NONE')
-    "\ | cal calendar#color#syntax('NormalSpace', has('gui') ? '#ff0000' : 255, '0', 'NONE')
-    "\ | cal calendar#color#syntax('CommentSelect', has('gui') ? '#ff0000' : 232, '0', 'NONE')
+autocmd FileType calendar
+    \ cal calendar#color#syntax('Sunday', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
+    \ | cal calendar#color#syntax('Saturday', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
+    \ | cal calendar#color#syntax('DayTitle', has('gui') ? '#ff0000' : 64, 'NONE', 'NONE')
+    \ | cal calendar#color#syntax('SundayTitle', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
+    \ | cal calendar#color#syntax('SaturdayTitle', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
+    \ | cal calendar#color#syntax('Today', has('gui') ? '#ff0000' : 33, '0', 'NONE')
+    \ | cal calendar#color#syntax('TodaySunday', has('gui') ? '#ff0000' : 33, 'NONE', 'NONE')
+    \ | cal calendar#color#syntax('TodaySaturday', has('gui') ? '#ff0000' : 33, 'NONE', 'NONE')
+    \ | cal calendar#color#syntax('Select', has('gui') ? '#ff0000' : 33, '0', 'NONE')
+    \ | cal calendar#color#syntax('OtherMonth', has('gui') ? '#ff0000' : 245, '0', 'NONE')
+    \ | cal calendar#color#syntax('OtherMonthSelect', has('gui') ? '#ff0000' : 245, '0', 'NONE')
+    \ | cal calendar#color#syntax('NormalSpace', has('gui') ? '#ff0000' : 255, '0', 'NONE')
+    \ | cal calendar#color#syntax('CommentSelect', has('gui') ? '#ff0000' : 232, '0', 'NONE')
 
-"let g:calendar_google_calendar = 1
-"let g:calendar_google_task = 1
+let g:calendar_google_calendar = 1
+let g:calendar_google_task = 1
 "}}}
 
 " vim-markdown {{{
 " disable of conceal regardless of conceallevel
-let g:vim_markdown_conceal = 0
+"let g:vim_markdown_conceal = 0
+"let g:markdown_folding = 1
+"let g:markdown_enable_folding = 1
 " }}}
 
 " Goyo {{{
