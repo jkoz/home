@@ -1,0 +1,10 @@
+#!/bin/bash
+
+tmux list-panes -F "#{pane_active}:#{pane_id}" |
+    xargs -I @@ sh -c 'echo @@ | cut -d":" -f2 | tmux capture-pane -pS -100000 -t -' |
+    tac | grep -P -o "[\w\d_\-\.\/]+" | awk '{ if (!seen[$0]++) print }' |
+    fzf-tmux -p --no-sort | xargs tmux set-buffer --
+
+tmux paste-buffer -t $1
+
+exit 0

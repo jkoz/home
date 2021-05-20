@@ -40,6 +40,7 @@ all:
 	install -Dm644 config/systemd/user/mailagent.service ~/.config/systemd/user/mailagent.service
 	install -Dm644 config/systemd/user/mailagent.timer ~/.config/systemd/user/mailagent.timer
 	install -Dm644 config/systemd/user/dropbox.service ~/.config/systemd/user/dropbox.service
+	install -Dm644 config/bat/config ~/.config/bat/config
 	install -Dm644 xinitrc ~/.xinitrc
 	install -Dm644 Xresources ~/.Xresources
 	install -Dm644 xprofile ~/.xprofile
@@ -84,7 +85,12 @@ all:
 	install -Dm755 scripts/zathura-tabbed ~/bin
 	install -Dm755 scripts/newpost ~/bin
 	install -Dm755 scripts/status ~/bin
+	install -Dm755 scripts/tmux-comp ~/bin/tmux-comp
 	install -Dm600 config/systemd/user/rclone-gdrive.service ~/.config/systemd/user/rclone-gdrive.service
+	# enable italic need following terminfo, work together with source code pro font
+	# https://rsapkf.xyz/blog/enabling-italics-vim-tmux
+	#tic -x xterm-256color-italic
+	#tic -x tmux-256color
 
 ui:
 	[ -d ~/.config/surf ] && git -C ~/.config/surf pull || { git clone http://git.suckless.org/surf ~/.config/surf && git -C ~/.config/surf apply ~/home/config/surf/surf-space-search.diff;}
