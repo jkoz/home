@@ -17,7 +17,7 @@ export M2_HOME=/usr/local/Cellar/maven/3.6.3_1/libexec
 export M2=${M2_HOME}/bin
 export M2_REPO=$HOME/.m2/repository
 export MAVEN_OPTS="-Xms256m -Xmx512m"
-export PATH=${M2_HOME}/bin:${JAVA_HOME}/bin:${PATH}
+export PATH=${M2_HOME}/bin:${JAVA_HOME}/bin:${HOME}/.local/bin:${PATH}
 
 export LESS_TERMCAP_mb=$'\E[01;31m'
 export LESS_TERMCAP_md=$'\E[01;38;5;74m'
@@ -67,6 +67,8 @@ export MEDIA_HOME="$HOME/media"
 
 # choose ruby environment with: rbenv global 2.7.0
 eval "$(rbenv init -)"
+export GOPATH="${HOME}/go"
+export NEXTWORD_DATA_PATH=$HOME/data/nextword/nextword-data-large
 
 #export GTK_MODULES=rgba
 export GTK_RGBA_APPS="allbut:firefox-bin:gnome-mplayer:totem:soffice:<unknown>:exe"
@@ -76,7 +78,7 @@ export GTK_IM_MODULE=ibus
 export QT_IM_MODULE=ibus
 
 export MPD_HOST=~/.mpd/socket
-PATH=${HOME}/bin:${PATH}
+PATH=${HOME}/bin:${GOPATH}/bin:${PATH}
 
 # history
 HISTSIZE=10000
@@ -177,13 +179,13 @@ bindkey '^s' history-incremental-pattern-search-forward
 # Make Vi mode transitions faster (KEYTIMEOUT is in hundredths of a second)
 export KEYTIMEOUT=1
 
-reset_color="%F{white}"
-_prompt_git_info() { git rev-parse --abbrev-ref HEAD 2> /dev/null | xargs printf '%%F{cyan}[%s] ';  }
-_prompt_hg_info() { hg branch 2> /dev/null | xargs printf '%%F{blue}[%s] '; }
+#_prompt_git_info() { git rev-parse --abbrev-ref HEAD 2> /dev/null | xargs printf '%%F{cyan}[%s] ';  }
+#_prompt_hg_info() { hg branch 2> /dev/null | xargs printf '%%F{blue}[%s] '; }
 _prompt() { test -z "$VIM_PROMPT" && echo "%F{white}%}> " || echo "%F{cyan}%}< "; }
 
+reset_color="%F{white}"
 PROMPT="\$(_prompt)%{$reset_color%}"
-RPROMPT="\$(_prompt_git_info)\$(_prompt_hg_info)%{$reset_color%}"
+#RPROMPT="\$(_prompt_git_info)\$(_prompt_hg_info)%{$reset_color%}"
 
 function zle-line-init zle-keymap-select {
     VIM_PROMPT="${${KEYMAP/vicmd/ normal }/(main|viins)/}"
@@ -252,11 +254,12 @@ alias tl='trash-list'
 alias del='trash-put'
 alias irssi='TERM=screen-256color irssi'
 alias b='mvn clean install -Dtest'
-alias e='mvn eclipse:clean eclipse:eclipse'
+#alias e='mvn eclipse:clean eclipse:eclipse'
 alias XTR='xrdb -merge ~/.Xresources'
 alias se='sudo vim'
 alias e='vim'
 alias m='mutt'
+alias t='tmux a'
 alias r='rem -n | sort'
 alias eX='vim ${DOTFILES_HOME}/.Xresources; uD'
 alias eZ='vim ${DOTFILES_HOME}/zshrc; uD'
@@ -282,7 +285,8 @@ alias c='calcurse'
 alias gitone='git --git-dir=.gitone'
 alias gittwo='git --git-dir=.gittwo'
 # }}}
-#
+
 # sourcing
 #source /usr/share/fzf/key-bindings.zsh
-
+#export TERM=xterm-256color-italic
+export TERM=xterm-256color
