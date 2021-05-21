@@ -38,30 +38,19 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'clarke/vim-renumber'
 Plug 'junegunn/goyo.vim'
-Plug 'morhetz/gruvbox'
-Plug 'itchyny/lightline.vim'
 Plug 'Yggdroot/indentLine'
 Plug 'altercation/vim-colors-solarized'
-Plug 'jaxbot/semantic-highlight.vim'
 Plug 'scrooloose/nerdcommenter'
-Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-speeddating'
-Plug 'tpope/vim-markdown'
 Plug 'masukomi/vim-markdown-folding'
 Plug 'gavinbeatty/dragvisuals.vim'
-Plug 'kana/vim-metarw'
-Plug 'mattn/webapi-vim'
-Plug 'mattn/vim-metarw-gdrive'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'reedes/vim-pencil'
 Plug 'reedes/vim-litecorrect'
 Plug 'godlygeek/tabular'
-"Plug 'plasticboy/vim-markdown'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'puremourning/vimspector'
 Plug 'easymotion/vim-easymotion'
@@ -70,40 +59,42 @@ Plug 'honza/vim-snippets'
 Plug 'chrisbra/unicode.vim'
 Plug 'simeji/winresizer'
 Plug 'jceb/vim-orgmode'
-Plug 'itchyny/calendar.vim'
 Plug 'liuchengxu/vim-which-key'
 Plug 'ryanoasis/vim-devicons'
 Plug 'airblade/vim-rooter'
 Plug 'Xuyuanp/nerdtree-git-plugin'
-
-
-"Plug 'Shougo/deoplete.nvim'
-"Plug 'lighttiger2505/deoplete-vim-lsp'
-"Plug 'roxma/nvim-yarp'
-"Plug 'roxma/vim-hug-neovim-rpc'
-
-
-Plug 'dense-analysis/ale'
-Plug 'rhysd/vim-lsp-ale'
+Plug 'scrooloose/nerdtree'
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'mattn/vim-lsp-settings'
-
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
 Plug 'machakann/asyncomplete-ezfilter.vim'
-Plug 'wellle/tmux-complete.vim'
-
-" go get -u github.com/high-moctane/nextword
-"Plug 'high-moctane/asyncomplete-nextword.vim'
-
-"Plug 'majutsushi/tagbar'
 Plug 'liuchengxu/vista.vim'
 
+"Plug 'itchyny/lightline.vim'
+"Plug 'tpope/vim-speeddating'
+"Plug 'jaxbot/semantic-highlight.vim'
+"Plug 'clarke/vim-renumber'
+"Plug 'morhetz/gruvbox'
+"Plug 'kana/vim-metarw'
+"Plug 'mattn/webapi-vim'
+"Plug 'mattn/vim-metarw-gdrive'
+"Plug 'itchyny/calendar.vim'
+"Plug 'Shougo/deoplete.nvim'
+"Plug 'lighttiger2505/deoplete-vim-lsp'
+"Plug 'roxma/nvim-yarp'
+"Plug 'roxma/vim-hug-neovim-rpc'
+"Plug 'dense-analysis/ale'
+"Plug 'rhysd/vim-lsp-ale'
+"Plug 'wellle/tmux-complete.vim' " as I use tmux-comp script with fzf
+" go get -u github.com/high-moctane/nextword
+"Plug 'high-moctane/asyncomplete-nextword.vim'
 "Plug 'ctrlpvim/ctrlp.vim'
 "Plug 'mattn/ctrlp-lsp'
 "Plug 'ycm-core/YouCompleteMe'
+"Plug 'majutsushi/tagbar'
 
 call plug#end()
 filetype plugin indent on
@@ -298,17 +289,33 @@ se fcs+=diff:\ "the leading space is used
 "se fcs+=stlnc:┈
 " }}}
 
-" Statusline {{{
+" Status line {{{
 se ls=2
-se stl=-
-"se stl=[%f]\ " Path to the file
+"se stl=\ %f\  " Path to the file
 "se stl+=%=        " Switch to the right side
 "se stl+=[%l]        " Current line
 "se stl+=/         " Separator
 "se stl+=[%L]        " Total lines
 
-hi StatusLine ctermbg=NONE cterm=NONE ctermfg=3
-hi StatusLineNC ctermbg=NONE cterm=NONE ctermfg=11
+
+function! StatuslineGit()
+  let l:branchname = system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
+  return strlen(l:branchname) > 0?'  '.l:branchname.' ':''
+endfunction
+
+se stl=
+se stl+=%#PmenuSel# " enable highlight for git info
+se stl+=%{StatuslineGit()} " show git info
+se stl+=%#Visual# " use Visual highlight for remaining status line
+se stl+=\ %f " show current file
+se stl+=%m\  " do not know
+se stl+=%=  " right align
+"set stl+=%#CursorColumn#
+"set stl+=\ %y " file type
+"set stl+=\ %{&fileencoding?&fileencoding:&encoding}  "encoding
+"set stl+=\[%{&fileformat}\] " file format
+se stl+=\ %p%%  " percentage through file
+se stl+=\ %l:%c\  " line number and  column
 
 " }}}
 
@@ -332,11 +339,11 @@ aug pencil
                 \ | setl fdo+=search
                 \ | setl nocursorcolumn
     autocmd FileType markdown,mkd,md
-                \   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 1})
+                \   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
                 \ | call litecorrect#init()
                 \ | setl spell spl=en_us
-                \ | setl foldtext=_foldtext()
                 \ | setl foldexpr=NestedMarkdownFolds()
+                \ | setl foldtext=_foldtext()
                 \ | setl fdo+=search
     autocmd Filetype git,gitsendemail,*commit*,*COMMIT*
                 \   call pencil#init({'wrap': 'soft', 'textwidth': 72})
@@ -386,6 +393,10 @@ let g:vista_executive_for = {
         \ }
 let g:vista_ignore_kinds = ['Variable']
 nn <silent> <leader>o :Vista finder<CR>
+aug vistahidecwd
+    autocmd!
+    autocmd bufenter * if winnr("$") == 1 && vista#sidebar#IsOpen() | q | endif
+aug end
 " }}}
 
 " Nerd Tree {{{
@@ -407,13 +418,15 @@ let NERDTreeHighlightCursorline=1 " Highlight the selected entry in the tree
 let NERDTreeMouseMode=2 " Use a single click to fold/unfold directories and a double click to open files
 "let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$',
             "\ '\.o$', '\.so$', '\.egg$', '^\.git$', '\.svn$', '^target$', '^\.settings$', '^\.classpath$', '^\.project$', '^\.hg', '.pydevproject'  ]
-
+" Disable arrow icons at the left side of folders for NERDTree.
+let g:NERDTreeDirArrowExpandable = "\u00a0"
+let g:NERDTreeDirArrowCollapsible = "\u00a0"
 let g:NERDTreeStatusline = '%#NonText#'
 
 " hide nerd tree first line
-aug nerdtreehidecwd
-	autocmd!
-	autocmd FileType nerdtree setlocal conceallevel=3 | syntax match NERDTreeHideCWD #^[</].*$# conceal
+"aug nerdtreehidecwd
+    "autocmd!
+    "autocmd FileType nerdtree setl conceallevel=3 | syntax match NERDTreeHideCWD #^[</].*$# conceal
 aug end
 
 " automatically close nerd tree when it is the only one left
@@ -422,6 +435,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 
 " FZF {{{
 nn <silent> <c-p>     :FZF<CR>
+nn <silent> <leader>p     :FZF<CR>
 nn <silent> <leader>z :Buffers<CR>
 nn <silent> <leader>m :History<CR>
 nn <silent> <leader>xx :Command<CR>
@@ -619,7 +633,7 @@ autocmd User asyncomplete_setup cal asyncomplete#register_source(asyncomplete#so
 
 let g:asyncomplete_auto_completeopt = 1
 let g:asyncomplete_auto_popup = 1
-inoremap <c-space> <Plug>(asyncomplete_force_refresh)
+imap <expr> <C-Space> <Plug>(asyncomplete_force_refresh)
 
 " }}}
 
@@ -695,18 +709,25 @@ hi Comment cterm=italic
 
 " {{{ foldtext
 fu! _foldtext()
-    let line = ' ' . substitute(getline(v:foldstart), '^\s*"\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g') . ' '
-    let lines_count = v:foldend - v:foldstart + 1
-    let lines_count_text = '[' . printf("%10s", lines_count . ' lines') . ' ]'
+    " clean up first line
+    let line = substitute(getline(v:foldstart), '^\s*"\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g') . ' '
+
     let foldchar = matchstr(&fillchars, 'fold:\zs.')
+
+    " shorten first line, and added fold char ahead of first line
     "let foldtextstart = strpart('+' . repeat(foldchar, v:foldlevel*2) . line, 0, (winwidth(0)*2)/3)
+
+    " simply use a portion of first line
     let foldtextstart = strpart(line, 0, (winwidth(0)*2)/3)
+
+    let lines_count_text = printf("%10s", v:foldend - v:foldstart + 1 . ' lines') . ' '
     let foldtextend = lines_count_text . repeat(foldchar, 8)
     let foldtextlength = strlen(substitute(foldtextstart . foldtextend, '.', 'x', 'g')) + &foldcolumn
     retu foldtextstart . repeat(foldchar, winwidth(0)-foldtextlength) . foldtextend
 endf
 hi Folded cterm=italic ctermbg=NONE ctermfg=12 guifg=Cyan guibg=DarkGrey
 hi FoldColumn ctermbg=NONE
+set foldtext=_foldtext()
 " }}}
 
 " windows {{{
@@ -788,13 +809,19 @@ hi IncSearch cterm=underline ctermbg=0 ctermfg=229
 "make popup menu looks nicer
 hi Pmenu cterm=NONE ctermfg=12 ctermbg=0
 
+" CursorColumn, CursorLine, and CursorLineNr
+hi CursorLineNr cterm=bold,italic ctermbg=NONE ctermfg=64
+hi CursorLine ctermbg=NONE
+hi CursorColumn ctermbg=NONE
+hi LineNr ctermbg=NONE
+
 " heading title looks better with yellow
 hi Title term=NONE cterm=italic ctermfg=136
 " }}}
 
 " semantic highlighting {{{
-nn<Leader>xs :SemanticHighlightToggle<cr>
-let g:semanticTermColors = [28,1,2,3,4,5,6,7,25,9,10,34,12,13,14,15,16,125,124,19]
+"nn<Leader>xs :SemanticHighlightToggle<cr>
+"let g:semanticTermColors = [28,1,2,3,4,5,6,7,25,9,10,34,12,13,14,15,16,125,124,19]
 " }}}
 
 " quick fix buffer {{{
@@ -806,37 +833,43 @@ nn <leader>j[ :lprevious<cr>
 
 "devicons {{{
 
-let g:WebDevIconsNerdTreeGitPluginForceVAlign=1
+"let g:WebDevIconsNerdTreeBeforeGlyphPadding = ""
+let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
+let g:webdevicons_conceal_nerdtree_brackets = 1
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+let g:DevIconsEnableFoldersOpenClose = 1
+let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
 
 " }}}
 
 "calendar {{{
 " to be autoground
 
-autocmd FileType calendar
-    \ cal calendar#color#syntax('Sunday', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
-    \ | cal calendar#color#syntax('Saturday', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
-    \ | cal calendar#color#syntax('DayTitle', has('gui') ? '#ff0000' : 64, 'NONE', 'NONE')
-    \ | cal calendar#color#syntax('SundayTitle', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
-    \ | cal calendar#color#syntax('SaturdayTitle', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
-    \ | cal calendar#color#syntax('Today', has('gui') ? '#ff0000' : 33, '0', 'NONE')
-    \ | cal calendar#color#syntax('TodaySunday', has('gui') ? '#ff0000' : 33, 'NONE', 'NONE')
-    \ | cal calendar#color#syntax('TodaySaturday', has('gui') ? '#ff0000' : 33, 'NONE', 'NONE')
-    \ | cal calendar#color#syntax('Select', has('gui') ? '#ff0000' : 33, '0', 'NONE')
-    \ | cal calendar#color#syntax('OtherMonth', has('gui') ? '#ff0000' : 245, '0', 'NONE')
-    \ | cal calendar#color#syntax('OtherMonthSelect', has('gui') ? '#ff0000' : 245, '0', 'NONE')
-    \ | cal calendar#color#syntax('NormalSpace', has('gui') ? '#ff0000' : 255, '0', 'NONE')
-    \ | cal calendar#color#syntax('CommentSelect', has('gui') ? '#ff0000' : 232, '0', 'NONE')
+"autocmd FileType calendar
+    "\ cal calendar#color#syntax('Sunday', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
+    "\ | cal calendar#color#syntax('Saturday', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
+    "\ | cal calendar#color#syntax('DayTitle', has('gui') ? '#ff0000' : 64, 'NONE', 'NONE')
+    "\ | cal calendar#color#syntax('SundayTitle', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
+    "\ | cal calendar#color#syntax('SaturdayTitle', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
+    "\ | cal calendar#color#syntax('Today', has('gui') ? '#ff0000' : 33, '0', 'NONE')
+    "\ | cal calendar#color#syntax('TodaySunday', has('gui') ? '#ff0000' : 33, 'NONE', 'NONE')
+    "\ | cal calendar#color#syntax('TodaySaturday', has('gui') ? '#ff0000' : 33, 'NONE', 'NONE')
+    "\ | cal calendar#color#syntax('Select', has('gui') ? '#ff0000' : 33, '0', 'NONE')
+    "\ | cal calendar#color#syntax('OtherMonth', has('gui') ? '#ff0000' : 245, '0', 'NONE')
+    "\ | cal calendar#color#syntax('OtherMonthSelect', has('gui') ? '#ff0000' : 245, '0', 'NONE')
+    "\ | cal calendar#color#syntax('NormalSpace', has('gui') ? '#ff0000' : 255, '0', 'NONE')
+    "\ | cal calendar#color#syntax('CommentSelect', has('gui') ? '#ff0000' : 232, '0', 'NONE')
+    "\ | setl conceallevel=3
 
-let g:calendar_google_calendar = 1
-let g:calendar_google_task = 1
+"let g:calendar_google_calendar = 1
+"let g:calendar_google_task = 1
 "}}}
 
 " vim-markdown {{{
 " disable of conceal regardless of conceallevel
 "let g:vim_markdown_conceal = 0
-"let g:markdown_folding = 1
-"let g:markdown_enable_folding = 1
+let g:markdown_folding = 1
+let g:markdown_enable_folding = 1
 " }}}
 
 " Goyo {{{
@@ -844,17 +877,20 @@ let g:goyo_width=100
 " }}}
 
 " Ale, deoplete {{{
-let g:ale_linters = {
-        \   'go': ['vim-lsp', 'golint'],
-    \ }
+"let g:ale_linters = {
+        "\   'go': ['vim-lsp', 'golint'],
+    "\ }
 "let g:ale_completion_enabled=1
-let g:deoplete#enable_at_startup = 1
+
+" turn this on to use deoplete
+"let g:deoplete#enable_at_startup = 1
+
 "nn <leader>jd :ALEGoToDefinition<cr>
 "nn <leader>jf :ALEFindReferences<cr>
 "nn <leader>js :ALESymbolSearch<cr>
 "nn <leader>jr :ALERename<cr>
-nn <leader>jn :ALENext<cr>
-nn <leader>jp :ALEPrevious<cr>
+"nn <leader>jn :ALENext<cr>
+"nn <leader>jp :ALEPrevious<cr>
 
 "nn <leader>ji :LspImplementation<cr>
 "nn <leader>ji :LspImplementation<cr>
