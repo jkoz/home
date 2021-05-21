@@ -1,11 +1,13 @@
 #!/bin/bash
 
-tmux list-panes -F "#{pane_active}:#{pane_id}" |
-    xargs -I @@ sh -c 'echo @@ | cut -d":" -f2 | tmux capture-pane -pS -100000 -t -' |
-    tac | grep -P -o "[\w\d_\-\.\/]+" | awk '{ if (!seen[$0]++) print }' |
-    fzf-tmux -p --no-sort | xargs -r tmux set-buffer --
+# 1. list all panes' id
+# 2. capture all info from all panes
+# 3. reverse the list
+# 4. filter word only
+# 5. unique awk '{ if (!seen[$0]++) print }'
+# 6. pass to fzf-tmux
+# 7. set buffer if user is not cancle fzf (via xargs -r argument)
 
-# TODO: don't paste last buffer if we cancle tmux in the middle
-tmux paste-buffer -t $1
-
-exit 0
+tmux list-panes -F "#{pane_id}" | xargs -I @@ tmux capture-pane -pS -100000 -t @@ |
+    tac | grep -P -o "[\w\d_\-\.\/\~]+" | awk '{ if (!seen[$0]++) print }' |
+    fzf-tmux -p --no-sort | xargs -r -I @@ sh -c "tmux set-buffer -- @@; tmux paste-buffer -t $1"
