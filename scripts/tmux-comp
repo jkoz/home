@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# USAGE:
+# tmux-comp $TMUX_PANE
+
 # 1. list all panes' id
 # 2. capture all info from all panes
 # 3. reverse the list
@@ -8,6 +11,9 @@
 # 6. pass to fzf-tmux
 # 7. set buffer if user is not cancle fzf (via xargs -r argument)
 
+# CHANGE LOG
+# replace tac | grep -P -o "[\w\d_\-\.\/\~]+" | awk '!seen[$0]++' to use awk only, thus work on any linux machine
+
 tmux list-panes -F "#{pane_id}" | xargs -I @@ tmux capture-pane -pS -100000 -t @@ |
-    tac | grep -P -o "[\w\d_\-\.\/\~]+" | awk '{ if (!seen[$0]++) print }' |
+    awk '{for(i=1;i<=NF;i++) { if (!visisted[$i]++) a[j++]=$i }} END { while (j--) print a[j] }' |
     fzf-tmux -p --no-sort | xargs -r -I @@ sh -c "tmux set-buffer -- @@; tmux paste-buffer -t $1"
