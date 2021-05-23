@@ -38,41 +38,46 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'junegunn/goyo.vim'
-Plug 'Yggdroot/indentLine'
 Plug 'altercation/vim-colors-solarized'
-Plug 'scrooloose/nerdcommenter'
+Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-vinegar'
+Plug 'tpope/vim-repeat'
 Plug 'masukomi/vim-markdown-folding'
 Plug 'gavinbeatty/dragvisuals.vim'
+Plug 'junegunn/goyo.vim'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
-Plug 'reedes/vim-pencil'
-Plug 'reedes/vim-litecorrect'
+Plug 'junegunn/vim-easy-align'
 Plug 'godlygeek/tabular'
 Plug 'dhruvasagar/vim-table-mode'
-Plug 'puremourning/vimspector'
 Plug 'easymotion/vim-easymotion'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-Plug 'chrisbra/unicode.vim'
 Plug 'simeji/winresizer'
 Plug 'jceb/vim-orgmode'
 Plug 'liuchengxu/vim-which-key'
-Plug 'ryanoasis/vim-devicons'
 Plug 'airblade/vim-rooter'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'scrooloose/nerdtree'
-Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/vim-lsp'
-Plug 'mattn/vim-lsp-settings'
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
-Plug 'machakann/asyncomplete-ezfilter.vim'
 Plug 'liuchengxu/vista.vim'
+Plug 'puremourning/vimspector'
+Plug 'airblade/vim-gitgutter'
+Plug 'natebosch/vim-lsc'
 
+" Plug 'prabirshrestha/async.vim'
+" Plug 'prabirshrestha/vim-lsp'
+" Plug 'mattn/vim-lsp-settings'
+" Plug 'prabirshrestha/asyncomplete.vim'
+" Plug 'prabirshrestha/asyncomplete-lsp.vim'
+" Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
+" Plug 'machakann/asyncomplete-ezfilter.vim'
+"Plug 'chrisbra/unicode.vim'
+"Plug 'reedes/vim-pencil'
+"Plug 'reedes/vim-litecorrect'
+"Plug 'Yggdroot/indentLine'
+"Plug 'Xuyuanp/nerdtree-git-plugin'
+"Plug 'scrooloose/nerdtree'
+"Plug 'ryanoasis/vim-devicons'
 "Plug 'itchyny/lightline.vim'
 "Plug 'tpope/vim-speeddating'
 "Plug 'jaxbot/semantic-highlight.vim'
@@ -271,7 +276,9 @@ se wildignore+=*_build/*,*/coverage/*,*/target/*,*/tmp/*,*/lib/*,*/.settings/*,*
 se dict=/usr/share/dict/cracklib-small
 se complete=.,b,u,]
 se wildmode=longest,list:longest
-se completeopt=menuone,menu,longest,preview
+
+" remove preview, as i don't want see my windows move because of scratch
+se completeopt=menuone,menu,longest,noselect
 
 " color
 se background=dark
@@ -333,26 +340,21 @@ aug END
 aug pencil
     autocmd!
     autocmd FileType tex,latex
-                \   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
-                \ | call litecorrect#init()
-                \ | setl spell spl=en_us noru nonu nornu
-                \ | setl fdo+=search
-                \ | setl nocursorcolumn
+                \ setl spell spl=en_us fdo+=search nocursorcolumn
+                "\ |  call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
+                "\ | call litecorrect#init()
     autocmd FileType markdown,mkd,md
-                \   call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
-                \ | call litecorrect#init()
-                \ | setl spell spl=en_us
-                \ | setl foldexpr=NestedMarkdownFolds()
-                \ | setl foldtext=_foldtext()
-                \ | setl fdo+=search
+                \ setl spell spl=en_us foldexpr=NestedMarkdownFolds() foldtext=_foldtext() fdo+=search
+                "\ | call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
+                "\ | call litecorrect#init()
     autocmd Filetype git,gitsendemail,*commit*,*COMMIT*
-                \   call pencil#init({'wrap': 'soft', 'textwidth': 72})
-                \ | call litecorrect#init()
-                \ | setl spell spl=en_us et sw=2 ts=2 noai
+                \ setl spell spl=en_us et sw=2 ts=2 noai
+                "\ | call pencil#init({'wrap': 'soft', 'textwidth': 72})
+                "\ | call litecorrect#init()
     autocmd Filetype mail
-                \   call pencil#init({'wrap': 'soft', 'textwidth': 60})
-                \ | call litecorrect#init()
-                \ | setl spell spl=en_us spf=~/.vim/spellfile.add et sw=2 ts=2 noai nonu nornu
+                \ setl spell spl=en_us spf=~/.vim/spellfile.add et sw=2 ts=2 noai nonu nornu
+                "\ |  call pencil#init({'wrap': 'soft', 'textwidth': 60})
+                "\ | call litecorrect#init()
 aug END
 
 "}}}
@@ -386,10 +388,11 @@ aug END
 " Vista {{{
 nn <silent> <leader>l :Vista<cr>
 let g:vista_executive_for = {
-        \ 'cpp': 'vim_lsp',
-        \ 'c': 'vim_lsp',
-        \ 'python': 'vim_lsp',
-        \ 'java': 'vim_lsp',
+        \ 'cpp': 'vim_lsc',
+        \ 'c': 'vim_lsc',
+        \ 'python': 'vim_lsc',
+        \ 'java': 'vim_lsc',
+        \ 'vim': 'vim_lsc'
         \ }
 let g:vista_ignore_kinds = ['Variable']
 nn <silent> <leader>o :Vista finder<CR>
@@ -400,29 +403,29 @@ aug end
 " }}}
 
 " Nerd Tree {{{
-nn <leader>no :NERDTreeToggle<CR>
-nn <leader>nf :NERDTreeFind<CR>
+"nn <leader>no :NERDTreeToggle<CR>
+"nn <leader>nf :NERDTreeFind<CR>
 
 "on mac to display correct use nerd font
 "brew tap homebrew/cask-fonts
 "brew cask install font-hack-nerd-font
-let NERDTreeMinimalUI = 1
-let NERDTreeDirArrows = 1
-let NERDTreeBookmarksFile=expand("$HOME/.vim/NERDTreeBookmarks") " Store the bookmarks file
-let NERDTreeShowBookmarks=1 " Show the bookmarks table on startup
-let NERDTreeShowFiles=1 " Show hidden files, too
-let NERDTreeShowHidden=1
-let NERDTreeQuitOnOpen=2 " Quit on opening files from the tree
-let NERDTreeWinSize = 30
-let NERDTreeHighlightCursorline=1 " Highlight the selected entry in the tree
-let NERDTreeMouseMode=2 " Use a single click to fold/unfold directories and a double click to open files
+"let NERDTreeMinimalUI = 1
+"let NERDTreeDirArrows = 1
+"let NERDTreeBookmarksFile=expand("$HOME/.vim/NERDTreeBookmarks") " Store the bookmarks file
+"let NERDTreeShowBookmarks=1 " Show the bookmarks table on startup
+"let NERDTreeShowFiles=1 " Show hidden files, too
+"let NERDTreeShowHidden=1
+"let NERDTreeQuitOnOpen=2 " Quit on opening files from the tree
+"let NERDTreeWinSize = 30
+"let NERDTreeHighlightCursorline=1 " Highlight the selected entry in the tree
+"let NERDTreeMouseMode=2 " Use a single click to fold/unfold directories and a double click to open files
+"let g:NERDTreeDirArrowExpandable = "\u00a0"
+"let g:NERDTreeDirArrowCollapsible = "\u00a0"
+"let g:NERDTreeStatusline = '%#NonText#'
+
 "let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$',
             "\ '\.o$', '\.so$', '\.egg$', '^\.git$', '\.svn$', '^target$', '^\.settings$', '^\.classpath$', '^\.project$', '^\.hg', '.pydevproject'  ]
 " Disable arrow icons at the left side of folders for NERDTree.
-let g:NERDTreeDirArrowExpandable = "\u00a0"
-let g:NERDTreeDirArrowCollapsible = "\u00a0"
-let g:NERDTreeStatusline = '%#NonText#'
-
 " hide nerd tree first line
 "aug nerdtreehidecwd
     "autocmd!
@@ -430,7 +433,27 @@ let g:NERDTreeStatusline = '%#NonText#'
 aug end
 
 " automatically close nerd tree when it is the only one left
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+" netrw
+"let g:netrw_banner = 0 " enable bannle to learn command for now
+"let g:netrw_altv = 1
+"let g:netrw_liststyle = 0
+"let g:netrw_browse_split = 4
+"let g:netrw_winsize = 20
+nn <Leader>nf :let @/=expand("%:t") <Bar> execute 'Ex' expand("%:h") <Bar> normal n<CR>
+"augroup ProjectDrawer
+  "autocmd!
+  "autocmd VimEnter * :Vexplore
+"augroup END
+" aug netrw_
+"     autocmd!
+"     autocmd filetype netrw call Fix_netrw_maps_for_dvorak()
+" aug END
+" fu! Fix_netrw_maps_for_dvorak()
+"     noremap <buffer> - :bd
+"     " and any others...
+" endf
 " }}}
 
 " FZF {{{
@@ -494,7 +517,7 @@ let g:syntastic_warning_symbol = '⚠'
 
 " Pencil {{{
 " soft mode use 1 line even if it is long line
-let g:pencil#mode_indicators = {'hard': 'PH', 'soft': 'PS', 'off': ''}
+" let g:pencil#mode_indicators = {'hard': 'PH', 'soft': 'PS', 'off': ''}
 " }}}
 
 " Dispatch {{{
@@ -661,29 +684,50 @@ imap <expr> <C-Space> <Plug>(asyncomplete_force_refresh)
 
 " vim-lsp {{{
 
-nn <leader>jd :LspDefinition<cr>
-nn <leader>jf :LspReferences<cr>
-nn <leader>ji :LspImplementation<cr>
-nn <leader>jn :LspNextError<cr>
-nn <leader>jp :LspPreviousError<cr>
-nn <leader>js :LspWorkspaceSymbol<cr>
-nn <leader>ji :LspImplementation<cr>
-nn <leader>jh :LspTypeHierarchy<cr>
-nn <leader>jr :LspRename<cr>
-nn <leader>jc :LspCodeAction<cr>
+" nn <leader>jd :LspDefinition<cr>
+" nn <leader>jf :LspReferences<cr>
+" nn <leader>ji :LspImplementation<cr>
+" nn <leader>jn :LspNextError<cr>
+" nn <leader>jp :LspPreviousError<cr>
+" nn <leader>js :LspWorkspaceSymbol<cr>
+" nn <leader>ji :LspImplementation<cr>
+" nn <leader>jh :LspTypeHierarchy<cr>
+" nn <leader>jr :LspRename<cr>
+" nn <leader>jc :LspCodeAction<cr>
 "set foldmethod=expr
   "\ foldexpr=lsp#ui#vim#folding#foldexpr()
   "\ foldtext=lsp#ui#vim#folding#foldtext()
 
 " enable diagnostics for cursor
-let g:lsp_diagnostics_enable = 1
-let g:lsp_diagnostics_echo_cursor = 1
+" let g:lsp_diagnostics_enable = 1
+" let g:lsp_diagnostics_echo_cursor = 1
 
-let g:lsp_log_verbose = 1
-let g:lsp_log_file = expand('~/.vim-lsp.log')
-let g:asyncomplete_log_file = expand('~/.asyncomplete.log')
-let g:lsp_highlight_references_enabled = 1
-hi lspReference cterm=underline ctermfg=33 ctermbg=0
+" let g:lsp_log_verbose = 1
+" let g:lsp_log_file = expand('~/.vim-lsp.log')
+" let g:asyncomplete_log_file = expand('~/.asyncomplete.log')
+" let g:lsp_highlight_references_enabled = 1
+" hi lspReference cterm=underline ctermfg=33 ctermbg=0
+" }}}
+
+" vim-lsc {{{
+" sudo npm install -g vim-language-server
+let g:lsc_server_commands = {
+ \ 'c': {
+ \    'command': 'clangd'
+ \  },
+ \  'vim': {
+ \    'command': 'vim-language-server --stdio'
+ \  }
+ \}
+
+let g:lsc_auto_map = v:true
+
+" re-trigger with c-x c-u
+let g:lsc_enable_autocomplete  = v:true
+let g:lsc_enable_diagnostics   = v:true
+let g:lsc_reference_highlights = v:true
+let g:lsc_trace_level          = 'off'
+hi lscReference cterm=underline ctermfg=33 ctermbg=0
 " }}}
 
 " easymotion {{{
@@ -801,7 +845,7 @@ autocmd FileType which_key highlight WhichKeyFloating ctermbg=0 ctermfg=12
 nnoremap <silent> <leader> :WhichKey ','<CR>
 " }}}
 
-" let personalize color override everything {{{
+" Personalize highlighting {{{
 hi SignColumn ctermfg=12 ctermbg=NONE
 hi Search cterm=underline ctermbg=0 ctermfg=NONE
 hi IncSearch cterm=underline ctermbg=0 ctermfg=229
@@ -817,6 +861,10 @@ hi LineNr ctermbg=NONE
 
 " heading title looks better with yellow
 hi Title term=NONE cterm=italic ctermfg=136
+
+" status line
+hi StatusLine ctermbg=NONE cterm=NONE ctermfg=3
+hi StatusLineNC ctermbg=NONE cterm=NONE ctermfg=11
 " }}}
 
 " semantic highlighting {{{
@@ -834,11 +882,11 @@ nn <leader>j[ :lprevious<cr>
 "devicons {{{
 
 "let g:WebDevIconsNerdTreeBeforeGlyphPadding = ""
-let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
-let g:webdevicons_conceal_nerdtree_brackets = 1
-let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-let g:DevIconsEnableFoldersOpenClose = 1
-let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
+"let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
+"let g:webdevicons_conceal_nerdtree_brackets = 1
+"let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+"let g:DevIconsEnableFoldersOpenClose = 1
+"let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
 
 " }}}
 
