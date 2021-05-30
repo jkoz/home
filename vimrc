@@ -44,26 +44,37 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-rsi'
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-abolish'
 Plug 'masukomi/vim-markdown-folding'
 Plug 'gavinbeatty/dragvisuals.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-easy-align'
-Plug 'godlygeek/tabular'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'easymotion/vim-easymotion'
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
 Plug 'simeji/winresizer'
-Plug 'jceb/vim-orgmode'
 Plug 'liuchengxu/vim-which-key'
 Plug 'airblade/vim-rooter'
 Plug 'liuchengxu/vista.vim'
 Plug 'puremourning/vimspector'
 Plug 'airblade/vim-gitgutter'
 Plug 'natebosch/vim-lsc'
+Plug 'Yggdroot/indentLine'
+Plug 'reedes/vim-pencil'
+Plug 'reedes/vim-litecorrect'
+Plug 'reedes/vim-lexical'
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip-integ'
 
+" Plug 'SirVer/ultisnips'
+" Plug 'honza/vim-snippets'
+" Plug 'godlygeek/tabular'
+" Plug 'jceb/vim-orgmode'
 " Plug 'prabirshrestha/async.vim'
 " Plug 'prabirshrestha/vim-lsp'
 " Plug 'mattn/vim-lsp-settings'
@@ -72,12 +83,10 @@ Plug 'natebosch/vim-lsc'
 " Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
 " Plug 'machakann/asyncomplete-ezfilter.vim'
 "Plug 'chrisbra/unicode.vim'
-"Plug 'reedes/vim-pencil'
-"Plug 'reedes/vim-litecorrect'
-"Plug 'Yggdroot/indentLine'
 "Plug 'Xuyuanp/nerdtree-git-plugin'
 "Plug 'scrooloose/nerdtree'
-"Plug 'ryanoasis/vim-devicons'
+" Plug 'lambdalisue/fern.vim'
+" Plug 'ryanoasis/vim-devicons'
 "Plug 'itchyny/lightline.vim'
 "Plug 'tpope/vim-speeddating'
 "Plug 'jaxbot/semantic-highlight.vim'
@@ -91,7 +100,7 @@ Plug 'natebosch/vim-lsc'
 "Plug 'lighttiger2505/deoplete-vim-lsp'
 "Plug 'roxma/nvim-yarp'
 "Plug 'roxma/vim-hug-neovim-rpc'
-"Plug 'dense-analysis/ale'
+" Plug 'dense-analysis/ale'
 "Plug 'rhysd/vim-lsp-ale'
 "Plug 'wellle/tmux-complete.vim' " as I use tmux-comp script with fzf
 " go get -u github.com/high-moctane/nextword
@@ -142,7 +151,7 @@ nn / /\v
 vn / /\v
 
 " match bracket pairs with tab is a hell of a lot easier than %
-map <tab> %
+" map <tab> %
 
 " clear search match
 nn <silent> <leader><space> :nohl<cr>
@@ -194,6 +203,7 @@ if has("multi_byte")
     se fileencodings=ucs-bom,utf-8,latin1
 en
 
+se nocompatible
 se t_Co=256
 se sw=4
 se autowrite
@@ -284,6 +294,10 @@ se completeopt=menuone,menu,longest,noselect
 se background=dark
 colo solarized
 
+" changing cursor in insert mode and normal mode
+let &t_SI = "\e[6 q"
+let &t_EI = "\e[2 q"
+
 "}}}
 
 " fillchars {{{
@@ -337,26 +351,6 @@ aug configgroup
     au BufRead,BufNewFile *.h,*.hpp,*.cc,*.cpp setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=manual foldlevel=0
     au BufRead,BufNewFile *.conf setl tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab foldmethod=marker foldlevel=0
 aug END
-aug pencil
-    autocmd!
-    autocmd FileType tex,latex
-                \ setl spell spl=en_us fdo+=search nocursorcolumn
-                "\ |  call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
-                "\ | call litecorrect#init()
-    autocmd FileType markdown,mkd,md
-                \ setl spell spl=en_us foldexpr=NestedMarkdownFolds() foldtext=_foldtext() fdo+=search
-                "\ | call pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 3})
-                "\ | call litecorrect#init()
-    autocmd Filetype git,gitsendemail,*commit*,*COMMIT*
-                \ setl spell spl=en_us et sw=2 ts=2 noai
-                "\ | call pencil#init({'wrap': 'soft', 'textwidth': 72})
-                "\ | call litecorrect#init()
-    autocmd Filetype mail
-                \ setl spell spl=en_us spf=~/.vim/spellfile.add et sw=2 ts=2 noai nonu nornu
-                "\ |  call pencil#init({'wrap': 'soft', 'textwidth': 60})
-                "\ | call litecorrect#init()
-aug END
-
 "}}}
 
 " Tag bar {{{
@@ -458,7 +452,7 @@ nn <Leader>nf :let @/=expand("%:t") <Bar> execute 'Ex' expand("%:h") <Bar> norma
 
 " FZF {{{
 nn <silent> <c-p>     :FZF<CR>
-nn <silent> <leader>p     :FZF<CR>
+nn <silent> <leader>p  :FZFExplore<CR>
 nn <silent> <leader>z :Buffers<CR>
 nn <silent> <leader>m :History<CR>
 nn <silent> <leader>xx :Command<CR>
@@ -498,6 +492,21 @@ let g:fzf_action = {
 " - C-t to open file in a new tab
 " - C-x to split
 " - C-v to v split
+
+" FZF go up directory upon doing :Files
+fu! FzfExplore(...)
+    let inpath = substitute(a:1, "'", '', 'g')
+    if inpath == "" || matchend(inpath, '/') == strlen(inpath)
+        execute "cd" getcwd() . '/' . inpath
+        let cwpath = getcwd() . '/'
+        call fzf#run(fzf#wrap(fzf#vim#with_preview({'source': 'ls -1ap', 'dir': cwpath, 'sink': 'FZFExplore', 'options': ['--prompt', cwpath]})))
+    else
+        let file = getcwd() . '/' . inpath
+        execute "e" file
+    endif
+endfunction
+
+command! -nargs=* FZFExplore call FzfExplore(shellescape(<q-args>))
 " }}}
 
 " Drag visuals {{{
@@ -517,7 +526,27 @@ let g:syntastic_warning_symbol = '⚠'
 
 " Pencil {{{
 " soft mode use 1 line even if it is long line
-" let g:pencil#mode_indicators = {'hard': 'PH', 'soft': 'PS', 'off': ''}
+let g:pencil#mode_indicators = {'hard': 'PH', 'soft': 'PS', 'off': ''}
+
+aug pencil
+    autocmd!
+    autocmd FileType tex,latex
+                \ setl spell spl=en_us fdo+=search nocursorcolumn
+                \ |  cal pencil#init({'wrap': 'soft', 'textwidth': 80, 'conceallevel': 2})
+                \ | cal litecorrect#init() | cal lexical#init()
+    autocmd FileType markdown,mkd,md
+                \ setl nowrap spell spl=en_us foldexpr=NestedMarkdownFolds() foldtext=_foldtext() fdo+=search
+                \ | cal pencil#init({'wrap': 'soft', 'textwidth': 200, 'conceallevel': 2})
+                \ | cal litecorrect#init() | cal lexical#init()
+    autocmd Filetype git,gitsendemail,*commit*,*COMMIT*
+                \ setl spell spl=en_us et sw=2 ts=2 noai
+                \ | cal pencil#init({'wrap': 'soft', 'textwidth': 72})
+                \ | cal litecorrect#init() | cal lexical#init()
+    autocmd Filetype mail
+                \ setl spell spl=en_us spf=~/.vim/spellfile.add et sw=2 ts=2 noai nonu nornu
+                \ |  cal pencil#init({'wrap': 'soft', 'textwidth': 60})
+                \ | cal litecorrect#init() | cal lexical#init()
+aug END
 " }}}
 
 " Dispatch {{{
@@ -526,8 +555,8 @@ nn <leader>r :silent Dispatch!<CR>
 
 " {{{ fugitive
 nnoremap <leader>ga :Git add %:p<CR><CR>
-nnoremap <leader>gs :Gstatus<CR>
-nnoremap <leader>gc :Gcommit -v -q<CR>
+nnoremap <leader>gs :Git<CR>
+nnoremap <leader>gc :Git commit -v -q<CR>
 nnoremap <leader>gt :Gcommit -v -q %:p<CR>
 nnoremap <leader>gd :Gdiff<CR>
 nnoremap <leader>ge :Gedit<CR>
@@ -538,8 +567,8 @@ nnoremap <leader>gp :Ggrep<Space>
 nnoremap <leader>gm :Gmove<Space>
 nnoremap <leader>gb :Git branch<Space>
 nnoremap <leader>go :Git checkout<Space>
-nnoremap <leader>gps :Gpush<CR>
-nnoremap <leader>gpl :Gpull<CR>
+nnoremap <leader>gps :Git push<CR>
+nnoremap <leader>gpl :Git pull<CR>
 " }}}
 
 " Gui {{{
@@ -606,27 +635,49 @@ sign define vimspectorBPDisabled text=o! texthl=LineNr
 sign define vimspectorPC         text=\ > texthl=MatchParen linehl=CursorLine
 sign define vimspectorPCBP       text=o>  texthl=MatchParen linehl=CursorLine
 
-fu! s:JavaStartDebugCallback(data)
-  cal vimspector#LaunchWithSettings( { 'DAPPort':
-      \ has_key(a:data['response'], 'result') ? a:data['response']['result']  : 0 } )
+fu! EchoMessageCallback(data)
+  echom a:data
+  " vim-lsp return a map
+  " cal vimspector#LaunchWithSettings( { 'DAPPort':
+  "     \ has_key(a:data['response'], 'result') ? a:data['response']['result']  : 0 } )
+
+  " vim-lsc return the integer of the port
+  " cal vimspector#LaunchWithSettings({ 'DAPPort' : a:data })
 endf
 
-fu JavaStartDebug()
-  cal lsp#send_request('eclipse-jdt-ls', {'method':
-      \ 'workspace/executeCommand', 'params': {'command':
-      \ 'vscode.java.startDebugSession'}, 'on_notification':
-      \ function('s:JavaStartDebugCallback')}
-      \)
+" sending executeCommand for request lsp server for debug port
+fu LSCJavaStartDebug()
+    cal lsc#server#userCall('workspace/executeCommand', {'command': 'vscode.java.startDebugSession'}, function('EchoMessageCallback'))
 endf
-nn<silent> <buffer> <Leader>vlj :call JavaStartDebug()<CR>
+
+" vim-lsp
+" fu JavaStartDebug()
+"   cal lsp#send_request('eclipse-jdt-ls', {'method':
+"       \ 'workspace/executeCommand', 'params': {'command':
+"       \ 'vscode.java.startDebugSession'}, 'on_notification':
+"       \ function('s:JavaStartDebugCallback')}
+"       \)
+" endf
+nn<silent> <buffer> <Leader>vlj :call LSCJavaStartDebug()<CR>
 
 " }}}
 
 " Utilsnip {{{
-let g:UltiSnipsExpandTrigger           = '<tab>'
-let g:UltiSnipsJumpForwardTrigger      = '<tab>'
-let g:UltiSnipsJumpBackwardTrigger     = '<s-tab>'
+" let g:UltiSnipsExpandTrigger           = '<tab>'
+" let g:UltiSnipsJumpForwardTrigger      = '<tab>'
+" let g:UltiSnipsJumpBackwardTrigger     = '<s-tab>'
 "}}}
+
+" vim-vsnip {{{
+" imap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
+" smap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
+" imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
+" smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
+imap <expr> <C-j>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<C-j>'
+smap <expr> <C-j>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<C-j>'
+imap <expr> <C-k> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<C-k>'
+smap <expr> <C-k> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<C-k>'
+" }}}
 
 " supertab {{{
 "let g:SuperTabCrMapping                = 0
@@ -637,15 +688,15 @@ let g:UltiSnipsJumpBackwardTrigger     = '<s-tab>'
 " }}}
 
 " asyncomplete {{{
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
+" inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
 
-autocmd User asyncomplete_setup cal asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
-            \ 'name': 'ultisnips',
-            \ 'allowlist': ['*'],
-            \ 'completor': function('asyncomplete#sources#ultisnips#completor'),
-            \ }))
+" autocmd User asyncomplete_setup cal asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
+"             \ 'name': 'ultisnips',
+"             \ 'allowlist': ['*'],
+"             \ 'completor': function('asyncomplete#sources#ultisnips#completor'),
+"             \ }))
 "call asyncomplete#register_source(asyncomplete#sources#nextword#get_source_options({
             "\   'name': 'nextword',
             "\   'allowlist': ['*'],
@@ -654,9 +705,9 @@ autocmd User asyncomplete_setup cal asyncomplete#register_source(asyncomplete#so
             "\   }))
 
 
-let g:asyncomplete_auto_completeopt = 1
-let g:asyncomplete_auto_popup = 1
-imap <expr> <C-Space> <Plug>(asyncomplete_force_refresh)
+" let g:asyncomplete_auto_completeopt = 1
+" let g:asyncomplete_auto_popup = 1
+" imap <expr> <C-Space> <Plug>(asyncomplete_force_refresh)
 
 " }}}
 
@@ -710,17 +761,36 @@ imap <expr> <C-Space> <Plug>(asyncomplete_force_refresh)
 " }}}
 
 " vim-lsc {{{
-" sudo npm install -g vim-language-server
+"
+" vim: sudo npm install -g vim-language-server
+" java: eclipse-jdt-ls use java >= 11
 let g:lsc_server_commands = {
  \ 'c': {
  \    'command': 'clangd'
  \  },
  \  'vim': {
  \    'command': 'vim-language-server --stdio'
+ \  },
+ \  'java': {
+ \    'command': 'java -Declipse.application=org.eclipse.jdt.ls.core.id1
+ \                     -Dosgi.bundles.defaultStartLevel=4
+ \                     -Declipse.product=org.eclipse.jdt.ls.core.product
+ \                     -Dlog.protocol=true -Dlog.level=INFO -Xmx1G
+ \                     -jar /home/tait/lsp/jdt-language-server/plugins/org.eclipse.equinox.launcher_1.6.100.v20201223-0822.jar
+ \                     -configuration /home/tait/lsp/jdt-language-server/config_linux
+ \                     -data /home/tait/lsp/jdt-language-server/workspace',
+ \    'message_hooks': {
+ \        'initialize': {
+ \            'initializationOptions': {
+ \                 'bundles': [ '/home/tait/.m2/repository/com/microsoft/java/com.microsoft.java.debug.plugin/0.32.0/com.microsoft.java.debug.plugin-0.32.0.jar' ]
+ \             }
+ \        }
+ \    }
  \  }
  \}
 
 let g:lsc_auto_map = v:true
+nn <silent> gD :LSClientAllDiagnostics<CR>
 
 " re-trigger with c-x c-u
 let g:lsc_enable_autocomplete  = v:true
@@ -733,6 +803,12 @@ hi lscReference cterm=underline ctermfg=33 ctermbg=0
 " easymotion {{{
 map <Leader>s <Plug>(easymotion-bd-f)
 map <leader>e <Plug>(easymotion-prefix)
+" }}}
+
+" vim-easy-align {{{
+" https://hackernoon.com/how-easily-align-your-code-in-vim-s16p3ysp
+xmap <leader>d <Plug>(EasyAlign)
+nmap <leader>d <Plug>(EasyAlign)
 " }}}
 
 " {{{ teaks split window border
@@ -860,7 +936,10 @@ hi CursorColumn ctermbg=NONE
 hi LineNr ctermbg=NONE
 
 " heading title looks better with yellow
-hi Title term=NONE cterm=italic ctermfg=136
+hi Title term=NONE cterm=bold ctermfg=136
+hi htmlH1 cterm=NONE cterm=bold ctermfg=136
+hi htmlH2 cterm=NONE cterm=NONE ctermfg=37
+hi htmlH3 cterm=NONE cterm=italic ctermfg=33
 
 " status line
 hi StatusLine ctermbg=NONE cterm=NONE ctermfg=3
@@ -872,11 +951,11 @@ hi StatusLineNC ctermbg=NONE cterm=NONE ctermfg=11
 "let g:semanticTermColors = [28,1,2,3,4,5,6,7,25,9,10,34,12,13,14,15,16,125,124,19]
 " }}}
 
-" quick fix buffer {{{
-nn <leader>] :cnext<cr>
-nn <leader>[ :cprev<cr>
-nn <leader>j] :lnext<cr>
-nn <leader>j[ :lprevious<cr>
+" quick fix buffer {{{ use vim-unimpaired now
+" nn <leader>] :cnext<cr>
+" nn <leader>[ :cprev<cr>
+" nn <leader>j] :lnext<cr>
+" nn <leader>j[ :lprevious<cr>
 " }}}
 
 "devicons {{{
@@ -925,9 +1004,9 @@ let g:goyo_width=100
 " }}}
 
 " Ale, deoplete {{{
-"let g:ale_linters = {
-        "\   'go': ['vim-lsp', 'golint'],
-    "\ }
+" let g:ale_linters = {
+"         \   'java': ['vim-lsc']
+"     \ }
 "let g:ale_completion_enabled=1
 
 " turn this on to use deoplete
