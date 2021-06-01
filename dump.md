@@ -4,11 +4,11 @@ title: technical dump
 permalink: /technicaldump/
 ---
 
-## abstract
+# abstract
 
 The purpose of this personal blog is to provide information about me and centralize my technical and academic notes.
 
-## markdown
+# markdown
 
 - this is emphasize _emphasize_
 - __bold__
@@ -32,16 +32,13 @@ The purpose of this personal blog is to provide information about me and central
 fdisk /dev/sdb1
 mkfs.ntfs /dev/sdb1
 
-## R
+# R
 
-- install new package
-
-```R
+sudo pacman -S r
 sudo R
 install.packages("ggplot2")
-```
 
-## Xdg
+# Xdg
 
 - My define type
 
@@ -56,29 +53,22 @@ xdg-mime default transmission-cli.desktop application/x-bittorrent
 
 - Get type
 
-```sh
 xdg-mime query default image/jpeg
 xdg-mime query default application/pdf
 xdg-mime query default text/plain
-```
 
-## xwininfo
+# xwininfo
 
 - List windows, including hidden one
 
-```sh
-    xwininfo -root -children
-```
+xwininfo -root -children
 
 - List all windows, including nested window
 
-```sh
-    xwininfo -root -all
-```
+xwininfo -root -all
 
-## arch packages
+# arch packages
 
-```sh
     pacman -S --noconfirm pass
     pacman -S --noconfirm parted
     pacman -S --noconfirm acpi # battery info
@@ -161,9 +151,8 @@ xdg-mime query default text/plain
     yaourt -S --noconfirm crunch # wordlist generator http://adaywithtape.blogspot.ca/2011/05/creating-wordlists-with-crunch-v30.html
     yaourt -S --noconfirm jdk && archlinux-java set java-8-jdk
     yaourt -S --noconfirm android-studio
-```
 
-## use hash for password in WPA supplicant
+# use hash for password in WPA supplicant
 
 - storing as 'password=hash:<hash>'
 
@@ -171,26 +160,21 @@ xdg-mime query default text/plain
     echo "asfds dfs" | /usr/bin/tr -d '[:space:]' | iconv -t utf16le | openssl md4
 ```
 
-## git
+# git
 
 - config
 
-``` sh
-    git config --global http.proxy http://10.10.10.10:8080
-    git config --global --unset http.proxy
-    git config --global http.proxy
-```
+git config --global http.proxy http://10.10.10.10:8080
+git config --global --unset http.proxy
+git config --global http.proxy
 
 - create new branch
 
-``` sh
-    git branch dmenu2_new_keybind
-```
+git branch dmenu2_new_keybind
 
 - create new branch and checkout it
-``` sh
-    git checkout -b new_leaf
-```
+
+git checkout -b new_leaf
 
 - cache password for period of time
 
@@ -234,10 +218,8 @@ xdg-mime query default text/plain
 
 - view local unpushed git commits
 
-```sh
-    git log origin/master..HEAD
-    git diff origin/master..HEAD
-```
+git log origin/master..HEAD
+git diff origin/master..HEAD
 
 - git delete remote branch
 
@@ -245,34 +227,31 @@ xdg-mime query default text/plain
 
 - new git repo
 
-```sh
-    git init
-    git add README.md
-    git commit -m "first commit"
-    git remote add origin https://github.com/jkoz/vim-bundle.git
-    git push -u origin master
-```
 
-## network manager
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/jkoz/vim-bundle.git
+git push -u origin master
 
-```sh
-    pacman -S networkmanager
-    nmtui
 
-    pacman -S network-manager-applet gnome-icon-theme
-```
+# network manager
 
-## install arch
+pacman -S networkmanager
+pacman -S network-manager-applet gnome-icon-theme
 
-- Configure network
+- configure network manager with nmcli or nmtui
 
-## vim
+# vim
 
 -count selected words
     - select a paragraph
     - press g, then ctrl-g
 
-## pdf
+- c-w o: maximize current window
+- c-{HJKL}: move current window around
+
+# pdf
 
 - concatenate
 
@@ -299,21 +278,21 @@ xdg-mime query default text/plain
 
 > pdftk conjunctions.pdf output conjunctions_fixed.pdf
 
-## rotate photos
+# rotate photos
 
 ```sh
     jhead -autorot .JPG
 ```
 
-## latex
+# latex
 
-## Root mount for specific user
+# Root mount for specific user
 sudo mount -o gid=users,fmask=113,dmask=002 /dev/sdb1 /mnt/usb
 
-## Md5
+# Md5
 md5sum -c razor-mmb29q-factory-0fe7279d.tgz.md5
 
-## aircrack
+# aircrack
 
 - Create interface
 
@@ -345,7 +324,7 @@ sudo aireplay-ng -0 10000 -a 10:9F:A9:EC:25:3F<BSSID> -c 74:F0:6D:3F:17:FA<STATI
 sudo aircrack-ng -w ~/Downloads/password-dir/1 -b 10:9F:A9:EC:25:3F<WPA handshake> file-<essid>*.cap
 ```
 
-## systemctl
+# systemctl
 
 - scanning for new & changes
 systemctl daemon-reload  
@@ -363,13 +342,7 @@ systemctl --user enable mpd
 
 zip -r file.zip *
 
-# Oauth2
-# Microsoft 
-# 1. Register application https://apps.dev.microsoft.com/#/appList
-
-
-
-## netctl
+# netctl
 
 - packages
 
@@ -404,7 +377,7 @@ zip -r file.zip *
     )
 ```
 
-## install arch linux on raspberry pi
+# install arch linux on raspberry pi
 
 ```sh
     # network
@@ -446,22 +419,48 @@ zip -r file.zip *
     yaourt -S sxhkd-git xtitle-git bar-aint-recursive
 ```
 
-### Github pages
+# Github pages
 
-`
-bundle exec jekyll serve
-gem install bundler
-`
+cd ~/github/jkoz.github.io && bundle exec jekyll serve --host=0.0.0.0`
 
-### CD DVD
+# CD DVD
 
 growisofs -Z /dev/cdrom /home/tait/Downloads/archlinux-2015.12.01-dual.iso
 
-### crontab
+# crontab
 
 */3 * * * * export DISPLAY=:0; find ~/Dropbox/Pictures -type f | shuf -n1 | xargs feh --bg-center
 */3 * * * * mbsync gmail-phuoctaitp
 */3 * * * * mbsync hotmail-tait
 
 
-## Printing with cups
+# Printing with cups
+
+# CAN BUS
+
+yaourt -S can-utils
+
+- set up virtual can bus
+
+``` sh 
+cangen vcan0 -v
+cansniffer -c vcan0
+candump -l vcan0
+```
+
+# Rclone
+
+1. create rclone config
+  > rclone config
+2. check if it is working
+  > rclone lsd gdrive:
+3.try to mount manually
+  > rclone mount gdrive: /home/tait/gdrive
+4. automatically mounted with systemd
+  > systemctl --user start rclone-gdrive
+  > systemctl --user start rclone-dropbox
+
+# Jo
+
+jo -p email=tait@gmail.com client_id=sdfasdfas secret=sadfadsfdas
+jo -p name=JP object=$(jo fruit=Orange point=$(jo x=10 y=20) number=17) sunday=false
