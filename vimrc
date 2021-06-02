@@ -455,7 +455,7 @@ nn <silent> <leader>fr :Rg<CR>
 
 " open in popup windows
 "let g:fzf_layout = { 'down': '20%' }
-let g:fzf_layout = { 'window': { 'width': 1.0, 'height': 0.3, 'yoffset': 1.0, 'border': 'horizontal'} }
+" let g:fzf_layout = { 'window': { 'width': 1.0, 'height': 0.3, 'yoffset': 1.0, 'border': 'horizontal'} }
 
 " dont open fzf in some special buffer
 "au BufEnter * if bufname('#') =~ 'NERD_tree' && bufname('%') !~ 'NERD_tree' && winnr('$') > 1 | b# | exe "normal! \<c-w>\<c-w>" | :blast | endif
