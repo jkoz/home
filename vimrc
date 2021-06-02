@@ -30,46 +30,46 @@
 
 " Vimplug {{{
 
-let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
-if empty(glob(data_dir . '/autoload/plug.vim'))
-    silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
+" let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+" if empty(glob(data_dir . '/autoload/plug.vim'))
+"     silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+"     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+" endif
 
-call plug#begin('~/.vim/plugged')
+" call plug#begin('~/.vim/plugged')
 
-Plug 'altercation/vim-colors-solarized'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-vinegar'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-unimpaired'
-Plug 'tpope/vim-dispatch'
-Plug 'tpope/vim-rsi'
-Plug 'tpope/vim-endwise'
-Plug 'tpope/vim-abolish'
-Plug 'masukomi/vim-markdown-folding'
-Plug 'gavinbeatty/dragvisuals.vim'
-Plug 'junegunn/goyo.vim'
-Plug 'junegunn/fzf'
-Plug 'junegunn/fzf.vim'
-Plug 'junegunn/vim-easy-align'
-Plug 'dhruvasagar/vim-table-mode'
-Plug 'easymotion/vim-easymotion'
-Plug 'simeji/winresizer'
-Plug 'liuchengxu/vim-which-key'
-Plug 'airblade/vim-rooter'
-Plug 'liuchengxu/vista.vim'
-Plug 'puremourning/vimspector'
-Plug 'airblade/vim-gitgutter'
-Plug 'natebosch/vim-lsc'
-Plug 'Yggdroot/indentLine'
-Plug 'reedes/vim-pencil'
-Plug 'reedes/vim-litecorrect'
-Plug 'reedes/vim-lexical'
-Plug 'hrsh7th/vim-vsnip'
-Plug 'hrsh7th/vim-vsnip-integ'
+" Plug 'altercation/vim-colors-solarized'
+" Plug 'tpope/vim-commentary'
+" Plug 'tpope/vim-surround'
+" Plug 'tpope/vim-fugitive'
+" Plug 'tpope/vim-vinegar'
+" Plug 'tpope/vim-repeat'
+" Plug 'tpope/vim-unimpaired'
+" Plug 'tpope/vim-dispatch'
+" Plug 'tpope/vim-rsi'
+" Plug 'tpope/vim-endwise'
+" Plug 'tpope/vim-abolish'
+" Plug 'masukomi/vim-markdown-folding'
+" Plug 'gavinbeatty/dragvisuals.vim'
+" Plug 'junegunn/goyo.vim'
+" Plug 'junegunn/fzf'
+" Plug 'junegunn/fzf.vim'
+" Plug 'junegunn/vim-easy-align'
+" Plug 'dhruvasagar/vim-table-mode'
+" Plug 'easymotion/vim-easymotion'
+" Plug 'simeji/winresizer'
+" Plug 'liuchengxu/vim-which-key'
+" Plug 'airblade/vim-rooter'
+" Plug 'liuchengxu/vista.vim'
+" Plug 'puremourning/vimspector'
+" Plug 'airblade/vim-gitgutter'
+" Plug 'natebosch/vim-lsc'
+" Plug 'Yggdroot/indentLine'
+" Plug 'reedes/vim-pencil'
+" Plug 'reedes/vim-litecorrect'
+" Plug 'reedes/vim-lexical'
+" Plug 'hrsh7th/vim-vsnip'
+" Plug 'hrsh7th/vim-vsnip-integ'
 
 " Plug 'SirVer/ultisnips'
 " Plug 'honza/vim-snippets'
@@ -110,25 +110,9 @@ Plug 'hrsh7th/vim-vsnip-integ'
 "Plug 'ycm-core/YouCompleteMe'
 "Plug 'majutsushi/tagbar'
 
-call plug#end()
+" call plug#end()
 filetype plugin indent on
 syntax on
-
-" }}}
-
-" Vundle {{{
-
-"if empty(glob('~/.vim/bundle/Vundle.vim'))
-    "sil !mkdir -p ~/.vim/bundle
-    "sil !git clone http://github.com/VundleVim/Vundle.Vim ~/.vim/bundle/Vundle.vim
-"en
-"set nocompatible
-"filetype off
-"set rtp+=~/.vim/bundle/Vundle.vim
-"call vundle#begin()
-"call vundle#end()
-"filetype plugin indent on
-"syntax on
 
 " }}}
 
@@ -303,7 +287,7 @@ let &t_EI = "\e[2 q"
 " fillchars {{{
 " open :UnicodeTable
 " in insert mode <C-v> and type U00B7
-se fcs=vert:┊
+se fcs=vert:│
 se fcs+=fold:·
 se fcs+=diff:\ "the leading space is used
 "se fcs+=stl:┈
@@ -451,7 +435,7 @@ nn <Leader>nf :let @/=expand("%:t") <Bar> execute 'Ex' expand("%:h") <Bar> norma
 " }}}
 
 " FZF {{{
-nn <silent> <c-p>     :FZF<CR>
+nn <silent> <leader>ff :FZF<CR>
 nn <silent> <leader>p  :FZFExplore<CR>
 nn <silent> <leader>z :Buffers<CR>
 nn <silent> <leader>m :History<CR>
@@ -461,7 +445,7 @@ nn <silent> <leader>fh :History:<cr>
 nn <silent> <leader>f/ :History/<cr>
 nn <silent> <leader>fl :BLines<CR>
 nn <silent> <leader>fw :Windows<CR>
-nn <silent> <leader>ff :GFiles<CR>
+nn <silent> <leader>fg :GFiles<CR>
 nn <silent> <leader>fc :Commits<CR>
 nn <silent> <leader>ft :Helptags<CR>
 nn <silent> <leader>fa :Ag<CR>
@@ -510,7 +494,7 @@ command! -nargs=* FZFExplore call FzfExplore(shellescape(<q-args>))
 " }}}
 
 " Drag visuals {{{
-" TODO: tempory disable visual effect as we need to use J for join multiple lines
+
 vm <expr> <c-h> DVB_Drag('left')
 vm <expr> <c-l> DVB_Drag('right')
 vm <expr> <c-j>  DVB_Drag('down')
@@ -761,15 +745,18 @@ smap <expr> <C-k> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<C-k>'
 " }}}
 
 " vim-lsc {{{
-"
 " vim: sudo npm install -g vim-language-server
 " java: eclipse-jdt-ls use java >= 11
+" javascript:  sudo npm install -g javascript-typescript-langserver
 let g:lsc_server_commands = {
  \ 'c': {
  \    'command': 'clangd'
  \  },
  \  'vim': {
  \    'command': 'vim-language-server --stdio'
+ \  },
+ \  'javascript': {
+ \    'command': 'javascript-typescript-stdio'
  \  },
  \  'java': {
  \    'command': 'java -Declipse.application=org.eclipse.jdt.ls.core.id1
