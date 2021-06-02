@@ -212,8 +212,13 @@ git submodule add https://github.com/reedes/vim-lexical vim/pack/plugins/start/v
 
 - update all sub branches plugins
 
+git pull --recurse-submodules
+git submodule update --recursive --remote
 git submodule update --remote --merge
 git commit
+
+- first time checkout repo and fetch submodule
+git submodule update --init --recursive --remote
 
 - remove a package
 
@@ -342,11 +347,26 @@ pacman -S network-manager-applet gnome-icon-theme
 
 > pdftk conjunctions.pdf output conjunctions_fixed.pdf
 
+# nodejs, reactjs
+
 # rotate photos
 
 ```sh
     jhead -autorot .JPG
 ```
+
+# Yay
+
+git clone https://github.com/Jguer/yay && cd yay && makepkg -si
+
+# z-wave, home assistant, aeotec z stick 
+
+- https://thelazyhacker.com/installing-aeotec-z-stick-gen5-with-home-assistant/
+pip install homeassistant homeassistant-cli
+pip uninstall homeassistant
+sudo pacman -S home-assistant
+sudo systemctl status home-assistant
+vimb http://localhost:8123
 
 # latex
 
