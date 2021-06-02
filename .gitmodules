@@ -82,3 +82,6 @@
 [submodule "vim/pack/plugins/start/vim-lexical"]
 	path = vim/pack/plugins/start/vim-lexical
 	url = https://github.com/reedes/vim-lexical
+[submodule "vim/pack/plugins/start/fzf.vim"]
+	path = vim/pack/plugins/start/fzf.vim
+	url = https://github.com/junegunn/fzf.vim
