@@ -1,0 +1,84 @@
+[submodule "vim/pack/plugins/start/vim-colors-solarized"]
+	path = vim/pack/plugins/start/vim-colors-solarized
+	url = https://github.com/altercation/vim-colors-solarized
+[submodule "vim/pack/plugins/start/vista.vim"]
+	path = vim/pack/plugins/start/vista.vim
+	url = https://github.com/liuchengxu/vista.vim
+[submodule "vim/pack/plugins/start/vim-commentary"]
+	path = vim/pack/plugins/start/vim-commentary
+	url = https://github.com/tpope/vim-commentary
+[submodule "vim/pack/plugins/start/vim-surround"]
+	path = vim/pack/plugins/start/vim-surround
+	url = https://github.com/tpope/vim-surround
+[submodule "vim/pack/plugins/start/vim-fugitive"]
+	path = vim/pack/plugins/start/vim-fugitive
+	url = https://github.com/tpope/vim-fugitive
+[submodule "vim/pack/plugins/start/vim-vinegar"]
+	path = vim/pack/plugins/start/vim-vinegar
+	url = https://github.com/tpope/vim-vinegar
+[submodule "vim/pack/plugins/start/vim-repeat"]
+	path = vim/pack/plugins/start/vim-repeat
+	url = https://github.com/tpope/vim-repeat
+[submodule "vim/pack/plugins/start/vim-unimpaired"]
+	path = vim/pack/plugins/start/vim-unimpaired
+	url = https://github.com/tpope/vim-unimpaired
+[submodule "vim/pack/plugins/start/vim-dispatch"]
+	path = vim/pack/plugins/start/vim-dispatch
+	url = https://github.com/tpope/vim-dispatch
+[submodule "vim/pack/plugins/start/vim-rsi"]
+	path = vim/pack/plugins/start/vim-rsi
+	url = https://github.com/tpope/vim-rsi
+[submodule "vim/pack/plugins/start/vim-endwise"]
+	path = vim/pack/plugins/start/vim-endwise
+	url = https://github.com/tpope/vim-endwise
+[submodule "vim/pack/plugins/start/dragvisuals.vim"]
+	path = vim/pack/plugins/start/dragvisuals.vim
+	url = https://github.com/gavinbeatty/dragvisuals.vim
+[submodule "vim/pack/plugins/start/vim-abolish"]
+	path = vim/pack/plugins/start/vim-abolish
+	url = https://github.com/tpope/vim-abolish
+[submodule "vim/pack/plugins/start/vim-markdown-folding"]
+	path = vim/pack/plugins/start/vim-markdown-folding
+	url = https://github.com/masukomi/vim-markdown-folding
+[submodule "vim/pack/plugins/start/goyo.vim"]
+	path = vim/pack/plugins/start/goyo.vim
+	url = https://github.com/junegunn/goyo.vim
+[submodule "vim/pack/plugins/start/vim-easy-align"]
+	path = vim/pack/plugins/start/vim-easy-align
+	url = https://github.com/junegunn/vim-easy-align
+[submodule "vim/pack/plugins/start/vim-table-mode"]
+	path = vim/pack/plugins/start/vim-table-mode
+	url = https://github.com/dhruvasagar/vim-table-mode
+[submodule "vim/pack/plugins/start/vim-easymotion"]
+	path = vim/pack/plugins/start/vim-easymotion
+	url = https://github.com/easymotion/vim-easymotion
+[submodule "vim/pack/plugins/start/vim-which-key"]
+	path = vim/pack/plugins/start/vim-which-key
+	url = https://github.com/liuchengxu/vim-which-key
+[submodule "vim/pack/plugins/start/winresizer"]
+	path = vim/pack/plugins/start/winresizer
+	url = https://github.com/simeji/winresizer
+[submodule "vim/pack/plugins/start/vim-gitgutter"]
+	path = vim/pack/plugins/start/vim-gitgutter
+	url = https://github.com/airblade/vim-gitgutter
+[submodule "vim/pack/plugins/start/vim-lsc"]
+	path = vim/pack/plugins/start/vim-lsc
+	url = https://github.com/natebosch/vim-lsc
+[submodule "vim/pack/plugins/start/indentLine"]
+	path = vim/pack/plugins/start/indentLine
+	url = https://github.com/Yggdroot/indentLine
+[submodule "vim/pack/plugins/start/vim-vsnip"]
+	path = vim/pack/plugins/start/vim-vsnip
+	url = https://github.com/hrsh7th/vim-vsnip
+[submodule "vim/pack/plugins/start/vim-vsnip-integ"]
+	path = vim/pack/plugins/start/vim-vsnip-integ
+	url = https://github.com/hrsh7th/vim-vsnip-integ
+[submodule "vim/pack/plugins/start/vim-litecorrect"]
+	path = vim/pack/plugins/start/vim-litecorrect
+	url = https://github.com/reedes/vim-litecorrect
+[submodule "vim/pack/plugins/start/vim-pencil"]
+	path = vim/pack/plugins/start/vim-pencil
+	url = https://github.com/reedes/vim-pencil
+[submodule "vim/pack/plugins/start/vim-lexical"]
+	path = vim/pack/plugins/start/vim-lexical
+	url = https://github.com/reedes/vim-lexical

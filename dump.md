@@ -162,6 +162,70 @@ xwininfo -root -all
 
 # git
 
+- submodules with native plugins support
+
+cd ~/github/home
+git submodule add https://github.com/tpope/vim-surround vim/pack/plugins/start/vim-surround
+git submodule add https://github.com/tpope/vim-commentary vim/pack/plugins/start/vim-commentary
+git submodule add https://github.com/tpope/vim-fugitive vim/pack/plugins/start/vim-fugitive
+
+git submodule add https://github.com/tpope/vim-fugitive vim/pack/plugins/start/vim-fugitive
+git submodule add https://github.com/tpope/vim-vinegar vim/pack/plugins/start/vim-vinegar
+git submodule add https://github.com/tpope/vim-repeat vim/pack/plugins/start/vim-repeat
+git submodule add https://github.com/tpope/vim-unimpaired vim/pack/plugins/start/vim-unimpaired
+git submodule add https://github.com/tpope/vim-dispatch vim/pack/plugins/start/vim-dispatch
+git submodule add https://github.com/tpope/vim-rsi vim/pack/plugins/start/vim-rsi
+git submodule add https://github.com/tpope/vim-endwise vim/pack/plugins/start/vim-endwise
+git submodule add https://github.com/tpope/vim-abolish vim/pack/plugins/start/vim-abolish
+
+git submodule add https://github.com/gavinbeatty/dragvisuals.vim vim/pack/plugins/start/dragvisuals.vim
+
+git submodule add https://github.com/masukomi/vim-markdown-folding vim/pack/plugins/start/vim-markdown-folding
+
+git submodule add https://github.com/liuchengxu/vista.vim vim/pack/plugins/start/vista.vim
+git submodule add https://github.com/liuchengxu/vim-which-key vim/pack/plugins/start/vim-which-key
+
+git submodule add https://github.com/altercation/vim-colors-solarized vim/pack/plugins/start/vim-colors-solarized
+
+git submodule add https://github.com/junegunn/fzf.vim vim/pack/plugins/start/fzf.vim
+git submodule add https://github.com/junegunn/goyo.vim vim/pack/plugins/start/goyo.vim
+git submodule add https://github.com/junegunn/vim-easy-align vim/pack/plugins/start/vim-easy-align
+
+git submodule add https://github.com/dhruvasagar/vim-table-mode vim/pack/plugins/start/vim-table-mode
+
+git submodule add https://github.com/easymotion/vim-easymotion vim/pack/plugins/start/vim-easymotion
+
+git submodule add https://github.com/simeji/winresizer vim/pack/plugins/start/winresizer
+
+git submodule add https://github.com/airblade/vim-gitgutter vim/pack/plugins/start/vim-gitgutter
+
+git submodule add https://github.com/natebosch/vim-lsc vim/pack/plugins/start/vim-lsc
+
+git submodule add https://github.com/Yggdroot/indentLine vim/pack/plugins/start/indentLine
+
+git submodule add https://github.com/hrsh7th/vim-vsnip vim/pack/plugins/start/vim-vsnip
+git submodule add https://github.com/hrsh7th/vim-vsnip-integ vim/pack/plugins/start/vim-vsnip-integ
+
+git submodule add https://github.com/reedes/vim-pencil vim/pack/plugins/start/vim-pencil
+git submodule add https://github.com/reedes/vim-litecorrect vim/pack/plugins/start/vim-litecorrect
+git submodule add https://github.com/reedes/vim-lexical vim/pack/plugins/start/vim-lexical
+
+- update all sub branches plugins
+
+git submodule update --remote --merge
+git commit
+
+- remove a package
+
+git submodule deinit vim/pack/shapeshed/start/vim-airline
+git rm vim/pack/shapeshed/start/vim-airline
+rm -Rf .git/modules/vim/pack/shapeshed/start/vim-airline
+git commit
+
+- unstage files and directories which was added by git add or git submodule add, without changing anything
+
+git reset --soft HEAD~1
+
 - config
 
 git config --global http.proxy http://10.10.10.10:8080
