@@ -11,9 +11,11 @@ export TERMINAL="st"
 export _JAVA_AWT_WM_NONREPARENTING=1
 
 # java stuff
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-15.jdk/Contents/Home
+export JDK_HOME=${HOME}/jdk/jdk-16.0.1
+export JAVA_HOME=${JDK_HOME}
 #export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_271.jdk/Contents/Home
-export M2_HOME=/usr/local/Cellar/maven/3.6.3_1/libexec
+# export M2_HOME=/usr/local/Cellar/maven/3.6.3_1/libexec
+export M2_HOME=${HOME}/mvn/apache-maven-3.8.1
 export M2=${M2_HOME}/bin
 export M2_REPO=$HOME/.m2/repository
 export MAVEN_OPTS="-Xms256m -Xmx512m"
@@ -126,8 +128,8 @@ export LANG=en_US.UTF-8
 # fzf {{{
 _gen_fzf_default_opts() {
   local base03="234"
-  local base02="235"
-  #local base02="0"
+  # local base02="235"
+  local base02="0"
   local base01="240"
   local base00="241"
   local base0="244"
@@ -149,7 +151,8 @@ _gen_fzf_default_opts() {
     --height=40%
     --info=inline
     --multi
-    --color fg:-1,bg:-1,gutter:-1,hl:$blue,fg+:$base2,bg+:$base02,hl+:$blue
+    --no-bold
+    --color fg:-1,bg:-1,gutter:-1,hl:underline:${blue},fg+:-1,bg+:${base02},hl+:underline:${blue}
     --color info:$yellow,prompt:$yellow,pointer:$base3,marker:$base3,spinner:$yellow
     --bind '?:toggle-preview'
     --preview-window=:hidden
@@ -186,6 +189,7 @@ _prompt() { test -z "$VIM_PROMPT" && echo "%F{white}%}> " || echo "%F{cyan}%}< "
 reset_color="%F{white}"
 PROMPT="\$(_prompt)%{$reset_color%}"
 #RPROMPT="\$(_prompt_git_info)\$(_prompt_hg_info)%{$reset_color%}"
+RPROMPT=
 
 function zle-line-init zle-keymap-select {
     VIM_PROMPT="${${KEYMAP/vicmd/ normal }/(main|viins)/}"
@@ -216,8 +220,8 @@ if which exa >/dev/null; then
     alias ll='exa -abghHliS'
 else
     alias ll='ls -lah '
-    alias l='ls -G'
-    alias ls='ls -G'
+    alias l='ls -1pG'
+    alias ls='ls -1pG'
 fi
 #alias dmenu='st -c Fzf -e sh -c'
 alias d=sdcv
@@ -260,7 +264,7 @@ alias se='sudo vim'
 alias e='vim'
 alias m='mutt'
 alias t='tmux a'
-alias r='rem -n | sort'
+# alias r='rem -n | sort'
 alias eX='vim ${DOTFILES_HOME}/.Xresources; uD'
 alias eZ='vim ${DOTFILES_HOME}/zshrc; uD'
 alias eI='vim ${DOTFILES_HOME}/i3/config; uD'
