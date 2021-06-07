@@ -1,4 +1,5 @@
 #+STARTUP: overview
+- open help for a command C-h k
 * Initialize MELPA and use package
 
 #+begin_src emacs-lisp
@@ -25,8 +26,12 @@
   (tool-bar-mode -1)
   (toggle-scroll-bar -1)
   (fset 'yes-or-no-p 'y-or-n-p)
+  ;; set scroll 1 step only upon moving with jk
+  (setq scroll-step 1)
+  (setq scroll-margin 1)
 #+end_src
 * Imenu-list
+- to toggle heading bar for markdown file, use imenu-list-smart-toogle
 #+begin_src emacs-lisp
 (use-package imenu-list
   :ensure t
@@ -70,28 +75,28 @@
 * Fuzzy search, counsel, ivy, helm, swipper
 
 #+begin_src emacs-lisp
-    (use-package helm
-      :ensure t
-      :bind
-        (("M-x" . 'helm-M-x)
-        ("C-x b" . 'helm-recentf)
-        ("C-x r b" . 'helm-bookmarks)
-        ("C-x C-f" . 'helm-find-files)
-        ("C-s" . 'helm-occur)
-        ("M-y" . helm-show-kill-ring))
-      :init
-        (helm-mode 1)
-        (setq helm-completion-style 'emacs)
-        (setq completion-styles '(flex))
-        (setq helm-buffers-fuzzy-matching t
-              helm-recentf-fuzzy-match t
-              helm-eshell-fuzzy-match t
-              helm-split-window-inside-p t
-              helm-move-to-line-cycle-in-source t
-              helm-ff-search-library-in-sexp t
-              helm-ff-file-name-history-use-recentf t
-              helm-display-buffer-reuse-frame t
-              helm-use-undecorated-frame-option t))
+  (use-package helm
+    :ensure t
+    :bind
+      (("M-x" . 'helm-M-x)
+      ("C-x b" . 'helm-recentf)
+      ("C-x r b" . 'helm-bookmarks)
+      ("C-x C-f" . 'helm-find-files)
+      ("C-s" . 'helm-occur)
+      ("M-y" . helm-show-kill-ring))
+    :init
+      (helm-mode 1)
+      (setq helm-completion-style 'emacs)
+      (setq completion-styles '(flex))
+      (setq helm-buffers-fuzzy-matching t
+            helm-recentf-fuzzy-match t
+            helm-eshell-fuzzy-match t
+            helm-split-window-inside-p t
+            helm-move-to-line-cycle-in-source t
+            helm-ff-search-library-in-sexp t
+            helm-ff-file-name-history-use-recentf t
+            helm-display-buffer-reuse-frame t
+            helm-use-undecorated-frame-option t))
 #+end_src
 
 - In helm M-x buffer, C-o to toggle search in command history
@@ -234,7 +239,7 @@
 #+end_src
 
 * Markdown mode
-
+- use markdown-toggle-markup-hiding to make it easier to view
 #+begin_src emacs-lisp
 (use-package markdown-mode
   :ensure t
@@ -487,7 +492,7 @@
     :ensure t
     :init
     (key-chord-mode 1)
-    (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
+    (key-chord-define evil-insert-state-map ",," 'evil-normal-state)
     (key-chord-define evil-normal-state-map "qq" 'delete-window))
 
     ;; swap : to ;
@@ -665,7 +670,65 @@
 #+end_src
 
 * Command log mode
+
 #+begin_src emacs-lisp 
   (use-package command-log-mode
     :ensure t)
+#+end_src
+
+* Server
+
+#+begin_src emacs-lisp
+    ;; fontify code in code blocks
+    (setq org-src-fontify-natively t)
+    ;; org-mode block, solarized base0: 839496 as background
+  (set-face-attribute 'org-block-begin-line nil :underline nil :overline nil :foreground "#008ED1" :background "0")
+  (set-face-attribute 'org-block-end-line nil :underline nil :overline nil :foreground "#008ED1" :background "0")
+    (set-frame-font "Source Code Pro 10" nil t)
+    (set-face-attribute 'helm-selection nil :foreground nil :underline nil)
+    (set-face-attribute 'helm-match nil :foreground "#268bd2" :underline nil)
+    (set-face-attribute 'helm-source-header nil :foreground "#2aa198" :background nil :underline nil)
+    (let* ((variable-tuple
+            (cond ((x-list-fonts "ETbb")         '(:font "ETbb"))
+                  ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
+                  ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
+                  ((x-list-fonts "Verdana")         '(:font "Verdana"))
+                  ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
+                  (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
+           (base-font-color     (face-foreground 'default nil 'default))
+           (headline           `(:inherit default :weight bold :foreground ,base-font-color)))
+
+      (custom-theme-set-faces
+       'user
+       `(org-level-8 ((t (,@headline ,@variable-tuple))))
+       `(org-level-7 ((t (,@headline ,@variable-tuple))))
+       `(org-level-6 ((t (,@headline ,@variable-tuple))))
+       `(org-level-5 ((t (,@headline ,@variable-tuple))))
+       `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
+       `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.25))))
+       `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.5))))
+       `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.75))))
+       `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))))
+    (font-lock-add-keywords 'org-mode
+                            '(("^ *\\([-]\\) "
+                               (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+    (custom-theme-set-faces
+     'user
+     '(org-block ((t (:inherit fixed-pitch :background "#073642"))))
+     '(org-code ((t (:inherit (shadow fixed-pitch)))))
+     '(org-document-info ((t (:foreground "dark orange"))))
+     '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+     '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
+     '(org-link ((t (:foreground "royal blue" :underline t))))
+     '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+     '(org-property-value ((t (:inherit fixed-pitch))) t)
+     '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+     '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
+     '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
+     '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
+    (custom-theme-set-faces
+     'user
+     '(variable-pitch ((t (:family "ETbb" :height 120 :weight thin))))
+     '(fixed-pitch ((t ( :family "Fira Code" :height 100)))))
+    (add-hook 'org-mode-hook 'variable-pitch-mode)
 #+end_src

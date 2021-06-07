@@ -91,3 +91,9 @@
 [submodule "vim/pack/plugins/start/vim-rooter"]
 	path = vim/pack/plugins/start/vim-rooter
 	url = https://github.com/airblade/vim-rooter
+[submodule "vim/pack/plugins/start/friendly-snippets"]
+	path = vim/pack/plugins/start/friendly-snippets
+	url = https://github.com/rafamadriz/friendly-snippets
+[submodule "vim/pack/plugins/start/vim-sleuth"]
+	path = vim/pack/plugins/start/vim-sleuth
+	url = https://github.com/tpope/vim-sleuth
