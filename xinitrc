@@ -84,4 +84,4 @@ slstatus -s | lemonbar -f "Terminus-12" -f "FontAwesome-10" -B "#f0073643" -F"#b
 #fi
 
 #exec wm
-exec emacs -mm --debug-init --daemon
+exec emacs --load ~/.emacs.d/exwm-init.el -mm --debug-init --daemon
