@@ -280,7 +280,7 @@ colo solarized
 
 " changing cursor in insert mode and normal mode
 let &t_SI = "\e[6 q"
-let &t_EI = "\e[2 q"
+let &t_EI = "\e[4 q"
 
 "}}}
 
