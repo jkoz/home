@@ -4,6 +4,7 @@ all:
 	install -Dm600 vimrc ~/.vimrc
 	install -Dm600 emacs.d/_init.org ~/.emacs.d/_init.org
 	install -Dm600 emacs.d/init.el ~/.emacs.d/init.el
+	install -Dm600 emacs.d/exwm-init.el ~/.emacs.d/exwm-init.el
 	install -Dm644 ctags ~/.ctags
 	install -Dm644 config/sxhkd/sxhkdrc ~/.config/sxhkd/sxhkdrc
 	install -Dm644 config/gtk-2.0/gtkfilechooser.ini ~/.config/gtk-2.0/gtkfilechooser.ini
@@ -120,3 +121,7 @@ mac:
 	install -m755 scripts/256cl ~/bin/256cl
 	install -m644 newsbeuter/config ~/.newsbeuter/config
 	install -m644 newsbeuter/urls ~/.newsbeuter/urls
+	install -m755 scripts/tmux-comp ~/bin/tmux-comp
+	install -m600 emacs.d/_init.org ~/.emacs.d/_init.org
+	install -m600 emacs.d/init.el ~/.emacs.d/init.el
+	install -m600 emacs.d/exwm-init.el ~/.emacs.d/exwm-init.el
