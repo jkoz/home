@@ -30,46 +30,51 @@
 
 " Vimplug {{{
 
-" let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
-" if empty(glob(data_dir . '/autoload/plug.vim'))
-"     silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-"     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-" endif
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+    silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
-" call plug#begin('~/.vim/plugged')
+ call plug#begin('~/.vim/plugged')
 
-" Plug 'altercation/vim-colors-solarized'
-" Plug 'tpope/vim-commentary'
-" Plug 'tpope/vim-surround'
-" Plug 'tpope/vim-fugitive'
-" Plug 'tpope/vim-vinegar'
-" Plug 'tpope/vim-repeat'
-" Plug 'tpope/vim-unimpaired'
-" Plug 'tpope/vim-dispatch'
-" Plug 'tpope/vim-rsi'
-" Plug 'tpope/vim-endwise'
-" Plug 'tpope/vim-abolish'
-" Plug 'masukomi/vim-markdown-folding'
-" Plug 'gavinbeatty/dragvisuals.vim'
-" Plug 'junegunn/goyo.vim'
-" Plug 'junegunn/fzf'
-" Plug 'junegunn/fzf.vim'
-" Plug 'junegunn/vim-easy-align'
-" Plug 'dhruvasagar/vim-table-mode'
-" Plug 'easymotion/vim-easymotion'
-" Plug 'simeji/winresizer'
-" Plug 'liuchengxu/vim-which-key'
-" Plug 'airblade/vim-rooter'
-" Plug 'liuchengxu/vista.vim'
-" Plug 'puremourning/vimspector'
-" Plug 'airblade/vim-gitgutter'
-" Plug 'natebosch/vim-lsc'
-" Plug 'Yggdroot/indentLine'
-" Plug 'reedes/vim-pencil'
-" Plug 'reedes/vim-litecorrect'
-" Plug 'reedes/vim-lexical'
-" Plug 'hrsh7th/vim-vsnip'
-" Plug 'hrsh7th/vim-vsnip-integ'
+Plug 'altercation/vim-colors-solarized'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-vinegar'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-rsi'
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-abolish'
+Plug 'masukomi/vim-markdown-folding'
+Plug 'gavinbeatty/dragvisuals.vim'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'junegunn/vim-easy-align'
+Plug 'dhruvasagar/vim-table-mode'
+Plug 'easymotion/vim-easymotion'
+Plug 'simeji/winresizer'
+Plug 'liuchengxu/vim-which-key'
+Plug 'airblade/vim-rooter'
+Plug 'liuchengxu/vista.vim'
+Plug 'puremourning/vimspector'
+Plug 'airblade/vim-gitgutter'
+Plug 'natebosch/vim-lsc'
+Plug 'Yggdroot/indentLine'
+Plug 'reedes/vim-pencil'
+Plug 'reedes/vim-litecorrect'
+Plug 'reedes/vim-lexical'
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip-integ'
+Plug 'lambdalisue/fern.vim'
+Plug 'lambdalisue/nerdfont.vim'
+Plug 'lambdalisue/fern-renderer-nerdfont.vim'
+Plug 'lambdalisue/glyph-palette.vim'
+Plug 'lambdalisue/fern-git-status.vim'
 
 " Plug 'SirVer/ultisnips'
 " Plug 'honza/vim-snippets'
@@ -85,7 +90,6 @@
 "Plug 'chrisbra/unicode.vim'
 "Plug 'Xuyuanp/nerdtree-git-plugin'
 "Plug 'scrooloose/nerdtree'
-" Plug 'lambdalisue/fern.vim'
 " Plug 'ryanoasis/vim-devicons'
 "Plug 'itchyny/lightline.vim'
 "Plug 'tpope/vim-speeddating'
@@ -110,7 +114,7 @@
 "Plug 'ycm-core/YouCompleteMe'
 "Plug 'majutsushi/tagbar'
 
-" call plug#end()
+call plug#end()
 filetype plugin indent on
 syntax on
 
@@ -380,7 +384,7 @@ aug vistahidecwd
 aug end
 " }}}
 
-" Nerd Tree {{{
+" Nerd Tree, fern {{{
 "nn <leader>no :NERDTreeToggle<CR>
 "nn <leader>nf :NERDTreeFind<CR>
 
@@ -419,7 +423,6 @@ aug end
 "let g:netrw_liststyle = 0
 "let g:netrw_browse_split = 4
 "let g:netrw_winsize = 20
-nn <Leader>nf :let @/=expand("%:t") <Bar> execute 'Ex' expand("%:h") <Bar> normal n<CR>
 "augroup ProjectDrawer
   "autocmd!
   "autocmd VimEnter * :Vexplore
@@ -432,6 +435,17 @@ nn <Leader>nf :let @/=expand("%:t") <Bar> execute 'Ex' expand("%:h") <Bar> norma
 "     noremap <buffer> - :bd
 "     " and any others...
 " endf
+
+" use netrw
+nn <Leader>nf :let @/=expand("%:t") <Bar> execute 'Ex' expand("%:h") <Bar> normal n<CR>
+
+" fern
+" search for current file in directory: :Fern . -reveal=% -drawer
+let g:fern#renderer = "nerdfont"
+aug fernaug
+    au!
+    au FileType fern setl nonumber norelativenumber
+aug end
 " }}}
 
 " FZF {{{
