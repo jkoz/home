@@ -449,6 +449,8 @@ aug end
 " }}}
 
 " FZF {{{
+" search for core vim script: :FZF /usr/local/Cellar/vim
+"
 nn <silent> <leader>ff :FZF<CR>
 nn <silent> <leader>p  :FZFExplore<CR>
 nn <silent> <leader>z :Buffers<CR>
@@ -938,9 +940,9 @@ hi LineNr ctermbg=NONE
 
 " heading title looks better with yellow
 hi Title term=NONE cterm=bold ctermfg=136
-hi htmlH1 cterm=NONE cterm=bold ctermfg=136
+hi htmlH1 cterm=NONE cterm=NONE ctermfg=136
 hi htmlH2 cterm=NONE cterm=NONE ctermfg=33
-hi htmlH3 cterm=NONE cterm=italic ctermfg=2
+hi htmlH3 cterm=NONE cterm=NONE ctermfg=2
 
 " status line
 hi StatusLine ctermbg=NONE cterm=NONE ctermfg=3
