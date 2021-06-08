@@ -910,8 +910,8 @@ nnoremap <silent> <leader> :WhichKey ','<CR>
 
 " Personalize highlighting {{{
 hi SignColumn ctermfg=12 ctermbg=NONE
-hi Search cterm=underline ctermbg=0 ctermfg=NONE
-hi IncSearch cterm=underline ctermbg=0 ctermfg=229
+hi Search cterm=underline ctermbg=136 ctermfg=234
+hi IncSearch cterm=underline ctermbg=164 ctermfg=234
 
 "make popup menu looks nicer
 hi Pmenu cterm=NONE ctermfg=12 ctermbg=0
