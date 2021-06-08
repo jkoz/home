@@ -184,19 +184,33 @@ export KEYTIMEOUT=1
 
 #_prompt_git_info() { git rev-parse --abbrev-ref HEAD 2> /dev/null | xargs printf '%%F{cyan}[%s] ';  }
 #_prompt_hg_info() { hg branch 2> /dev/null | xargs printf '%%F{blue}[%s] '; }
-_prompt() { test -z "$VIM_PROMPT" && echo "%F{white}%}> " || echo "%F{cyan}%}< "; }
-
-reset_color="%F{white}"
-PROMPT="\$(_prompt)%{$reset_color%}"
 #RPROMPT="\$(_prompt_git_info)\$(_prompt_hg_info)%{$reset_color%}"
 RPROMPT=
 
-function zle-line-init zle-keymap-select {
-    VIM_PROMPT="${${KEYMAP/vicmd/ normal }/(main|viins)/}"
-    zle reset-prompt
+function zle-line-finish {
+    print -n -- "\E]50;\e[4 q\C-G"  # back to normal mode cursor, _
 }
 
+# cursor can be set in vim, shell, or terminal level
+function zle-keymap-select zle-line-init {
+    case $KEYMAP in
+        vicmd)
+            print -n -- "\E]50;\e[4 q\C-G"  # normal mode cursor, _
+            PROMPT="%F{yellow}%}< %F{252}"
+            ;;
+        viins|main)
+            print -n -- "\E]52;\e[5 q\C-G"  # line cursor
+            PROMPT="%F{blue}%}> %F{252}"
+            ;;
+    esac
+
+    zle reset-prompt
+    zle -R
+}
+
+
 zle -N zle-line-init
+zle -N zle-line-finish
 zle -N zle-keymap-select
 # }}}
 
