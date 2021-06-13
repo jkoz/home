@@ -604,6 +604,15 @@
     :ensure t)
 #+end_src
 
+* Web browser
+#+begin_src emacs-lisp
+  (setq browse-url-browser-function 'eww-browse-url
+        shr-use-colors nil
+        shr-bullet "• "
+        shr-folding-mode t
+        eww-search-prefix "https://duckduckgo.com/html?q="
+        url-privacy-level '(email agent cookies lastloc))
+#+end_src
 * Command log mode
 
 #+begin_src emacs-lisp 
@@ -611,6 +620,12 @@
     :ensure t)
 #+end_src
 
+* RSS feed reader, elfeed
+
+#+begin_src emacs-lisp
+  (use-package elfeed 
+    :ensure t)
+#+end_src
 * Server
 
 #+begin_src emacs-lisp
@@ -620,6 +635,7 @@
   (set-face-attribute 'org-block-begin-line nil :underline nil :overline nil :foreground "#008ED1" :background "#002B36")
   (set-face-attribute 'org-block-end-line nil :underline nil :overline nil :foreground "#008ED1" :background "#002B36")
   (set-face-attribute 'hl-line nil :underline nil :overline nil :background nil)
+  (set-face-attribute 'mode-line nil :underline t :overline t)
   (set-frame-font "Fira Code 13" nil t)
   (set-face-attribute 'helm-selection nil :foreground nil :underline nil)
   (set-face-attribute 'helm-match nil :foreground "#268bd2" :underline nil)
