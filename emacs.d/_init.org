@@ -1,5 +1,9 @@
 #+STARTUP: overview
+* Notes
 - open help for a command C-h k
+- open help for a variable C-h v
+- blogs:
+  - https://ladicle.com/post/config
 * Initialize MELPA and use package
 
 #+begin_src emacs-lisp
@@ -38,7 +42,7 @@
   :bind (("C-'" . imenu-list-smart-toggle))
   :config
   (setq imenu-list-focus-after-activation t
-        imenu-list-auto-resize nil))
+        imenu-list-auto-resize t))
 #+end_src
 * Builtin goodies
 
@@ -108,12 +112,30 @@
 - C-x k : kill buffer
 
 * Theme
+- Enable 24 bit color for Emacs in st terminal
 
-#+begin_src emacs-lisp
-  (use-package solarized-theme
-    :ensure t
-    :config
-    (load-theme 'solarized-dark t))
+#+begin_src shell
+  tmux set-option -ga terminal-overrides ",st-256color:Tc"
+  mkdir ~/.terminfo/s
+  cat <<EOF > ~/.terminfo/s/screen-24bit.terminfo
+  screen-24bit|screen with 24-bit direct color mode,
+    use=screen-256color,
+    setb24=\E[48:2:%p1%{65536}%/%d:%p1%{256}%/%{255}%&%d:%p1%{255}%&%dm,
+    setf24=\E[38:2:%p1%{65536}%/%d:%p1%{256}%/%{255}%&%d:%p1%{255}%&%dm,
+  screen-24bits|screen with 24-bit direct color mode,
+    use=screen-256color,
+    setb24=\E[48;2;%p1%{65536}%/%d;%p1%{256}%/%{255}%&%d;%p1%{255}%&%dm,
+    setf24=\E[38;2;%p1%{65536}%/%d;%p1%{256}%/%{255}%&%d;%p1%{255}%&%dm,
+  EOF
+  tic -x ~/.terminfo/s/screen-24bit.terminfo
+  TERM=screen-24bit emacsclient -nw
+#+end_src
+
+  #+begin_src emacs-lisp
+    (use-package solarized-theme
+      :ensure t
+      :config
+      (load-theme 'solarized-dark t))
 #+end_src
 
 * Auto complete, company
@@ -416,12 +438,18 @@
 
   (use-package lsp-mode
     :ensure t
-    :hook ((lsp-mode . lsp-enable-which-key-integration))
-    :config (setq lsp-completion-enable-additional-text-edit nil))
+    :hook (lsp-mode . (lambda ()
+                      (let ((lsp-keymap-prefix "C-c l"))
+                        (lsp-enable-which-key-integration))))
+    :config 
+      (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
+      (setq lsp-completion-enable-additional-text-edit nil))
 
   (use-package lsp-java
     :ensure t
-    :config (add-hook 'java-mode-hook 'lsp))
+    :config
+      (setq lsp-java-server-install-dir "/home/tait/lsp/jdt-language-server")
+      (add-hook 'java-mode-hook 'lsp))
 
   (use-package dap-mode
     :ensure t
@@ -511,25 +539,26 @@
     "w" 'save-buffer
     "k" 'kill-buffer
     "q" 'save-buffers-kill-terminal
-    "g" 'helm-M-x
+    "xx" 'helm-M-x
     "e" 'mu4e
     "ci" 'evilnc-comment-or-uncomment-lines
     "SPC" 'evil-search-highlight-persist-remove-all
     "s" 'avy-goto-char
     "o" 'helm-imenu
-    "ln" 'flycheck-next-error
-    "lj" 'lsp-find-definition
-    "lo" 'helm-lsp-workspace-symbol
-    "lp" 'helm-projectile-switch-project
-    "lf" 'helm-projectile-find-file
-    "lc" 'helm-lsp-code-actions
-    "lr" 'lsp-rename
-    "le" 'lsp-treemacs-errors-list
+    "l" 'imenu-list-smart-toggle
     "nt" 'treemacs
     "nf" 'treemacs-select-window
     "nc" 'treemacs-display-current-project-exclusively
     "nr" 'treemacs-refresh
     )
+    ;;"ln" 'flycheck-next-error
+    ;;"lj" 'lsp-find-definition
+    ;;"lo" 'helm-lsp-workspace-symbol
+    ;;"lp" 'helm-projectile-switch-project
+    ;;"lf" 'helm-projectile-find-file
+    ;;"lc" 'helm-lsp-code-actions
+    ;;"lr" 'lsp-rename
+    ;;"le" 'lsp-treemacs-errors-list
 
   ;; additional vim key stroke collection
   (use-package evil-collection
@@ -635,7 +664,7 @@
   (set-face-attribute 'org-block-begin-line nil :underline nil :overline nil :foreground "#008ED1" :background "#002B36")
   (set-face-attribute 'org-block-end-line nil :underline nil :overline nil :foreground "#008ED1" :background "#002B36")
   (set-face-attribute 'hl-line nil :underline nil :overline nil :background nil)
-  (set-face-attribute 'mode-line nil :underline t :overline t)
+  (set-face-attribute 'mode-line nil :underline nil :overline nil)
   (set-frame-font "Fira Code 13" nil t)
   (set-face-attribute 'helm-selection nil :foreground nil :underline nil)
   (set-face-attribute 'helm-match nil :foreground "#268bd2" :underline nil)
