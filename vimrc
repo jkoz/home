@@ -75,11 +75,11 @@ Plug 'lambdalisue/nerdfont.vim'
 Plug 'lambdalisue/fern-renderer-nerdfont.vim'
 Plug 'lambdalisue/glyph-palette.vim'
 Plug 'lambdalisue/fern-git-status.vim'
+Plug 'jceb/vim-orgmode'
 
 " Plug 'SirVer/ultisnips'
 " Plug 'honza/vim-snippets'
 " Plug 'godlygeek/tabular'
-" Plug 'jceb/vim-orgmode'
 " Plug 'prabirshrestha/async.vim'
 " Plug 'prabirshrestha/vim-lsp'
 " Plug 'mattn/vim-lsp-settings'
@@ -91,7 +91,7 @@ Plug 'lambdalisue/fern-git-status.vim'
 "Plug 'Xuyuanp/nerdtree-git-plugin'
 "Plug 'scrooloose/nerdtree'
 " Plug 'ryanoasis/vim-devicons'
-"Plug 'itchyny/lightline.vim'
+" Plug 'itchyny/lightline.vim'
 "Plug 'tpope/vim-speeddating'
 "Plug 'jaxbot/semantic-highlight.vim'
 "Plug 'clarke/vim-renumber'
@@ -300,31 +300,82 @@ se fcs+=diff:\ "the leading space is used
 
 " Status line {{{
 se ls=2
-"se stl=\ %f\  " Path to the file
-"se stl+=%=        " Switch to the right side
-"se stl+=[%l]        " Current line
-"se stl+=/         " Separator
-"se stl+=[%L]        " Total lines
 
+function! NearestMethodOrFunction() abort
+    let l:func = get(b:, 'vista_nearest_method_or_function', '')
+    if l:func != ''
+        return '> ' . get(b:, 'vista_nearest_method_or_function', '') . ' '
+    endif
+    return ''
+endfunction
+
+" status line
+hi StatusLine ctermbg=none cterm=underline term=none ctermfg=250
+hi StatusLineNC ctermbg=NONE cterm=underline term=NONE ctermfg=10
+hi User1 ctermbg=8 ctermfg=2 cterm=bold,underline
+hi User2 ctermfg=250 ctermbg=8 cterm=underline
+
+aug StatusLineAug
+    autocmd!
+    au InsertEnter * hi User1 ctermbg=8 ctermfg=33 cterm=bold,underline
+    au InsertLeave * hi User1 ctermbg=8 ctermfg=2 cterm=bold,underline
+aug end
 
 function! StatuslineGit()
   let l:branchname = system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
   return strlen(l:branchname) > 0?'  '.l:branchname.' ':''
 endfunction
 
+" 'n'  : 'Normal',
+" 'no' : 'Normal·Operator Pending',
+" 'v'  : 'Visual',
+" 'V'  : 'V·Line',
+" '^V' : 'V·Block',
+" 's'  : 'Select',
+" 'S'  : 'S·Line',
+" '^S' : 'S·Block',
+" 'i'  : 'Insert',
+" 'R'  : 'Replace',
+" 'Rv' : 'V·Replace',
+" 'c'  : 'Command',
+" 'cv' : 'Vim Ex',
+" 'ce' : 'Ex',
+" 'r'  : 'Prompt',
+" 'rm' : 'More',
+" 'r?' : 'Confirm',
+" '!'  : 'Shell',
+" 't'  : 'Terminal'
+let g:currentmode={
+    \ 'n'  : 'N',
+    \ 'no' : 'N',
+    \ 'v'  : 'V',
+    \ 'V'  : 'V',
+    \ '^V' : 'V',
+    \ 's'  : 'S',
+    \ 'S'  : 'S',
+    \ '^S' : 'S',
+    \ 'i'  : 'I',
+    \ 'R'  : 'R',
+    \ 'Rv' : 'V',
+    \ 'c'  : 'C',
+    \ 'cv' : 'E',
+    \ 'ce' : 'E',
+    \ 'r'  : 'P',
+    \ 'rm' : 'More',
+    \ 'r?' : 'C',
+    \ '!'  : 'S',
+    \ 't'  : 'T'
+    \}
+
 se stl=
-se stl+=%#PmenuSel# " enable highlight for git info
-se stl+=%{StatuslineGit()} " show git info
-se stl+=%#Visual# " use Visual highlight for remaining status line
-se stl+=\ %f " show current file
-se stl+=%m\  " do not know
+se stl+=%1*\ %{toupper(g:currentmode[mode()])}\  "current mode
+se stl+=%2*\ %f " show current file
+se stl+=\ %{NearestMethodOrFunction()} " vista show curent function
+se stl+=%0*
 se stl+=%=  " right align
-"set stl+=%#CursorColumn#
-"set stl+=\ %y " file type
-"set stl+=\ %{&fileencoding?&fileencoding:&encoding}  "encoding
-"set stl+=\[%{&fileformat}\] " file format
-se stl+=\ %p%%  " percentage through file
 se stl+=\ %l:%c\  " line number and  column
+se stl+=%2*\ \ \ \ \ \ %p%%  " percentage through file
+se stl+=\ %L  " percentage through file
 
 " }}}
 
@@ -438,6 +489,7 @@ aug end
 
 " use netrw
 nn <Leader>nf :let @/=expand("%:t") <Bar> execute 'Ex' expand("%:h") <Bar> normal n<CR>
+nn <Leader>nt :Fern . -reveal=% -drawer -stay<CR>
 
 " fern
 " search for current file in directory: :Fern . -reveal=% -drawer
@@ -558,7 +610,7 @@ nnoremap <leader>ga :Git add %:p<CR><CR>
 nnoremap <leader>gs :Git<CR>
 nnoremap <leader>gc :Git commit -v -q<CR>
 nnoremap <leader>gt :Gcommit -v -q %:p<CR>
-nnoremap <leader>gd :Gdiff<CR>
+nnoremap <leader>gd :Gvdiffsplit<CR>
 nnoremap <leader>ge :Gedit<CR>
 nnoremap <leader>gr :Gread<CR>
 nnoremap <leader>gw :Gwrite<CR><CR>
@@ -800,7 +852,7 @@ let g:lsc_enable_autocomplete  = v:true
 let g:lsc_enable_diagnostics   = v:true
 let g:lsc_reference_highlights = v:true
 let g:lsc_trace_level          = 'off'
-hi lscReference cterm=underline ctermfg=33 ctermbg=0
+hi lscReference cterm=underline ctermfg=NONE ctermbg=0
 " }}}
 
 " easymotion {{{
@@ -815,9 +867,8 @@ nmap <leader>d <Plug>(EasyAlign)
 " }}}
 
 " {{{ teaks split window border
-hi VertSplit ctermfg=3 ctermbg=NONE guibg=NONE
+hi VertSplit ctermfg=10 ctermbg=NONE guibg=NONE
 hi ErrorMsg term=NONE cterm=NONE  ctermbg=NONE ctermfg=12
-hi Error cterm=bold ctermbg=NONE ctermfg=2 ctermbg=NONE
 hi Comment cterm=italic
 
 "se foldcolumn=1
@@ -926,27 +977,31 @@ nnoremap <silent> <leader> :WhichKey ','<CR>
 
 " Personalize highlighting {{{
 hi SignColumn ctermfg=12 ctermbg=NONE
-hi Search cterm=underline ctermbg=136 ctermfg=234
-hi IncSearch cterm=underline ctermbg=164 ctermfg=234
+hi Search ctermbg=8 ctermfg=2 cterm=italic,underline,bold
+hi IncSearch cterm=underline ctermbg=136 ctermfg=0
 
 "make popup menu looks nicer
 hi Pmenu cterm=NONE ctermfg=12 ctermbg=0
+hi PmenuSel ctermfg=2 cterm=bold ctermbg=0
+hi TabLineSel ctermfg=2 cterm=underline,bold ctermbg=0
 
 " CursorColumn, CursorLine, and CursorLineNr
 hi CursorLineNr cterm=bold,italic ctermbg=NONE ctermfg=64
-hi CursorLine ctermbg=NONE
+hi CursorLine ctermbg=0 cterm=none
 hi CursorColumn ctermbg=NONE
 hi LineNr ctermbg=NONE
 
 " heading title looks better with yellow
 hi Title term=NONE cterm=bold ctermfg=136
-hi htmlH1 cterm=NONE cterm=NONE ctermfg=136
-hi htmlH2 cterm=NONE cterm=NONE ctermfg=33
-hi htmlH3 cterm=NONE cterm=NONE ctermfg=2
+hi htmlH1 cterm=NONE cterm=NONE ctermfg=33
+hi htmlH2 cterm=NONE cterm=NONE ctermfg=2
+hi htmlH3 cterm=NONE cterm=NONE ctermfg=136
 
-" status line
-hi StatusLine ctermbg=NONE cterm=NONE ctermfg=3
-hi StatusLineNC ctermbg=NONE cterm=NONE ctermfg=11
+
+" spell error, warning, etc
+hi Error cterm=italic,underline ctermfg=166 ctermbg=0
+hi SpellBad cterm=italic,underline ctermfg=136
+hi SpellCap cterm=none ctermfg=64
 " }}}
 
 " semantic highlighting {{{
