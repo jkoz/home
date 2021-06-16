@@ -76,6 +76,7 @@ Plug 'lambdalisue/fern-renderer-nerdfont.vim'
 Plug 'lambdalisue/glyph-palette.vim'
 Plug 'lambdalisue/fern-git-status.vim'
 Plug 'jceb/vim-orgmode'
+Plug 'rhysd/git-messenger.vim'
 
 " Plug 'SirVer/ultisnips'
 " Plug 'honza/vim-snippets'
@@ -119,6 +120,33 @@ filetype plugin indent on
 syntax on
 
 " }}}
+
+function! MyTabLine()
+  let s = ''
+  for i in range(tabpagenr('$'))
+    let tabnr = i + 1 " range() starts at 0
+    let winnr = tabpagewinnr(tabnr)
+    let buflist = tabpagebuflist(tabnr)
+    let bufnr = buflist[winnr - 1]
+    let bufname = fnamemodify(bufname(bufnr), ':t')
+ 
+    let s .= '%' . tabnr . 'T'
+    let s .= (tabnr == tabpagenr() ? '%#TabLineSel#' : '%#TabLine#')
+    let s .= ' ' . tabnr
+ 
+    let n = tabpagewinnr(tabnr,'$')
+    if n > 1 | let s .= ':' . n | endif
+ 
+    let s .= empty(bufname) ? ' [No Name] ' : ' ' . bufname . ' '
+ 
+    let bufmodified = getbufvar(bufnr, "&mod")
+    if bufmodified | let s .= '+ ' | endif
+  endfor
+  let s .= '%#TabLineFill#'
+  return s
+endfunction
+set tabline=%!MyTabLine()
+set showtabline=2 " always show tabline
 
 " Mappings {{{
 let mapleader = ","
@@ -287,6 +315,14 @@ let &t_SI = "\e[6 q"
 let &t_EI = "\e[4 q"
 
 "}}}
+
+" tabs {{{
+nn <silent> tt :tabedit %<CR>
+nn <silent> [g :tabprevious<CR>
+nn <silent> ]g :tabnext<CR>
+nn <silent> [G :tabrewind<CR>
+nn <silent> ]G :tablast<CR>
+" }}}
 
 " fillchars {{{
 " open :UnicodeTable
@@ -616,8 +652,9 @@ nnoremap <leader>gr :Gread<CR>
 nnoremap <leader>gw :Gwrite<CR><CR>
 nnoremap <leader>gl :silent! Glog<CR>:bot copen<CR>
 nnoremap <leader>gp :Ggrep<Space>
-nnoremap <leader>gm :Gmove<Space>
-nnoremap <leader>gb :Git branch<Space>
+nnoremap <leader>gmv :Gmove<Space>
+nnoremap <leader>gbb :Git branch<Space>
+nnoremap <leader>gbl :Git blame<cr>
 nnoremap <leader>go :Git checkout<Space>
 nnoremap <leader>gps :Git push<CR>
 nnoremap <leader>gpl :Git pull<CR>
