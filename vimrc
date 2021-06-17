@@ -121,6 +121,7 @@ syntax on
 
 " }}}
 
+" tabline {{{
 function! MyTabLine()
   let s = ''
   for i in range(tabpagenr('$'))
@@ -129,16 +130,16 @@ function! MyTabLine()
     let buflist = tabpagebuflist(tabnr)
     let bufnr = buflist[winnr - 1]
     let bufname = fnamemodify(bufname(bufnr), ':t')
- 
+
     let s .= '%' . tabnr . 'T'
     let s .= (tabnr == tabpagenr() ? '%#TabLineSel#' : '%#TabLine#')
     let s .= ' ' . tabnr
- 
+
     let n = tabpagewinnr(tabnr,'$')
     if n > 1 | let s .= ':' . n | endif
- 
+
     let s .= empty(bufname) ? ' [No Name] ' : ' ' . bufname . ' '
- 
+
     let bufmodified = getbufvar(bufnr, "&mod")
     if bufmodified | let s .= '+ ' | endif
   endfor
@@ -147,6 +148,7 @@ function! MyTabLine()
 endfunction
 set tabline=%!MyTabLine()
 set showtabline=2 " always show tabline
+" }}}
 
 " Mappings {{{
 let mapleader = ","
@@ -340,7 +342,7 @@ se ls=2
 function! NearestMethodOrFunction() abort
     let l:func = get(b:, 'vista_nearest_method_or_function', '')
     if l:func != ''
-        return '> ' . get(b:, 'vista_nearest_method_or_function', '') . ' '
+        return ' > ' . get(b:, 'vista_nearest_method_or_function', '') . ' '
     endif
     return ''
 endfunction
@@ -351,67 +353,17 @@ hi StatusLineNC ctermbg=NONE cterm=underline term=NONE ctermfg=10
 hi User1 ctermbg=8 ctermfg=2 cterm=bold,underline
 hi User2 ctermfg=250 ctermbg=8 cterm=underline
 
-aug StatusLineAug
-    autocmd!
-    au InsertEnter * hi User1 ctermbg=8 ctermfg=33 cterm=bold,underline
-    au InsertLeave * hi User1 ctermbg=8 ctermfg=2 cterm=bold,underline
-aug end
 
-function! StatuslineGit()
-  let l:branchname = system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
-  return strlen(l:branchname) > 0?'  '.l:branchname.' ':''
-endfunction
-
-" 'n'  : 'Normal',
-" 'no' : 'Normal·Operator Pending',
-" 'v'  : 'Visual',
-" 'V'  : 'V·Line',
-" '^V' : 'V·Block',
-" 's'  : 'Select',
-" 'S'  : 'S·Line',
-" '^S' : 'S·Block',
-" 'i'  : 'Insert',
-" 'R'  : 'Replace',
-" 'Rv' : 'V·Replace',
-" 'c'  : 'Command',
-" 'cv' : 'Vim Ex',
-" 'ce' : 'Ex',
-" 'r'  : 'Prompt',
-" 'rm' : 'More',
-" 'r?' : 'Confirm',
-" '!'  : 'Shell',
-" 't'  : 'Terminal'
-let g:currentmode={
-    \ 'n'  : 'N',
-    \ 'no' : 'N',
-    \ 'v'  : 'V',
-    \ 'V'  : 'V',
-    \ '^V' : 'V',
-    \ 's'  : 'S',
-    \ 'S'  : 'S',
-    \ '^S' : 'S',
-    \ 'i'  : 'I',
-    \ 'R'  : 'R',
-    \ 'Rv' : 'V',
-    \ 'c'  : 'C',
-    \ 'cv' : 'E',
-    \ 'ce' : 'E',
-    \ 'r'  : 'P',
-    \ 'rm' : 'More',
-    \ 'r?' : 'C',
-    \ '!'  : 'S',
-    \ 't'  : 'T'
-    \}
-
-se stl=
-se stl+=%1*\ %{toupper(g:currentmode[mode()])}\  "current mode
-se stl+=%2*\ %f " show current file
-se stl+=\ %{NearestMethodOrFunction()} " vista show curent function
-se stl+=%0*
-se stl+=%=  " right align
-se stl+=\ %l:%c\  " line number and  column
-se stl+=%2*\ \ \ \ \ \ %p%%  " percentage through file
-se stl+=\ %L  " percentage through file
+se statusline=[%n]\ %<%.99f%{NearestMethodOrFunction()}\ %y%h%w%m%r%=%-14.(%l,%c%V%)\ %P\ %L\  " one line status line
+" se stl=
+" se stl+=%1*\ %{StatuslineGit()}\  "current mode
+" se stl+=%2*\ %f " show current file
+" se stl+=\ %{NearestMethodOrFunction()} " vista show curent function
+" se stl+=%0*
+" se stl+=%=  " right align
+" se stl+=\ %l:%c\  " line number and  column
+" se stl+=%2*\ \ \ \ \ \ %p%%  " percentage through file
+" se stl+=\ %L  " percentage through file
 
 " }}}
 
