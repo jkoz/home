@@ -4,7 +4,8 @@
 " help digraph-table
 " search PLUS-MINUS
 " c^k +-
-" C-o to jump back previous location
+" C-o jump back previous location
+" C-i jump back again location
 " C-e: scroll up
 " C-y: scroll down
 
@@ -63,13 +64,10 @@ Plug 'airblade/vim-rooter'
 Plug 'liuchengxu/vista.vim'
 Plug 'puremourning/vimspector'
 Plug 'airblade/vim-gitgutter'
-Plug 'natebosch/vim-lsc'
 Plug 'Yggdroot/indentLine'
 Plug 'reedes/vim-pencil'
 Plug 'reedes/vim-litecorrect'
 Plug 'reedes/vim-lexical'
-Plug 'hrsh7th/vim-vsnip'
-Plug 'hrsh7th/vim-vsnip-integ'
 Plug 'lambdalisue/fern.vim'
 Plug 'lambdalisue/nerdfont.vim'
 Plug 'lambdalisue/fern-renderer-nerdfont.vim'
@@ -77,16 +75,25 @@ Plug 'lambdalisue/glyph-palette.vim'
 Plug 'lambdalisue/fern-git-status.vim'
 Plug 'jceb/vim-orgmode'
 Plug 'rhysd/git-messenger.vim'
+Plug 'uiiaoo/java-syntax.vim'
+Plug 'octol/vim-cpp-enhanced-highlight'
+" Plug 'sheerun/vim-polyglot'
+
+Plug 'natebosch/vim-lsc'
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip-integ'
+Plug 'chunkhang/vim-mbsync'
 
 " Plug 'SirVer/ultisnips'
 " Plug 'honza/vim-snippets'
-" Plug 'godlygeek/tabular'
 " Plug 'prabirshrestha/async.vim'
 " Plug 'prabirshrestha/vim-lsp'
 " Plug 'mattn/vim-lsp-settings'
 " Plug 'prabirshrestha/asyncomplete.vim'
 " Plug 'prabirshrestha/asyncomplete-lsp.vim'
 " Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
+
+" Plug 'godlygeek/tabular'
 " Plug 'machakann/asyncomplete-ezfilter.vim'
 "Plug 'chrisbra/unicode.vim'
 "Plug 'Xuyuanp/nerdtree-git-plugin'
@@ -302,11 +309,21 @@ se wildignore+=*_build/*,*/coverage/*,*/target/*,*/tmp/*,*/lib/*,*/.settings/*,*
 
 " completion
 se dict=/usr/share/dict/cracklib-small
-se complete=.,b,u,]
+se cpt=.,b,u,] " this specifies how key word complete works when using <c-p><c-n>
 se wildmode=longest,list:longest
+set completepopup=height:10,width:60,highlight:Pmenu,border:on
 
 " remove preview, as i don't want see my windows move because of scratch
-se completeopt=menuone,menu,longest,noselect
+" use popup to show preview info
+se completeopt=menuone,menu,longest,noselect,popup
+
+" sameple popup menu
+"     let s:popup_id = popup_atcursor(a:lines, {
+"           \ 'padding': [0, 0, 0, 0],
+"           \ 'border': [1, 1, 1, 1],
+"           \ 'moved': 'any',
+"           \ 'borderchars': ['─', '│', '─ ', '│', '╭', '╮', '╯', '╰'],
+"           \ })
 
 " color
 se background=dark
@@ -370,7 +387,7 @@ se statusline=[%n]\ %<%.99f%{NearestMethodOrFunction()}\ %y%h%w%m%r%=%-14.(%l,%c
 " Auto Groups {{{
 aug configgroup
     au!
-    au BufRead,BufNewFile *.html,*.xhtml,*.xml setl foldmethod=indent foldlevel=0
+    au BufRead,BufNewFile *.html,*.xhtml,*.xml setl foldmethod=indent foldlevel=0 tabstop=2 shiftwidth=2
     au BufRead,BufNewFile *.vim setl shiftwidth=2 tabstop=2 foldmethod=marker foldlevel=0
     au BufNewFile,BufRead *.otl setl listchars=tab:\|\ ,extends:>,precedes:\ ,nbsp:~,trail:.
     au BufRead,BufNewFile *rc setl foldmethod=marker
@@ -415,6 +432,13 @@ let g:vista_executive_for = {
         \ 'java': 'vim_lsc',
         \ 'vim': 'vim_lsc'
         \ }
+" let g:vista_executive_for = {
+"         \ 'cpp': 'vim_lsp',
+"         \ 'c': 'vim_lsp',
+"         \ 'python': 'vim_lsp',
+"         \ 'java': 'vim_lsp',
+"         \ 'vim': 'vim_lsp'
+"         \ }
 let g:vista_ignore_kinds = ['Variable']
 nn <silent> <leader>o :Vista finder<CR>
 aug vistahidecwd
@@ -477,7 +501,7 @@ aug end
 
 " use netrw
 nn <Leader>nf :let @/=expand("%:t") <Bar> execute 'Ex' expand("%:h") <Bar> normal n<CR>
-nn <Leader>nt :Fern . -reveal=% -drawer -stay<CR>
+nn <Leader>nt :Fern . -reveal=% -drawer<CR>
 
 " fern
 " search for current file in directory: :Fern . -reveal=% -drawer
@@ -489,26 +513,7 @@ aug end
 " }}}
 
 " FZF {{{
-" search for core vim script: :FZF /usr/local/Cellar/vim
-"
-nn <silent> <leader>ff :FZF<CR>
-nn <silent> <leader>p  :FZFExplore<CR>
-nn <silent> <leader>z :Buffers<CR>
-nn <silent> <leader>m :History<CR>
-nn <silent> <leader>xx :Command<CR>
-nn <silent> <leader>fo :BTags<CR>
-nn <silent> <leader>fh :History:<cr>
-nn <silent> <leader>f/ :History/<cr>
-nn <silent> <leader>fl :BLines<CR>
-nn <silent> <leader>fw :Windows<CR>
-nn <silent> <leader>fg :GFiles<CR>
-nn <silent> <leader>fc :Commits<CR>
-nn <silent> <leader>ft :Helptags<CR>
-nn <silent> <leader>fa :Ag<CR>
-nn <silent> <leader>fr :Rg<CR>
-
 " indicate how fzf buffer is opened
-
 " open in popup windows
 "let g:fzf_layout = { 'down': '20%' }
 " let g:fzf_layout = { 'window': { 'width': 1.0, 'height': 0.3, 'yoffset': 1.0, 'border': 'horizontal'} }
@@ -545,8 +550,54 @@ fu! FzfExplore(...)
         execute "e" file
     endif
 endfunction
-
 command! -nargs=* FZFExplore call FzfExplore(shellescape(<q-args>))
+
+function! s:format_qf_line(line)
+  let parts = split(a:line, ':')
+  return { 'filename': parts[0]
+         \,'lnum': parts[1]
+         \,'col': parts[2]
+         \,'text': join(parts[3:], ':')
+         \ }
+endfunction
+
+function! s:qf_to_fzf(key, line) abort
+  let l:filepath = expand('#' . a:line.bufnr . ':p')
+  return l:filepath . ':' . a:line.lnum . ':' . a:line.col . ':' . a:line.text
+endfunction
+
+function! s:fzf_to_qf(filtered_list) abort
+  let list = map(a:filtered_list, 's:format_qf_line(v:val)')
+  if len(list) > 0
+    call setqflist(list)
+    copen
+  endif
+endfunction
+
+command! FzfQF call fzf#run(fzf#wrap({
+      \ 'source': map(getqflist(), function('<sid>qf_to_fzf')),
+      \ 'sink*':   function('<sid>fzf_to_qf'),
+      \ 'options': '--reverse --multi --bind=ctrl-a:select-all,ctrl-d:deselect-all --prompt "quickfix> "',
+      \ }))
+
+" search for core vim script: :FZF /usr/local/Cellar/vim
+"
+nn <silent> <leader>ff :FZF<CR>
+nn <silent> <leader>p  :FZFExplore<CR>
+nn <silent> <leader>z :Buffers<CR>
+nn <silent> <leader>m :History<CR>
+nn <silent> <leader>xx :Command<CR>
+nn <silent> <leader>fo :BTags<CR>
+nn <silent> <leader>fh :History:<cr>
+nn <silent> <leader>f/ :History/<cr>
+nn <silent> <leader>fl :BLines<CR>
+nn <silent> <leader>fw :Windows<CR>
+nn <silent> <leader>fg :GFiles<CR>
+nn <silent> <leader>fc :Commits<CR>
+nn <silent> <leader>ft :Helptags<CR>
+nn <silent> <leader>fa :Ag<CR>
+nn <silent> <leader>fr :Rg<CR>
+nn <leader>fq :FzfQF<cr>
 " }}}
 
 " Drag visuals {{{
@@ -687,7 +738,7 @@ fu! EchoMessageCallback(data)
 endf
 
 " sending executeCommand for request lsp server for debug port
-fu LSCJavaStartDebug()
+fu JavaStartDebug()
     cal lsc#server#userCall('workspace/executeCommand', {'command': 'vscode.java.startDebugSession'}, function('EchoMessageCallback'))
 endf
 
@@ -699,7 +750,7 @@ endf
 "       \ function('s:JavaStartDebugCallback')}
 "       \)
 " endf
-nn<silent> <buffer> <Leader>vlj :call LSCJavaStartDebug()<CR>
+nn<silent> <buffer> <Leader>vlj :call JavaStartDebug()<CR>
 
 " }}}
 
@@ -733,23 +784,16 @@ smap <expr> <C-k> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<C-k>'
 " inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 " inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
 
-" autocmd User asyncomplete_setup cal asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
-"             \ 'name': 'ultisnips',
-"             \ 'allowlist': ['*'],
-"             \ 'completor': function('asyncomplete#sources#ultisnips#completor'),
-"             \ }))
-"call asyncomplete#register_source(asyncomplete#sources#nextword#get_source_options({
-            "\   'name': 'nextword',
-            "\   'allowlist': ['*'],
-            "\   'args': ['-n', '10000'],
-            "\   'completor': function('asyncomplete#sources#nextword#completor')
-            "\   }))
+" cal asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
+" 	\ 'name': 'ultisnips',
+" 	\ 'allowlist': ['*'],
+" 	\ 'completor': function('asyncomplete#sources#ultisnips#completor'),
+" 	\ }))
 
 
 " let g:asyncomplete_auto_completeopt = 1
 " let g:asyncomplete_auto_popup = 1
-" imap <expr> <C-Space> <Plug>(asyncomplete_force_refresh)
-
+" let g:asyncomplete_log_file = expand('~/.asyncomplete.log')
 " }}}
 
 " YCM {{{
@@ -774,7 +818,7 @@ smap <expr> <C-k> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<C-k>'
 "se completeopt-=preview
 " }}}
 
-" vim-lsp {{{
+" vim-lsp {{{                    se
 
 " nn <leader>jd :LspDefinition<cr>
 " nn <leader>jf :LspReferences<cr>
@@ -796,15 +840,36 @@ smap <expr> <C-k> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<C-k>'
 
 " let g:lsp_log_verbose = 1
 " let g:lsp_log_file = expand('~/.vim-lsp.log')
-" let g:asyncomplete_log_file = expand('~/.asyncomplete.log')
 " let g:lsp_highlight_references_enabled = 1
 " hi lspReference cterm=underline ctermfg=33 ctermbg=0
 " }}}
 
 " vim-lsc {{{
+
 " vim: sudo npm install -g vim-language-server
-" java: eclipse-jdt-ls use java >= 11
+" java:
+"   - eclipse-jdt-ls use java >= 11
+"   - curl -o lombok.jar 'https://projectlombok.org/downloads/lombok.jar'
 " javascript:  sudo npm install -g javascript-typescript-langserver
+
+
+" Turn the invalid java.apply.workspaceEdit commands into an edit
+" action which complies with the LSP spec
+function! s:fixEdits(actions) abort
+    return map(a:actions, function('<SID>fixEdit'))
+endfunction
+
+function! s:fixEdit(idx, maybeEdit) abort
+    if !has_key(a:maybeEdit, 'command') ||
+        \ !has_key(a:maybeEdit.command, 'command') ||
+        \ a:maybeEdit.command.command !=# 'java.apply.workspaceEdit'
+        return a:maybeEdit
+    endif
+    return {
+        \ 'edit': a:maybeEdit.command.arguments[0],
+        \ 'title': a:maybeEdit.command.title}
+endfunction
+
 let g:lsc_server_commands = {
  \ 'c': {
  \    'command': 'clangd'
@@ -816,12 +881,13 @@ let g:lsc_server_commands = {
  \    'command': 'javascript-typescript-stdio'
  \  },
  \  'java': {
- \    'command': 'java -Declipse.application=org.eclipse.jdt.ls.core.id1
+ \    'command': '/home/tait/jdk/jdk-16.0.1/bin/java -Declipse.application=org.eclipse.jdt.ls.core.id1
  \                     -Dosgi.bundles.defaultStartLevel=4
  \                     -Declipse.product=org.eclipse.jdt.ls.core.product
  \                     -Dlog.protocol=true -Dlog.level=INFO -Xmx1G
  \                     -jar /home/tait/lsp/jdt-language-server/plugins/org.eclipse.equinox.launcher_1.6.100.v20201223-0822.jar
  \                     -configuration /home/tait/lsp/jdt-language-server/config_linux
+ \                     -javaagent:/home/tait/lsp/jdt-language-server/lombok.jar
  \                     -data /home/tait/lsp/jdt-language-server/workspace',
  \    'message_hooks': {
  \        'initialize': {
@@ -829,7 +895,10 @@ let g:lsc_server_commands = {
  \                 'bundles': [ '/home/tait/.m2/repository/com/microsoft/java/com.microsoft.java.debug.plugin/0.32.0/com.microsoft.java.debug.plugin-0.32.0.jar' ]
  \             }
  \        }
- \    }
+ \    },
+ \    'response_hooks': {
+ \        'textDocument/codeAction': function('<SID>fixEdits'),
+ \    },
  \  }
  \}
 
@@ -840,7 +909,8 @@ nn <silent> gD :LSClientAllDiagnostics<CR>
 let g:lsc_enable_autocomplete  = v:true
 let g:lsc_enable_diagnostics   = v:true
 let g:lsc_reference_highlights = v:true
-let g:lsc_trace_level          = 'off'
+let g:lsc_trace_level          = 'verbose'
+let g:lsc_autocomplete_length = 3  "start complete after typing second charcter
 hi lscReference cterm=underline ctermfg=NONE ctermbg=0
 " }}}
 
@@ -910,6 +980,11 @@ nn <C-L> 2zl
 nn <C-J> <C-E>
 nn <C-K> <C-Y>
 
+nn <leader><leader>h <C-W>h
+nn <leader><leader>j <C-W>j
+nn <leader><leader>k <C-W>k
+nn <leader><leader>l <C-W>l
+
 " window resize
 "C-w _ : Max out the height of the current split
 "C-w | : Max out the width of the current split
@@ -928,37 +1003,6 @@ ru! ftplugin/man.vim
 " C-t to go back
 " }}}
 
-" fzf hack for quick fix {{{
-function! s:format_qf_line(line)
-  let parts = split(a:line, ':')
-  return { 'filename': parts[0]
-         \,'lnum': parts[1]
-         \,'col': parts[2]
-         \,'text': join(parts[3:], ':')
-         \ }
-endfunction
-
-function! s:qf_to_fzf(key, line) abort
-  let l:filepath = expand('#' . a:line.bufnr . ':p')
-  return l:filepath . ':' . a:line.lnum . ':' . a:line.col . ':' . a:line.text
-endfunction
-
-function! s:fzf_to_qf(filtered_list) abort
-  let list = map(a:filtered_list, 's:format_qf_line(v:val)')
-  if len(list) > 0
-    call setqflist(list)
-    copen
-  endif
-endfunction
-
-command! FzfQF call fzf#run(fzf#wrap({
-      \ 'source': map(getqflist(), function('<sid>qf_to_fzf')),
-      \ 'sink*':   function('<sid>fzf_to_qf'),
-      \ 'options': '--reverse --multi --bind=ctrl-a:select-all,ctrl-d:deselect-all --prompt "quickfix> "',
-      \ }))
-nn <leader>fq :FzfQF<cr>
-"}}}
-
 " vim-which-key {{{
 autocmd FileType which_key highlight WhichKeyFloating ctermbg=0 ctermfg=12
 nnoremap <silent> <leader> :WhichKey ','<CR>
@@ -966,12 +1010,14 @@ nnoremap <silent> <leader> :WhichKey ','<CR>
 
 " Personalize highlighting {{{
 hi SignColumn ctermfg=12 ctermbg=NONE
-hi Search ctermbg=8 ctermfg=2 cterm=italic,underline,bold
+hi Search ctermbg=8 ctermfg=72 cterm=italic,underline,bold
 hi IncSearch cterm=underline ctermbg=136 ctermfg=0
 
 "make popup menu looks nicer
-hi Pmenu cterm=NONE ctermfg=12 ctermbg=0
-hi PmenuSel ctermfg=2 cterm=bold ctermbg=0
+hi Pmenu cterm=NONE ctermfg=12 ctermbg=8
+hi PmenuSel ctermfg=2 cterm=none ctermbg=0
+hi PmenuThumb ctermfg=2 cterm=none ctermbg=12
+hi PmenuSbar ctermfg=2 cterm=none ctermbg=0
 hi TabLineSel ctermfg=2 cterm=underline,bold ctermbg=0
 
 " CursorColumn, CursorLine, and CursorLineNr
@@ -991,6 +1037,10 @@ hi htmlH3 cterm=NONE cterm=NONE ctermfg=136
 hi Error cterm=italic,underline ctermfg=166 ctermbg=0
 hi SpellBad cterm=italic,underline ctermfg=136
 hi SpellCap cterm=none ctermfg=64
+
+" function, identifier
+hi Identifier ctermfg=14
+hi Function ctermfg=251
 " }}}
 
 " semantic highlighting {{{
