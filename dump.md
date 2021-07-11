@@ -461,7 +461,16 @@ zip -r file.zip *
     )
 ```
 
-# install arch linux on raspberry pi
+# Install archlinux
+
+- enable internet access
+iwd dhcpd dhclient wifi-menu dialog wpa_supplicant
+
+- install yay 
+git clone https://github.com/Jguer/yay && cd yay && makepkg -si
+
+- install rbenv with yay
+
 
 ```sh
     # network
@@ -491,11 +500,9 @@ zip -r file.zip *
 
     pacman -S bc elinks zsh sudo xclip axel zip unzip unrar rtorrent alsa-utils samba openssh ranger net-tools wireless_tools ntfs-3g mpd
 
-    # yaourt
+    # yay
     pacman -S base-devel
-    curl -O https://aur.archlinux.org/packages/pa/package-query/package-query.tar.gz && tar xzvf package-query.tar.gz && cd package-query && makepkg -si --asroot
-    curl -O https://aur.archlinux.org/packages/ya/yaourt/yaourt.tar.gz && tar xzvf yaourt.tar.gz && cd yaourt && makepkg -si --asroot
-    rm -rf package-query.tar.gz yaourt.tar.gz
+    cd ~/github && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
 
     # wm
     pacman -S xdotool xorg xorg-server xorg-xinit xlockmore rxvt-unicode xautolock
