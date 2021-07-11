@@ -469,7 +469,14 @@ iwd dhcpd dhclient wifi-menu dialog wpa_supplicant
 - install yay 
 git clone https://github.com/Jguer/yay && cd yay && makepkg -si
 
+- enable nerd font in st terminal
+ttf-nerd-fonts-symbols
+
 - install rbenv with yay
+yay -S rbenv
+
+- language servers
+clang
 
 
 ```sh
