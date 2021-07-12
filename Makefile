@@ -29,7 +29,7 @@ all:
 	install -Dm644 mpdconf ~/.mpdconf
 	install -Dm644 gdbinit ~/.gdbinit
 	install gitconfig ~/.gitconfig
-	install -Dm644 mbsyncrc ~/.mbsyncrc
+	# install -Dm644 mbsyncrc ~/.mbsyncrc
 	install -Dm6644 msmtprc ~/.msmtprc
 	install -Dm644 mutt/muttrc ~/.mutt/muttrc
 	install -Dm644 mailcap ~/.mailcap
