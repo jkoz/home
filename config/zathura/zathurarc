@@ -13,4 +13,3 @@ set recolor-darkcolor "#657b83"
 set recolor-lightcolor "#fdf6e3"
 
 set scroll-step 10
-set smooth-scroll true
