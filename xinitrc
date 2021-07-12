@@ -20,7 +20,7 @@ sxhkd &
 feh --bg-scale ~/.config/Arch.jpg
 
 # Desktop notification
-#dunst &
+dunst &
 
 # GPG
 #gpg-agent --daemon --use-standard-socket
@@ -40,7 +40,8 @@ redshift &
 
 # Status
 #
-slstatus -s | lemonbar -f "Terminus-12" -f "FontAwesome-10" -B "#f0073643" -F"#b58900" &
+# slstatus -s | lemonbar -f "Terminus-12" -f "FontAwesome-10" -B "#f0073643" -F"#b58900" &
+dwmblocks &
 #conky &
 #tint2&
 #while true; do xsetroot -name "$(acpi | cut -d',' -f2)  $(date +'%b %d %l:%M%p  ')"; sleep 1; done &
@@ -84,4 +85,5 @@ slstatus -s | lemonbar -f "Terminus-12" -f "FontAwesome-10" -B "#f0073643" -F"#b
 #fi
 
 #exec wm
-exec emacs --load ~/.emacs.d/exwm-init.el -mm --debug-init --daemon
+# exec emacs --load ~/.emacs.d/exwm-init.el -mm --debug-init --daemon
+exec dwm

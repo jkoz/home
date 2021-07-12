@@ -471,12 +471,17 @@ git clone https://github.com/Jguer/yay && cd yay && makepkg -si
 
 - enable nerd font in st terminal
 ttf-nerd-fonts-symbols
+ttf-fira-code
+ttf-symbola
 
 - install rbenv with yay
 yay -S rbenv
 
 - language servers
 clang
+
+- time sync
+systemctl start ntp
 
 
 ```sh

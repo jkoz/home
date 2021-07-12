@@ -87,6 +87,10 @@ all:
 	install -Dm755 scripts/newpost ~/bin
 	install -Dm755 scripts/status ~/bin
 	install -Dm755 scripts/tmux-comp ~/bin/tmux-comp
+	install -Dm755 scripts/weather ~/bin/weather
+	install -Dm755 scripts/battery ~/bin/battery
+	install -Dm755 scripts/brightness ~/bin/brightness
+	install -Dm755 scripts/clock ~/bin/clock
 	install -Dm600 config/systemd/user/rclone-gdrive.service ~/.config/systemd/user/rclone-gdrive.service
 	# enable italic need following terminfo, work together with source code pro font
 	# https://rsapkf.xyz/blog/enabling-italics-vim-tmux

@@ -230,8 +230,8 @@ wthr() { curl -s 'wttr.in/Edmonton?format=1'; }
 # alias {{{
 if which exa >/dev/null; then
     alias ls=exa
-    alias l='exa -lh'
-    alias ll='exa -abghHliS'
+    alias l='exa -lh --icons'
+    alias ll='exa -abghHliS --icons'
 else
     alias ll='ls -lah '
     alias l='ls -1pG'
