@@ -483,6 +483,17 @@ clang
 - time sync
 systemctl start ntp
 
+- pdf
+zathura zathura-pdf-mupdf
+
+- mail
+mutt
+mbsync
+yay -S mu cyrus-sasl-xoauth2-git
+mu init --maildir ~/Mail/tai.t@hotmail.com
+mu init --maildir ~/Mail/phuoctaitp@gmail.com
+mu index
+
 
 ```sh
     # network
