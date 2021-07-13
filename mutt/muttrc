@@ -37,7 +37,6 @@ set include = yes #automatically quote message
 set forward_format="Fwd: %s"
 
 set edit_headers = yes #you can add cc, bcc, or change ur from input
-set query_command = "goobook query '%s'" #autocomplete addresses, TODO
 set header_cache = ~/.cache/mutt/headers # Store message headers locally to speed things up.
 set message_cachedir = ~/.cache/mutt/bodies
 set certificate_file = ~/.mutt.d/certificates
@@ -48,21 +47,22 @@ set pipe_decode # strip headers and eval mimes when piping
 set thorough_search # strip headers and eval mimes before searching
 set mask = * # Gmail have hidden files .All Mail ....
 #set crypt_autosign = yes
-set status_format = "───[%f]───[%r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? ]───%>─%?p?( %p postponed )?───"
+set status_format = " $from  %f  %r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? %> %?p?( %p postponed )? "; \
 set status_chars  = " *%A"
 
 # this crash on some mail from rbc, comment it for now
-#set display_filter="sed -e '/\\[-- Type: text.* --\\]/d' \
-                        #-e '/\\[-- Autoview.* --\\]/d' \
-                        #-e '/\\[-- Type.* --\\]/d' \
-                        #-e '/\\[-- .*unsupported.* --\\]/d' \
-                        #-e '/\\[-- Attachment #[0-9] --\\]/d' \
-                        #-e 's/Attachment #[0-9]: //g' \
-                        #-e '/./,/^$/!d'"
+set display_filter="sed -e '/\\[-- Type: text.* --\\]/d' \
+                        -e '/\\[-- Autoview.* --\\]/d' \
+                        -e '/\\[-- Type.* --\\]/d' \
+                        -e '/\\[-- .*unsupported.* --\\]/d' \
+                        -e '/\\[-- Attachment #[0-9] --\\]/d' \
+                        -e 's/Attachment #[0-9]: //g' \
+                        -e '/./,/^$/!d'"
 
 #set alias_file = ~/.muttrc.d/aliases
 #source ~/.muttrc.d/aliases
 set query_command= "abook --mutt-query '%s'"
+# set query_command="lbdbq '%s'"
 macro index,pager A "<pipe-message>abook --add-email-quiet<return>"
 
 set timeout=30
@@ -112,7 +112,7 @@ set date_format         = "%d/%m/%y at %I:%M%P"
 #set index_format        = " %Z  %-15.15L       %s"
 #set index_format = "  %{%b %d}   %-30.30n %s"
 #set index_format = "%3C  %[!%d.%m.%y]  %-30.30n %s"
-set index_format="%3C  %[!%d.%m.%y]  %-30.30n  %?X?(%1X)& ? %?M?(%02M)& ? %s%> %?y?[%Y]?"
+set index_format="%3C  %[!%Y.%m.%d]  %-30.30n  %?X?(%1X)& ? %?M?(%02M)& ? %s%> %?y?[%Y]?"
 set alias_format = "%4n %t %-20a  %r"
 set reply_regexp = "^(([Rr][Ee]?(\[[0-9]+\])?: *)?(\[[^]]+\] *)?)*"
 set quote_regexp = "^( {0,4}[>|:#%]| {0,4}[a-z0-9]+[>|]+)+"
@@ -143,14 +143,15 @@ folder-hook 'phuoctaitp@gmail.com' \
          set realname = "Phuoc Tai Tran"; \
          set from = "phuoctaitp@gmail.com"; \
          set sendmail = "msmtp -a gmail-phuoctaitp"; \
-         macro index \cF "!mbsync gmail-phuoctaitp > /dev/null 2>&1 &<enter>"; \
+         macro index \cF "!tmux split-window -p 20 'mbsync gmail-phuoctaitp' &<enter>"; \
          macro index ,ki  "<change-folder> =Inbox"<enter>; \
          macro index ,kd  "<change-folder> =[Gmail]/Trash"<enter>; \
          macro index ,km  "<change-folder> =[Gmail]/Spam"<enter>; \
-         macro index,pager ,m "<enter-command>\`cd ~/Mail/phuoctaitp@gmail.com && find . -maxdepth 5 -mindepth 1 -type d | sed -Ee \"/\\[Gmail\\]$|new$|cur$|tmp$/d\" -e \"s/^\\.//g\" -e \"s/\\//./g\" | fzf-tmux | sed -e \"s/ /\\<quote-char\\>\\<space\\>/g\" -e \"s/^\./=/g\" -e \"s/\\./\\//g\" -e \"s/^/push c/\" -e \"s/$/\\<enter\\>/g\" \` <enter>"; \
+         macro index,pager ,m "<enter-command>\`cd ~/Mail/phuoctaitp@gmail.com && find . -maxdepth 5 -mindepth 1 -type d | sed -Ee \"/\\[Gmail\\]$|new$|cur$|tmp$/d\" -e \"s/^\\.//g\" -e \"s/\\//./g\" | fzf-tmux -r 25 | sed -e \"s/ /\\<quote-char\\>\\<space\\>/g\" -e \"s/^\./=/g\" -e \"s/\\./\\//g\" -e \"s/^/push c/\" -e \"s/$/\\<enter\\>/g\" \` <enter>"; \
          unmailboxes *; \
          mailboxes `find ~/Mail/phuoctaitp@gmail.com -maxdepth 5 -mindepth 1 -type d | sed -Ee "/\[Gmail\]$|tmp$|new$|cur$/d" -e "s/ /\\\\ /g" | awk 1 ORS=" "`; \
-         color status yellow default;'
+         set status_format = " $from  %f  %r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? %> %?p?( %p postponed )? "; \
+         color status underline yellow default;'
 #}}}
 
 # tai.t@hotmail.com {{{
@@ -164,15 +165,16 @@ folder-hook 'tai.t@hotmail.com' \
          set realname = "Phuoc Tai Tran"; \
          set from = "tai.t@hotmail.com"; \
          set sendmail = "msmtp -a hotmail-tait"; \
-         macro index \cF "!mbsync hotmail-tait > /dev/null 2>&1 &<enter>"; \
+         macro index \cF "!tmux split-window -p 20 'mbsync hotmail-tait' &<enter>"; \
          macro index ,ki  "<change-folder> =Inbox"<enter>; \
          macro index ,kd  "<change-folder> =Deleted"<enter>; \
          macro index ,km  "<change-folder> =Junk"<enter>; \
          macro index ,ks  "<change-folder> =Sent"<enter>; \
-         macro index,pager ,m "<enter-command>\`cd ~/Mail/tai.t@hotmail.com && find . -maxdepth 5 -mindepth 1 -type d | sed -Ee \"/\\[Gmail\\]$|new$|cur$|tmp$/d\" -e \"s/^\\.//g\" -e \"s/\\//./g\" | fzf-tmux | sed -e \"s/ /\\<quote-char\\>\\<space\\>/g\" -e \"s/^\./=/g\" -e \"s/\\./\\//g\" -e \"s/^/push c/\" -e \"s/$/\\<enter\\>/g\" \` <enter>"; \
+         macro index,pager ,m "<enter-command>\`cd ~/Mail/tai.t@hotmail.com && find . -maxdepth 5 -mindepth 1 -type d | sed -Ee \"/\\[Gmail\\]$|new$|cur$|tmp$/d\" -e \"s/^\\.//g\" -e \"s/\\//./g\" | fzf-tmux -r 25 | sed -e \"s/ /\\<quote-char\\>\\<space\\>/g\" -e \"s/^\./=/g\" -e \"s/\\./\\//g\" -e \"s/^/push c/\" -e \"s/$/\\<enter\\>/g\" \` <enter>"; \
          unmailboxes *; \
          mailboxes `find ~/Mail/tai.t@hotmail.com -maxdepth 5 -mindepth 1 -type d | sed -Ee "/\[Gmail\]$|tmp$|new$|cur$/d" -e "s/ /\\\\ /g" | awk 1 ORS=" "`; \
-         color status blue default;'
+         set status_format = " $from  %f  %r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? %> %?p?( %p postponed )? "; \
+         color status underline color230 default;'
 #}}}
 
 # ctphung1987@gmail.com {{{
@@ -186,14 +188,15 @@ folder-hook 'ctphung1987@gmail.com' \
          set realname = "Thu Phung Chau"; \
          set from = "ctphung1987@gmail.com"; \
          set sendmail = "msmtp -a gmail-ctphung1987"; \
-         macro index \cF "!mbsync gmail-ctphung1987> /dev/null 2>&1 &<enter>"; \
+         macro index \cF "!tmux split-window -p 20 'mbsync gmail-ctphung1987' &<enter>"; \
          macro index ,ki  "<change-folder> =Inbox"<enter>; \
          macro index ,kd  "<change-folder> =[Gmail]/Trash"<enter>; \
          macro index ,km  "<change-folder> =[Gmail]/Spam"<enter>; \
-         macro index,pager ,m "<enter-command>\`cd ~/Mail/ctphung1987@gmail.com && find . -maxdepth 5 -mindepth 1 -type d | sed -Ee \"/\\[Gmail\\]$|new$|cur$|tmp$/d\" -e \"s/^\\.//g\" -e \"s/\\//./g\" | fzf-tmux | sed -e \"s/ /\\<quote-char\\>\\<space\\>/g\" -e \"s/^\./=/g\" -e \"s/\\./\\//g\" -e \"s/^/push c/\" -e \"s/$/\\<enter\\>/g\" \` <enter>"; \
+         macro index,pager ,m "<enter-command>\`cd ~/Mail/ctphung1987@gmail.com && find . -maxdepth 5 -mindepth 1 -type d | sed -Ee \"/\\[Gmail\\]$|new$|cur$|tmp$/d\" -e \"s/^\\.//g\" -e \"s/\\//./g\" | fzf-tmux -r 25 | sed -e \"s/ /\\<quote-char\\>\\<space\\>/g\" -e \"s/^\./=/g\" -e \"s/\\./\\//g\" -e \"s/^/push c/\" -e \"s/$/\\<enter\\>/g\" \` <enter>"; \
          unmailboxes *; \
          mailboxes `find ~/Mail/ctphung1987@gmail.com -maxdepth 5 -mindepth 1 -type d | sed -Ee "/\[Gmail\]$|tmp$|new$|cur$/d" -e "s/ /\\\\ /g" | awk 1 ORS=" "`; \
-         color status cyan default;'
+         set status_format = " $from  %f  %r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? %> %?p?( %p postponed )? "; \
+         color status underline cyan default;'
 #}}}
 
 # thunderchief3000@yahoo.com {{{
@@ -207,11 +210,12 @@ folder-hook 'thunderchief3000@yahoo.com' \
          set realname = "Tai Tran"; \
          set from = "thunderchief3000@yahoo.com"; \
          set sendmail = "msmtp -a yahoo-thunderchief3000"; \
-         macro index F "!tmux split-window -v -l 3 \"mbsync yahoo-thunderchief3000\"<enter>"; \
+         macro index F "!tmux split-window -v -p 20 'mbsync yahoo-thunderchief3000' &<enter>"; \
          macro index d '<save-message>=Trash<enter>'; \
          unmailboxes *; \
          mailboxes `find ~/Mail/thunderchief3000@yahoo.com -maxdepth 5 -mindepth 1 -type d ! -regex ".*/cur$\|.*/new$\|.*/tmp$" | sed "s/ /\\\\ /g" | awk 1 ORS=" "`; \
-         color status blue default;'
+         set status_format = " [$from] [%f] [%r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? ]───%>─%?p?( %p postponed )?───"; \
+         color status underline blue default;'
 # }}}
 
 #}}}
@@ -231,10 +235,13 @@ color status    white           blue            # status lines in the folder ind
 color tree      color241        default         # the "tree" display of threads within the folder index
 color search    white           blue            # search matches found with search within the internal pager
 color markers   red             default         # The markers indicate a wrapped line hen showing messages with looong lines
+
+color index default default '.*'
 color index yellow default '~O'
 color index blue default '~N'
 color index color6 default '~F'    # Flagged Messages are important!
 color index color10 default   '~D'            # Deleted Mails - use dark color as these are already "dealt with"
+
 # }}}
 
 # binding {{{
@@ -242,15 +249,19 @@ color index color10 default   '~D'            # Deleted Mails - use dark color a
 #macro index \cx ":source ~/bin/fzfo|<enter>"
 macro index,pager ,u "<enter-command>set pipe_decode = yes<enter><pipe-message>urlview<enter><enter-command>set pipe_decode = no<enter>" "view URLs"
 
+macro index ,s "<shell-escape>mu find --clearlinks --format=links --linksdir=~/.mu/search "   "mu find"
+macro index ,v "<change-folder-readonly>~/.mu/search"      "mu find results"
+
 # search all mailboxes under ~/Mail
-# :`find ~/Mail -type d | grep -vE "\[Gmail\]$|tmp$|new$|cur$" | fzf-tmux | xargs printf "push c%s<enter>"`
-#macro index,pager ,m "<enter-command>\`find ~/Mail -type d | grep -vE \"[Gmail]$|tmp$|new$|cur$\" | fzf-tmux | xargs printf \"push c%s\\<enter\\>\"\`<enter>"
+# :`find ~/Mail -type d | grep -vE "\[Gmail\]$|tmp$|new$|cur$" | fzf-tmux -r 25 | xargs printf "push c%s<enter>"`
+#macro index,pager ,m "<enter-command>\`find ~/Mail -type d | grep -vE \"[Gmail]$|tmp$|new$|cur$\" | fzf-tmux -r 25 | xargs printf \"push c%s\\<enter\\>\"\`<enter>"
 
 # pick 1 account under ~/Mail
 # :`find ~/Mail -maxdepth 1 -mindepth 1 -type d -exec basename {} \; | fzf-tmux | xargs printf "push c$HOME/Mail/%s/Inbox<enter>"`
-macro index,pager ,a "<enter-command>\`find ~/Mail -maxdepth 1 -mindepth 1 -type d -exec basename {} \\; | fzf-tmux | xargs printf \"push c$HOME/Mail/%s/Inbox\\<enter\\>\" \`<enter>"
+macro index,pager ,z "<enter-command>\`find ~/Mail -maxdepth 1 -mindepth 1 -type d -exec basename {} \\; | fzf-tmux -r 25 | xargs printf \"push c$HOME/Mail/%s/Inbox\\<enter\\>\" \`<enter>"
 
 macro attach B "<pipe-message>cat > /tmp/mutt.html; open /tmp/mutt.html<enter>"
+macro attach s <save-entry><bol>/tmp/<eol>
 macro index,pager ,jh  "<change-folder> $HOME/Mail/phuoctaitp@gmail.com/Inbox"<enter>
 macro index,pager ,jj  "<change-folder> $HOME/Mail/tai.t@hotmail.com/Inbox"<enter>
 macro index,pager ,jk  "<change-folder> $HOME/Mail/ctphung1987@gmail.com/Inbox"<enter>
@@ -258,8 +269,8 @@ macro index,pager ,jk  "<change-folder> $HOME/Mail/ctphung1987@gmail.com/Inbox"<
 macro generic,index,pager \; "<enter-command>"
 
 
-bind index,pager \t next-unread
-bind index,pager ,\t previous-unread
+bind index <tab> next-unread
+bind index <backtab> previous-unread
 
 bind index,pager ,,k sidebar-prev
 bind index,pager ,,j sidebar-next
