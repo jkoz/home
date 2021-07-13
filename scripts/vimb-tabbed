@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh +x
 histfile=~/.config/vimb/history
 histsize=1000
 
@@ -9,10 +9,15 @@ histsize=1000
 #pacman -S gst-plugins-base
 #pacman -S gst-plugins-ugly
 
+xidfile="/tmp/tabbed-vimb.xid"
+xid="$([ -r $xidfile ] && cat $xidfile)"
 
-if xdotool search -classname 'VimbT'; then
-    echo "<Esc>;tabopen $@<CR>" | socat - unix-connect:$(grep 'socket' /tmp/vimb.socket)
+
+# if xdotool search -classname 'VimbT'; then
+if [ -n "$xid" ] && xprop -id "$xid" >/dev/null 2>&1 ; then
+    # echo "<Esc>;tabopen $@<CR>" | socat - unix-connect:$(grep 'socket' /tmp/vimb.socket)
+    vimb -e $xid
 else
-    #tabbed -c -n 'VimbT' vimb --socket --dump --embed $@ > /tmp/vimb.socket
-    tabbed -n 'VimbT' -c vimb -e
+    # tabbed -c -n 'VimbT' vimb --socket --dump --embed $@ > /tmp/vimb.socket
+    tabbed -n 'VimbT' -c vimb -e >"$xidfile" 2>/dev/null
 fi
