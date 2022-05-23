@@ -3,7 +3,7 @@ mod4 + Return
     st
 # Terminal Dropdown
 mod4 + i
-    xdotool search --maxdept 1 --onlyvisible --class "terminaldropdown" windowunmap || xdotool search --maxdept 1 --class "terminaldropdown" windowmap windowraise windowmove 6 20 windowsize 99% 97% || st -c terminaldropdown -e tmux a &
+    xdotool search --maxdept 1 --onlyvisible --class "terminaldropdown" windowunmap || xdotool search --maxdept 1 --class "terminaldropdown" windowmap windowraise windowmove 6 25 windowsize 99% 97% || st -c terminaldropdown -g 199x54+20+25 -e tmux a
 # Terminal
 #mod4 + t
     #xdotool search --maxdept 1 --onlyvisible --class "st-256color" windowunmap || xdotool search --maxdept 1 --class "st-256color" windowmap windowraise windowmove 0 20 || st &
@@ -33,7 +33,7 @@ mod4 + Left
     amixer -c 0 set Master 1-
 # Zathura pdf
 mod4 + p
-    xdotool search --maxdept 1 --onlyvisible --classname "zathura-tabbed" windowunmap || xdotool search --maxdept 1 --classname "zathura-tabbed" windowmap windowraise windowmove 6 20 windowsize 99% 97% || zathura-tabbed &
+    xdotool search --maxdept 1 --onlyvisible --classname "zathura-tabbed" windowunmap || xdotool search --maxdept 1 --classname "zathura-tabbed" windowmap windowraise windowmove 6 25 windowsize 99% 97% || zathura-tabbed &
 # Kill process
 mod4 + u
     st -c Fzf -e sh -c "xdotool search 'Fzf' ; dm ps"

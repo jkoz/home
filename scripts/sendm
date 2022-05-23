@@ -35,7 +35,7 @@ done
 
 ssl_cert=/etc/ssl/cert.pem
 #smtp_server="smtp.outlook.com:587"
-#pass_cmd=`hotmail-tait`
+pass_cmd=`gpg -dq ~/.gnupg/hotmail-tait.gpg| xargs -0 bash -c`
 
 while read a;do echo $a; done | \
      curl -v --silent --sasl-ir --ssl-reqd --user "${user}"  \

@@ -1,17 +1,14 @@
 #!/bin/sh
-#set -x
+# set -x
 
 xidfile="/tmp/tabbed-zathura.xid"
 
-for arg in $@; do
-    xid="$([ -r $xidfile ] && cat $xidfile)"
+arg="$@"
 
-    if [ -n "$xid" ] && xprop -id "$xid" >/dev/null 2>&1 ; then
-        zathura -e "$xid" "$arg" --fork >/dev/null 2>&1;
-    else
-        tabbed -c -f -dn 'zathura-tabbed' -r 2 zathura -e '' "$arg" >"$xidfile" 2>/dev/null &
-    fi
-    # TODO: hack wait for xid is initialized, ;-) dig into later
-    sleep 2
-done
+xid="$([ -r $xidfile ] && cat $xidfile)"
 
+if [ -n "$xid" ] && xprop -id "$xid" >/dev/null 2>&1 ; then
+    zathura -e "$xid" "$arg" --fork >/dev/null 2>&1;
+else
+    tabbed -c -f -dn 'zathura-tabbed' -r 2 zathura -e '' "$arg" >"$xidfile" 2>/dev/null &
+fi

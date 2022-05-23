@@ -8,6 +8,20 @@ permalink: /technicaldump/
 
 The purpose of this personal blog is to provide information about me and centralize my technical and academic notes.
 
+# TODO
+
+- picom not work unfocused
+- google refresh_token was exipred
+- vim hilight wrong syntax word
+
+# gpg
+
+gpg -r email -e file.txt
+
+- gpg-agent is older than use, solved with following command
+gpgconf --kill all
+
+
 # markdown
 
 - this is emphasize _emphasize_
@@ -82,7 +96,7 @@ xwininfo -root -all
     pacman -S --noconfirm xdg-user-dirs && xdg-user-dirs-update
     pacman -S --noconfirm xclip
     pacman -S --noconfirm libxcb xcb-util xcb-util-keysyms xcb-util-wm # xcb tools
-    pacman -S --noconfirm words # dictionary used in vim
+    pacman -S --noconfirm words # dictionary used in vim, together with asyncomplete-look
     yaourt -S --noconfirm xdo-git # like xdotool
     yaourt -S --noconfirm sxhkd-git # bindkeys in x
     yaourt -S --noconfirm mt7601u-dkms # wifi mt7601u
@@ -484,16 +498,18 @@ clang
 systemctl start ntp
 
 - pdf
-zathura zathura-pdf-mupdf
+zathura zathura-pdf-mupdf zathura-ps zathura-djvu
 
 - mail
 mutt
 mbsync
 yay -S mu cyrus-sasl-xoauth2-git
-mu init --maildir ~/Mail/tai.t@hotmail.com
-mu init --maildir ~/Mail/phuoctaitp@gmail.com
-mu index
+mu --muhome=~/.mu/abc@bca.com init --maildir ~/Mail/tai.t@hotmail.com
+mu index --muhome=~/.mu/ttran@edmkw.com
 
+- gtk themes for chrome, gvim, file chooser
+sudo pacman -S adapta-gtk-theme
+yay -S numix-gtk-theme-git
 
 ```sh
     # network

@@ -1,7 +1,7 @@
 # environment {{{
 export EDITOR="vim"
 export PAGER="less"
-export BROWSER="surf-tabbed"
+export BROWSER="vimb-tabbed"
 export MOVPLAY="mplayer"
 export PICVIEW="feh"
 export SNDPLAY="mplayer"
@@ -19,7 +19,8 @@ export M2_HOME=${HOME}/mvn/apache-maven-3.8.1
 export M2=${M2_HOME}/bin
 export M2_REPO=$HOME/.m2/repository
 export MAVEN_OPTS="-Xms256m -Xmx512m"
-export PATH=${M2_HOME}/bin:${JAVA_HOME}/bin:${HOME}/.local/bin:${PATH}
+export ANT_HOME=${HOME}/ant/apache-ant-1.9.16
+export PATH=${ANT_HOME}/bin:${M2_HOME}/bin:${JAVA_HOME}/bin:${HOME}/.local/bin:${PATH}
 
 export LESS_TERMCAP_mb=$'\E[01;31m'
 export LESS_TERMCAP_md=$'\E[01;38;5;74m'
@@ -149,7 +150,8 @@ _gen_fzf_default_opts() {
   export FZF_DEFAULT_OPTS="
     --layout=reverse
     --height=40%
-    --info=inline
+    --info=hidden
+    --prompt='  '
     --multi
     --no-bold
     --color fg:-1,bg:-1,gutter:-1,hl:underline:${blue},fg+:-1,bg+:${base02},hl+:underline:${blue}

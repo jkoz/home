@@ -15,7 +15,7 @@ for battery in /sys/class/power_supply/BAT?
 do
 capacity=$(cat "$battery"/capacity) || exit
 status=$(cat "$battery"/status)
-left=$(acpi | awk '{print $5}')
+# left=$(acpi | awk '{print $5}')
 
 if [ "$capacity" -ge 75 ]; then
 	color="#00ff00"
@@ -32,5 +32,6 @@ fi
 
 [ "$status" = "Charging" ] && color="#ffffff"
 
-printf "%s%s%s%s\n" "$(echo "$status" | sed "s/,//;s/Discharging/🔋/;s/Not charging/🛑/;s/Charging/🔌/;s/Unknown/♻/;s/Full/⚡/;s/ 0*/ /g;s/ :/ /g")" "$warn" "$(echo "$capacity" | sed -e 's/$/%/')" " $(echo "$left") "
+printf "%s%s%s%s\n" "$(echo "$status" | sed "s/,//;s/Discharging/🔋/;s/Not charging/🛑/;s/Charging/🔌/;s/Unknown/♻/;s/Full/⚡/;s/ 0*/ /g;s/ :/ /g")" "$warn" "$(echo "$capacity" | sed -e 's/$/%/')"
+# printf "%s%s%s%s\n" "$(echo "$status" | sed "s/,//;s/Discharging/🔋/;s/Not charging/🛑/;s/Charging/🔌/;s/Unknown/♻/;s/Full/⚡/;s/ 0*/ /g;s/ :/ /g")" "$warn" "$(echo "$capacity" | sed -e 's/$/%/')"
 done

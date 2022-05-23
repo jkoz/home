@@ -63,7 +63,6 @@ Plug 'simeji/winresizer'
 Plug 'liuchengxu/vim-which-key'
 Plug 'airblade/vim-rooter'
 Plug 'liuchengxu/vista.vim'
-Plug 'puremourning/vimspector'
 Plug 'airblade/vim-gitgutter'
 Plug 'Yggdroot/indentLine'
 Plug 'reedes/vim-pencil'
@@ -78,22 +77,17 @@ Plug 'jceb/vim-orgmode'
 Plug 'rhysd/git-messenger.vim'
 Plug 'uiiaoo/java-syntax.vim'
 Plug 'octol/vim-cpp-enhanced-highlight'
-" Plug 'sheerun/vim-polyglot'
-
-Plug 'natebosch/vim-lsc'
+Plug 'chunkhang/vim-mbsync'
+Plug 'neovim/nvim-lspconfig'
+Plug 'glepnir/lspsaga.nvim'
+Plug 'hrsh7th/nvim-compe'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
-Plug 'chunkhang/vim-mbsync'
 
 " Plug 'SirVer/ultisnips'
 " Plug 'honza/vim-snippets'
-" Plug 'prabirshrestha/async.vim'
-" Plug 'prabirshrestha/vim-lsp'
-" Plug 'mattn/vim-lsp-settings'
-" Plug 'prabirshrestha/asyncomplete.vim'
-" Plug 'prabirshrestha/asyncomplete-lsp.vim'
-" Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
-
+" Plug 'puremourning/vimspector'
+" Plug 'sheerun/vim-polyglot'
 " Plug 'godlygeek/tabular'
 " Plug 'machakann/asyncomplete-ezfilter.vim'
 "Plug 'chrisbra/unicode.vim'
@@ -754,71 +748,13 @@ nn<silent> <buffer> <Leader>vlj :call JavaStartDebug()<CR>
 
 " }}}
 
-" Utilsnip {{{
-" let g:UltiSnipsExpandTrigger           = '<tab>'
-" let g:UltiSnipsJumpForwardTrigger      = '<tab>'
-" let g:UltiSnipsJumpBackwardTrigger     = '<s-tab>'
+" utilsnip {{{
+let g:UltiSnipsExpandTrigger           = '<tab>'
+let g:UltiSnipsJumpForwardTrigger      = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger     = '<s-tab>'
 "}}}
 
-" vim-vsnip {{{
-" imap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-" smap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-" imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-" smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-imap <expr> <C-j>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<C-j>'
-smap <expr> <C-j>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<C-j>'
-imap <expr> <C-k> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<C-k>'
-smap <expr> <C-k> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<C-k>'
-" }}}
-
-" supertab {{{
-"let g:SuperTabCrMapping                = 0
-"let g:SuperTabDefaultCompletionType    = '<C-n>'
-"let g:SuperTabMappingForward='<c-j>'
-"let g:SuperTabMappingBackward='<c-k>'
-" c-h to delete character
-" }}}
-
-" asyncomplete {{{
-" inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-" inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
-
-" cal asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
-" 	\ 'name': 'ultisnips',
-" 	\ 'allowlist': ['*'],
-" 	\ 'completor': function('asyncomplete#sources#ultisnips#completor'),
-" 	\ }))
-
-
-" let g:asyncomplete_auto_completeopt = 1
-" let g:asyncomplete_auto_popup = 1
-" let g:asyncomplete_log_file = expand('~/.asyncomplete.log')
-" }}}
-
-" YCM {{{
-"let g:ycm_semantic_triggers =  {'VimspectorPrompt': [ '.', '->', ':', '<' ]}
-"let g:ycm_key_list_select_completion   = ['<C-j>', '<C-n>', '<Down>']
-"let g:ycm_key_list_previous_completion = ['<C-k>', '<C-p>', '<Up>']
-"let g:ycm_always_populate_location_list = 1
-
-"nn <leader>jf :YcmCompleter GoToReferences<cr>
-"nn <leader>ji :YcmCompleter GoToImplementation<cr>
-"nn <leader>jd :YcmCompleter GoToDefinition<cr>
-"nn <leader>js :YcmCompleter GoToSymbol *<cr> " load all symbol of the workspace
-"nn <leader>jj :YcmDiags<cr>
-"nn <leader>j] :lnext<cr>
-"nn <leader>j[ :lprevious<cr>
-"nn <leader>jr :YcmCompleter RefactorRename<cr>
-"nn <leader>jc :YcmCompleter FixIt<cr>
-
-"let g:ycm_enable_diagnostic_signs = 1
-"let g:ycm_log_level = 'info'
-"let g:ycm_autoclose_preview_window_after_completion = 1
-"se completeopt-=preview
-" }}}
-
-" vim-lsp {{{                    se
+" vim-lsp {{{
 
 " nn <leader>jd :LspDefinition<cr>
 " nn <leader>jf :LspReferences<cr>
@@ -844,76 +780,6 @@ smap <expr> <C-k> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<C-k>'
 " hi lspReference cterm=underline ctermfg=33 ctermbg=0
 " }}}
 
-" vim-lsc {{{
-
-" vim: sudo npm install -g vim-language-server
-" java:
-"   - eclipse-jdt-ls use java >= 11
-"   - curl -o lombok.jar 'https://projectlombok.org/downloads/lombok.jar'
-" javascript:  sudo npm install -g javascript-typescript-langserver
-
-
-" Turn the invalid java.apply.workspaceEdit commands into an edit
-" action which complies with the LSP spec
-function! s:fixEdits(actions) abort
-    return map(a:actions, function('<SID>fixEdit'))
-endfunction
-
-function! s:fixEdit(idx, maybeEdit) abort
-    if !has_key(a:maybeEdit, 'command') ||
-        \ !has_key(a:maybeEdit.command, 'command') ||
-        \ a:maybeEdit.command.command !=# 'java.apply.workspaceEdit'
-        return a:maybeEdit
-    endif
-    return {
-        \ 'edit': a:maybeEdit.command.arguments[0],
-        \ 'title': a:maybeEdit.command.title}
-endfunction
-
-let g:lsc_server_commands = {
- \ 'c': {
- \    'command': 'clangd'
- \  },
- \  'vim': {
- \    'command': 'vim-language-server --stdio'
- \  },
- \  'javascript': {
- \    'command': 'javascript-typescript-stdio'
- \  },
- \  'java': {
- \    'command': '/home/tait/jdk/jdk-16.0.1/bin/java -Declipse.application=org.eclipse.jdt.ls.core.id1
- \                     -Dosgi.bundles.defaultStartLevel=4
- \                     -Declipse.product=org.eclipse.jdt.ls.core.product
- \                     -Dlog.protocol=true -Dlog.level=INFO -Xmx1G
- \                     -jar /home/tait/lsp/jdt-language-server/plugins/org.eclipse.equinox.launcher_1.6.100.v20201223-0822.jar
- \                     -configuration /home/tait/lsp/jdt-language-server/config_linux
- \                     -javaagent:/home/tait/lsp/jdt-language-server/lombok.jar
- \                     -data /home/tait/lsp/jdt-language-server/workspace',
- \    'message_hooks': {
- \        'initialize': {
- \            'initializationOptions': {
- \                 'bundles': [ '/home/tait/.m2/repository/com/microsoft/java/com.microsoft.java.debug.plugin/0.32.0/com.microsoft.java.debug.plugin-0.32.0.jar' ]
- \             }
- \        }
- \    },
- \    'response_hooks': {
- \        'textDocument/codeAction': function('<SID>fixEdits'),
- \    },
- \  }
- \}
-
-let g:lsc_auto_map = v:true
-nn <silent> gD :LSClientAllDiagnostics<CR>
-
-" re-trigger with c-x c-u
-let g:lsc_enable_autocomplete  = v:true
-let g:lsc_enable_diagnostics   = v:true
-let g:lsc_reference_highlights = v:true
-let g:lsc_trace_level          = 'verbose'
-let g:lsc_autocomplete_length = 3  "start complete after typing second charcter
-hi lscReference cterm=underline ctermfg=NONE ctermbg=0
-" }}}
-
 " easymotion {{{
 map <Leader>s <Plug>(easymotion-bd-f)
 map <leader>e <Plug>(easymotion-prefix)
@@ -931,13 +797,6 @@ hi ErrorMsg term=NONE cterm=NONE  ctermbg=NONE ctermfg=12
 hi Comment cterm=italic
 
 "se foldcolumn=1
-" }}}
-
-" python3/dyn {{{
-"
-"se pythonthreehome=/usr/local/Cellar/python@3.9/3.9.5/Frameworks/Python.framework/Versions/3.9
-"se pythonthreedll=/usr/local/Cellar/python@3.9/3.9.5/Frameworks/Python.framework/Versions/3.9/lib/python3.9/config-3.9-darwin/libpython3.9.dylib
-"
 " }}}
 
 " {{{ foldtext
@@ -1066,29 +925,6 @@ hi Function ctermfg=251
 
 " }}}
 
-"calendar {{{
-" to be autoground
-
-"autocmd FileType calendar
-    "\ cal calendar#color#syntax('Sunday', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
-    "\ | cal calendar#color#syntax('Saturday', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
-    "\ | cal calendar#color#syntax('DayTitle', has('gui') ? '#ff0000' : 64, 'NONE', 'NONE')
-    "\ | cal calendar#color#syntax('SundayTitle', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
-    "\ | cal calendar#color#syntax('SaturdayTitle', has('gui') ? '#ff0000' : 136, 'NONE', 'NONE')
-    "\ | cal calendar#color#syntax('Today', has('gui') ? '#ff0000' : 33, '0', 'NONE')
-    "\ | cal calendar#color#syntax('TodaySunday', has('gui') ? '#ff0000' : 33, 'NONE', 'NONE')
-    "\ | cal calendar#color#syntax('TodaySaturday', has('gui') ? '#ff0000' : 33, 'NONE', 'NONE')
-    "\ | cal calendar#color#syntax('Select', has('gui') ? '#ff0000' : 33, '0', 'NONE')
-    "\ | cal calendar#color#syntax('OtherMonth', has('gui') ? '#ff0000' : 245, '0', 'NONE')
-    "\ | cal calendar#color#syntax('OtherMonthSelect', has('gui') ? '#ff0000' : 245, '0', 'NONE')
-    "\ | cal calendar#color#syntax('NormalSpace', has('gui') ? '#ff0000' : 255, '0', 'NONE')
-    "\ | cal calendar#color#syntax('CommentSelect', has('gui') ? '#ff0000' : 232, '0', 'NONE')
-    "\ | setl conceallevel=3
-
-"let g:calendar_google_calendar = 1
-"let g:calendar_google_task = 1
-"}}}
-
 " vim-markdown {{{
 " disable of conceal regardless of conceallevel
 "let g:vim_markdown_conceal = 0
@@ -1100,25 +936,115 @@ let g:markdown_enable_folding = 1
 let g:goyo_width=100
 " }}}
 
-" Ale, deoplete {{{
-" let g:ale_linters = {
-"         \   'java': ['vim-lsc']
-"     \ }
-"let g:ale_completion_enabled=1
+" lspconfig {{{
 
-" turn this on to use deoplete
-"let g:deoplete#enable_at_startup = 1
+lua <<EOF
+  require 'lspconfig'.pyright.setup{}
+  require 'lspconfig'.vimls.setup{}
+  require 'lspsaga'.init_lsp_saga {
+    error_sign = '', -- 
+    warn_sign = '',
+    hint_sign = '',
+    infor_sign = '',
+  }
 
-"nn <leader>jd :ALEGoToDefinition<cr>
-"nn <leader>jf :ALEFindReferences<cr>
-"nn <leader>js :ALESymbolSearch<cr>
-"nn <leader>jr :ALERename<cr>
-"nn <leader>jn :ALENext<cr>
-"nn <leader>jp :ALEPrevious<cr>
+  require'compe'.setup {
+    enabled = true;
+    autocomplete = true;
+    debug = false;
+    min_length = 1;
+    preselect = 'enable';
+    throttle_time = 80;
+    source_timeout = 200;
+    incomplete_delay = 400;
+    max_abbr_width = 100;
+    max_kind_width = 100;
+    max_menu_width = 100;
+    documentation = false;
 
-"nn <leader>ji :LspImplementation<cr>
-"nn <leader>ji :LspImplementation<cr>
-"nn <leader>jh :LspTypeHierarchy<cr>
-"nn <leader>jc :LspCodeAction<cr>
+    source = {
+      path = true;
+      buffer = true;
+      calc = true;
+      vsnip = true;
+      nvim_lsp = true;
+      nvim_lua = true;
+      spell = true;
+      tags = true;
+      snippets_nvim = true;
+      treesitter = true;
+    };
+  }
+  local t = function(str)
+    return vim.api.nvim_replace_termcodes(str, true, true, true)
+  end
+
+  local check_back_space = function()
+      local col = vim.fn.col('.') - 1
+      if col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
+          return true
+      else
+          return false
+      end
+  end
+
+  -- Use (s-)tab to:
+  --- move to prev/next item in completion menuone
+  --- jump to prev/next snippet's placeholder
+  _G.tab_complete = function()
+    if vim.fn.pumvisible() == 1 then
+      return t "<C-n>"
+    elseif vim.fn.call("vsnip#available", {1}) == 1 then
+      return t "<Plug>(vsnip-expand-or-jump)"
+    elseif check_back_space() then
+      return t "<Tab>"
+    else
+      return vim.fn['compe#complete']()
+    end
+  end
+  _G.s_tab_complete = function()
+    if vim.fn.pumvisible() == 1 then
+      return t "<C-p>"
+    elseif vim.fn.call("vsnip#jumpable", {-1}) == 1 then
+      return t "<Plug>(vsnip-jump-prev)"
+    else
+      -- If <S-Tab> is not working in your terminal, change it to <C-h>
+      return t "<S-Tab>"
+    end
+  end
+
+  vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
+  vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
+  vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+  vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+
+  require'vim.lsp.protocol'.CompletionItemKind = {
+    '', -- Text
+    '', -- Method
+    '', -- Function
+    '', -- Constructor
+    '', -- Field
+    '', -- Variable
+    '', -- Class
+    'ﰮ', -- Interface
+    '', -- Module
+    '', -- Property
+    '', -- Unit
+    '', -- Value
+    '', -- Enum
+    '', -- Keyword
+    '﬌', -- Snippet
+    '', -- Color
+    '', -- File
+    '', -- Reference
+    '', -- Folder
+    '', -- EnumMember
+    '', -- Constant
+    '', -- Struct
+    '', -- Event
+    'ﬦ', -- Operator
+    '', -- TypeParameter
+  }
+EOF
 
 " }}}

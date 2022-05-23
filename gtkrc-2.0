@@ -1,14 +1,14 @@
 # use solarize scheme
-#include "/usr/share/themes/Numix/gtk-2.0/gtkrc"
-#include "/usr/share/themes/Numix-OSX/gtk-2.0/gtkrc"
+include "/usr/share/themes/Numix-OSX/gtk-2.0/gtkrc"
+include "/usr/share/themes/NumixSolarizedDarkBlue/gtk-2.0/gtkrc"
 
 gtk-theme-name = "Numix"
 gtk-icon-theme-name = "Numix-Circle"
-gtk-font-name = "Lucida Grande 10"
+gtk-font-name = "Lucida Grande 16"
 
 # font
 style "user-font" {
-    font_name = "Lucida Grande 10"
+    font_name = "Lucida Grande 16"
 }
 widget_class "*" style "user-font"
 

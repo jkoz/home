@@ -6,10 +6,12 @@ all:
 	install -Dm600 emacs.d/init.el ~/.emacs.d/init.el
 	install -Dm600 emacs.d/exwm-init.el ~/.emacs.d/exwm-init.el
 	install -Dm644 ctags ~/.ctags
+	install -Dm644 config/nvim/init.vim ~/.config/nvim/init.vim
 	install -Dm644 config/sxhkd/sxhkdrc ~/.config/sxhkd/sxhkdrc
-	install -Dm644 config/gtk-2.0/gtkfilechooser.ini ~/.config/gtk-2.0/gtkfilechooser.ini
+	install -Dm644 config/calcurse/conf ~/.config/calcurse/conf
+	# install -Dm644 config/gtk-2.0/gtkfilechooser.ini ~/.config/gtk-2.0/gtkfilechooser.ini
 	install -Dm644 config/gtk-3.0/settings.ini ~/.config/gtk-3.0/settings.ini
-	install -Dm644 gtkrc-2.0 ~/.gtkrc-2.0
+	# install -Dm644 gtkrc-2.0 ~/.gtkrc-2.0
 	install -Dm644 newsbeuter/config ~/.newsbeuter/config
 	install -Dm644 newsbeuter/urls ~/.newsbeuter/urls
 	install -Dm644 config/zathura/zathurarc ~/.config/zathura/zathurarc
@@ -32,9 +34,12 @@ all:
 	# install -Dm644 mbsyncrc ~/.mbsyncrc
 	install -Dm6644 msmtprc ~/.msmtprc
 	install -Dm644 mutt/muttrc ~/.mutt/muttrc
+	install -Dm755 mutt/mutt_display_filter.awk ~/.mutt/mutt_display_filter.awk
 	install -Dm644 mailcap ~/.mailcap
 	install -Dm644 config/dunst/dunstrc ~/.config/dunst/dunstrc
-	#install -Dm644 config/systemd/user/fetchmail.service ~/.config/systemd/user/fetchmail.service
+	# install -Dm644 config/systemd/user/fetchmail.service ~/.config/systemd/user/fetchmail.service
+	install -Dm700 fetchmailrc ~/.fetchmailrc
+	install -Dm644 procmailrc ~/.procmailrc
 	install -Dm644 config/systemd/user/mpd.service ~/.config/systemd/user/mpd.service
 	install -Dm644 config/systemd/user/mpd.socket ~/.config/systemd/user/mpd.socket
 	install -Dm644 config/systemd/user/torrent.service ~/.config/systemd/user/torrent.service
@@ -56,7 +61,7 @@ all:
 	install -Dm644 irssi/scripts/notify.pl ~/.irssi/scripts/notify.pl
 	install -Dm644 config/ranger/rc.conf ~/.config/ranger/rc.conf
 	install -Dm755 config/ranger/scope.sh ~/.config/ranger/scope.sh
-	install -Dm644 config/compton.conf ~/.config/compton.conf
+	install -Dm644 config/picom.conf ~/.config/picom.conf
 	install -Dm644 conkyrc ~/.conkyrc
 	install -Dm644 conky/conky_widgets.lua ~/.conky/conky_widgets.lua
 	install -Dm644 mplayer/config ~/.mplayer/config
@@ -79,6 +84,7 @@ all:
 	install -Dm644 texmf/tex/latex/shading/shading.tex ~/texmf/tex/latex/shading/shading.tex
 	#install -Dm644 config/tint2/tint2rc ~/.config/tint2/tint2rc
 	install -Dm644 config/Arch.jpg ~/.config/Arch.jpg
+	install -Dm644 config/Solar.jpg ~/.config/Solar.jpg
 	install -Dm644 Xmodmap ~/.Xmodmap
 	install -m644 dircolors ~/.dircolors
 	install -Dm644 config/tabbed/config.def.h ~/.config/tabbed/config.h
@@ -86,6 +92,7 @@ all:
 	install -Dm755 scripts/zathura-tabbed ~/bin
 	install -Dm755 scripts/newpost ~/bin
 	install -Dm755 scripts/status ~/bin
+	install -Dm755 scripts/sendm ~/bin
 	install -Dm755 scripts/tmux-comp ~/bin/tmux-comp
 	install -Dm755 scripts/weather ~/bin/weather
 	install -Dm755 scripts/battery ~/bin/battery

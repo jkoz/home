@@ -3,6 +3,10 @@
 # to get current temperature: run 
 # $ curl -sf "wttr.in/?format=3"
 
+ # curl -sf 'wttr.in/?format=3' | cut -d':' -f2
+ curl -sf 'wttr.in/?format=3' | sed "s/\(.*\):\(..\).*\([-+]\)\(.*\)\\+/\2 \3\4/"
+ exit 0
+
 # Displays todays precipication chance (☔) and daily low (🥶) and high (🌞).
 # Usually intended for the statusbar.
 

@@ -16,7 +16,7 @@ xid="$([ -r $xidfile ] && cat $xidfile)"
 # if xdotool search -classname 'VimbT'; then
 if [ -n "$xid" ] && xprop -id "$xid" >/dev/null 2>&1 ; then
     # echo "<Esc>;tabopen $@<CR>" | socat - unix-connect:$(grep 'socket' /tmp/vimb.socket)
-    vimb -e $xid
+    vimb -e $xid $@
 else
     # tabbed -c -n 'VimbT' vimb --socket --dump --embed $@ > /tmp/vimb.socket
     tabbed -n 'VimbT' -c vimb -e >"$xidfile" 2>/dev/null

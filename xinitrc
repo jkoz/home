@@ -14,10 +14,10 @@ xsetroot -solid "#002b36" -cursor_name left_ptr -name " "
 sxhkd &
 
 # Composite
-#compton -b
+picom -b --focus-exclude 'x = 0 && y = 0 && override_redirect = true'
 
 # Feh
-feh --bg-scale ~/.config/Arch.jpg
+feh --bg-scale ~/.config/Solar.jpg
 
 # Desktop notification
 dunst &
@@ -41,7 +41,7 @@ redshift &
 # Status
 #
 # slstatus -s | lemonbar -f "Terminus-12" -f "FontAwesome-10" -B "#f0073643" -F"#b58900" &
-dwmblocks &
+# dwmblocks &
 #conky &
 #tint2&
 #while true; do xsetroot -name "$(acpi | cut -d',' -f2)  $(date +'%b %d %l:%M%p  ')"; sleep 1; done &
@@ -65,7 +65,7 @@ dwmblocks &
 #nm-applet & # Network manager front-end
 
 # Hides the mouse cursor
-#unclutter -root -jitter 10 &
+unclutter -root -jitter 10 &
 
 # auto mount usb
 #udiskie &
