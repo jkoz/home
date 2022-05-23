@@ -50,6 +50,7 @@ Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-speeddating'
 Plug 'masukomi/vim-markdown-folding'
 Plug 'gavinbeatty/dragvisuals.vim'
 Plug 'junegunn/goyo.vim'
@@ -77,21 +78,25 @@ Plug 'jceb/vim-orgmode'
 Plug 'rhysd/git-messenger.vim'
 Plug 'uiiaoo/java-syntax.vim'
 Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'dominikduda/vim_current_word'
+
 " Plug 'sheerun/vim-polyglot'
 
-Plug 'natebosch/vim-lsc'
-Plug 'hrsh7th/vim-vsnip'
-Plug 'hrsh7th/vim-vsnip-integ'
+" Plug 'natebosch/vim-lsc'
+" Plug 'hrsh7th/vim-vsnip'
+" Plug 'hrsh7th/vim-vsnip-integ'
 Plug 'chunkhang/vim-mbsync'
 
-" Plug 'SirVer/ultisnips'
-" Plug 'honza/vim-snippets'
-" Plug 'prabirshrestha/async.vim'
-" Plug 'prabirshrestha/vim-lsp'
-" Plug 'mattn/vim-lsp-settings'
-" Plug 'prabirshrestha/asyncomplete.vim'
-" Plug 'prabirshrestha/asyncomplete-lsp.vim'
-" Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'mattn/vim-lsp-settings'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
+Plug 'itchyny/vim-cursorword'
+Plug 'qxxxb/vim-searchhi'
 
 " Plug 'godlygeek/tabular'
 " Plug 'machakann/asyncomplete-ezfilter.vim'
@@ -100,7 +105,6 @@ Plug 'chunkhang/vim-mbsync'
 "Plug 'scrooloose/nerdtree'
 " Plug 'ryanoasis/vim-devicons'
 " Plug 'itchyny/lightline.vim'
-"Plug 'tpope/vim-speeddating'
 "Plug 'jaxbot/semantic-highlight.vim'
 "Plug 'clarke/vim-renumber'
 "Plug 'morhetz/gruvbox'
@@ -154,7 +158,7 @@ function! MyTabLine()
   return s
 endfunction
 set tabline=%!MyTabLine()
-set showtabline=2 " always show tabline
+set showtabline=1 " always show tabline
 " }}}
 
 " Mappings {{{
@@ -182,7 +186,7 @@ vn / /\v
 nn <silent> <leader><space> :nohl<cr>
 
 " Quick quit
-nn <silent> q :q<cr>
+" nn <silent> q :q<cr>
 nn <silent> - :bp\|bd #<cr>
 
 "com! BW :bp|:bd#
@@ -236,6 +240,7 @@ se title
 se list
 se listchars=tab:\|\ ,extends:>,precedes:\ ,nbsp:~,trail:.
 se signcolumn=no
+se shm+=I "dont show version welcome page please
 
 se ttyfast
 se ttyscroll=3
@@ -365,7 +370,7 @@ function! NearestMethodOrFunction() abort
 endfunction
 
 " status line
-hi StatusLine ctermbg=none cterm=underline term=none ctermfg=250
+hi StatusLine ctermbg=0 cterm=none ctermfg=250
 hi StatusLineNC ctermbg=NONE cterm=underline term=NONE ctermfg=10
 hi User1 ctermbg=8 ctermfg=2 cterm=bold,underline
 hi User2 ctermfg=250 ctermbg=8 cterm=underline
@@ -425,20 +430,20 @@ aug END
 
 " Vista {{{
 nn <silent> <leader>l :Vista<cr>
-let g:vista_executive_for = {
-        \ 'cpp': 'vim_lsc',
-        \ 'c': 'vim_lsc',
-        \ 'python': 'vim_lsc',
-        \ 'java': 'vim_lsc',
-        \ 'vim': 'vim_lsc'
-        \ }
 " let g:vista_executive_for = {
-"         \ 'cpp': 'vim_lsp',
-"         \ 'c': 'vim_lsp',
-"         \ 'python': 'vim_lsp',
-"         \ 'java': 'vim_lsp',
-"         \ 'vim': 'vim_lsp'
+"         \ 'cpp': 'vim_lsc',
+"         \ 'c': 'vim_lsc',
+"         \ 'python': 'vim_lsc',
+"         \ 'java': 'vim_lsc',
+"         \ 'vim': 'vim_lsc'
 "         \ }
+let g:vista_executive_for = {
+        \ 'cpp': 'vim_lsp',
+        \ 'c': 'vim_lsp',
+        \ 'python': 'vim_lsp',
+        \ 'java': 'vim_lsp',
+        \ 'vim': 'vim_lsp'
+         \ }
 let g:vista_ignore_kinds = ['Variable']
 nn <silent> <leader>o :Vista finder<CR>
 aug vistahidecwd
@@ -634,6 +639,11 @@ aug pencil
                 \ | cal pencil#init({'wrap': 'soft', 'textwidth': 72})
                 \ | cal litecorrect#init() | cal lexical#init()
     autocmd Filetype mail
+                \ setl fdm=manual spell spl=en_us spf=~/.vim/spellfile.add et sw=2 ts=2 noai nonu nornu
+                \ | cal pencil#init({'wrap': 'soft', 'textwidth': 60})
+                \ | cal litecorrect#init() | cal lexical#init()
+                \ | 1,/^$/-1fold
+    autocmd Filetype org
                 \ setl spell spl=en_us spf=~/.vim/spellfile.add et sw=2 ts=2 noai nonu nornu
                 \ |  cal pencil#init({'wrap': 'soft', 'textwidth': 60})
                 \ | cal litecorrect#init() | cal lexical#init()
@@ -755,9 +765,9 @@ nn<silent> <buffer> <Leader>vlj :call JavaStartDebug()<CR>
 " }}}
 
 " Utilsnip {{{
-" let g:UltiSnipsExpandTrigger           = '<tab>'
-" let g:UltiSnipsJumpForwardTrigger      = '<tab>'
-" let g:UltiSnipsJumpBackwardTrigger     = '<s-tab>'
+let g:UltiSnipsExpandTrigger           = '<tab>'
+let g:UltiSnipsJumpForwardTrigger      = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger     = '<s-tab>'
 "}}}
 
 " vim-vsnip {{{
@@ -765,10 +775,10 @@ nn<silent> <buffer> <Leader>vlj :call JavaStartDebug()<CR>
 " smap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
 " imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
 " smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-imap <expr> <C-j>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<C-j>'
-smap <expr> <C-j>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<C-j>'
-imap <expr> <C-k> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<C-k>'
-smap <expr> <C-k> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<C-k>'
+" imap <expr> <C-j>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<C-j>'
+" smap <expr> <C-j>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<C-j>'
+" imap <expr> <C-k> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<C-k>'
+" smap <expr> <C-k> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<C-k>'
 " }}}
 
 " supertab {{{
@@ -780,20 +790,26 @@ smap <expr> <C-k> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<C-k>'
 " }}}
 
 " asyncomplete {{{
-" inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 " inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
 
-" cal asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
-" 	\ 'name': 'ultisnips',
-" 	\ 'allowlist': ['*'],
-" 	\ 'completor': function('asyncomplete#sources#ultisnips#completor'),
-" 	\ }))
+cal asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
+	\ 'name': 'ultisnips',
+	\ 'allowlist': ['*'],
+	\ 'completor': function('asyncomplete#sources#ultisnips#completor'),
+	\ }))
+
+au User asyncomplete_setup call asyncomplete#register_source({
+    \ 'name': 'look',
+    \ 'allowlist': ['text', 'markdown', 'org'],
+    \ 'completor': function('asyncomplete#sources#look#completor'),
+    \ })
 
 
-" let g:asyncomplete_auto_completeopt = 1
-" let g:asyncomplete_auto_popup = 1
-" let g:asyncomplete_log_file = expand('~/.asyncomplete.log')
+let g:asyncomplete_auto_completeopt = 1
+let g:asyncomplete_auto_popup = 1
+let g:asyncomplete_log_file = expand('~/.asyncomplete.log')
 " }}}
 
 " YCM {{{
@@ -820,28 +836,35 @@ smap <expr> <C-k> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<C-k>'
 
 " vim-lsp {{{                    se
 
-" nn <leader>jd :LspDefinition<cr>
-" nn <leader>jf :LspReferences<cr>
-" nn <leader>ji :LspImplementation<cr>
-" nn <leader>jn :LspNextError<cr>
-" nn <leader>jp :LspPreviousError<cr>
-" nn <leader>js :LspWorkspaceSymbol<cr>
-" nn <leader>ji :LspImplementation<cr>
-" nn <leader>jh :LspTypeHierarchy<cr>
-" nn <leader>jr :LspRename<cr>
-" nn <leader>jc :LspCodeAction<cr>
-"set foldmethod=expr
-  "\ foldexpr=lsp#ui#vim#folding#foldexpr()
-  "\ foldtext=lsp#ui#vim#folding#foldtext()
+ nn <leader>jd :LspDefinition<cr>
+ nn <leader>jf :LspReferences<cr>
+ nn <leader>ji :LspImplementation<cr>
+ nn <leader>jn :LspNextError<cr>
+ nn <leader>jp :LspPreviousError<cr>
+ nn <leader>js :LspWorkspaceSymbol<cr>
+ nn <leader>ji :LspImplementation<cr>
+ nn <leader>jh :LspTypeHierarchy<cr>
+ nn <leader>jr :LspRename<cr>
+ nn <leader>jc :LspCodeAction<cr>
+" set foldmethod=expr
+"   \ foldexpr=lsp#ui#vim#folding#foldexpr()
+"   \ foldtext=lsp#ui#vim#folding#foldtext()
 
-" enable diagnostics for cursor
-" let g:lsp_diagnostics_enable = 1
-" let g:lsp_diagnostics_echo_cursor = 1
+" lsp signs
+let g:lsp_diagnostics_signs_error = {'text': '✗'}
+let g:lsp_diagnostics_signs_warning = {'text': ''}
+let g:lsp_diagnostics_signs_hint = {'text': ''}
+let g:lsp_diagnostics_signs_information = {'text': ''}
+let g:lsp_document_code_action_signs_hint = {'text': ''}
 
-" let g:lsp_log_verbose = 1
-" let g:lsp_log_file = expand('~/.vim-lsp.log')
-" let g:lsp_highlight_references_enabled = 1
-" hi lspReference cterm=underline ctermfg=33 ctermbg=0
+ " enable diagnostics for cursor
+ let g:lsp_diagnostics_enable = 1
+ let g:lsp_diagnostics_echo_cursor = 1
+
+ let g:lsp_log_verbose = 1
+ let g:lsp_log_file = expand('~/.vim-lsp.log')
+ let g:lsp_highlight_references_enabled = 1
+ hi lspReference cterm=underline ctermfg=33 ctermbg=0
 " }}}
 
 " vim-lsc {{{
@@ -855,63 +878,63 @@ smap <expr> <C-k> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<C-k>'
 
 " Turn the invalid java.apply.workspaceEdit commands into an edit
 " action which complies with the LSP spec
-function! s:fixEdits(actions) abort
-    return map(a:actions, function('<SID>fixEdit'))
-endfunction
+" function! s:fixEdits(actions) abort
+"     return map(a:actions, function('<SID>fixEdit'))
+" endfunction
 
-function! s:fixEdit(idx, maybeEdit) abort
-    if !has_key(a:maybeEdit, 'command') ||
-        \ !has_key(a:maybeEdit.command, 'command') ||
-        \ a:maybeEdit.command.command !=# 'java.apply.workspaceEdit'
-        return a:maybeEdit
-    endif
-    return {
-        \ 'edit': a:maybeEdit.command.arguments[0],
-        \ 'title': a:maybeEdit.command.title}
-endfunction
+" function! s:fixEdit(idx, maybeEdit) abort
+"     if !has_key(a:maybeEdit, 'command') ||
+"         \ !has_key(a:maybeEdit.command, 'command') ||
+"         \ a:maybeEdit.command.command !=# 'java.apply.workspaceEdit'
+"         return a:maybeEdit
+"     endif
+"     return {
+"         \ 'edit': a:maybeEdit.command.arguments[0],
+"         \ 'title': a:maybeEdit.command.title}
+" endfunction
 
-let g:lsc_server_commands = {
- \ 'c': {
- \    'command': 'clangd'
- \  },
- \  'vim': {
- \    'command': 'vim-language-server --stdio'
- \  },
- \  'javascript': {
- \    'command': 'javascript-typescript-stdio'
- \  },
- \  'java': {
- \    'command': '/home/tait/jdk/jdk-16.0.1/bin/java -Declipse.application=org.eclipse.jdt.ls.core.id1
- \                     -Dosgi.bundles.defaultStartLevel=4
- \                     -Declipse.product=org.eclipse.jdt.ls.core.product
- \                     -Dlog.protocol=true -Dlog.level=INFO -Xmx1G
- \                     -jar /home/tait/lsp/jdt-language-server/plugins/org.eclipse.equinox.launcher_1.6.100.v20201223-0822.jar
- \                     -configuration /home/tait/lsp/jdt-language-server/config_linux
- \                     -javaagent:/home/tait/lsp/jdt-language-server/lombok.jar
- \                     -data /home/tait/lsp/jdt-language-server/workspace',
- \    'message_hooks': {
- \        'initialize': {
- \            'initializationOptions': {
- \                 'bundles': [ '/home/tait/.m2/repository/com/microsoft/java/com.microsoft.java.debug.plugin/0.32.0/com.microsoft.java.debug.plugin-0.32.0.jar' ]
- \             }
- \        }
- \    },
- \    'response_hooks': {
- \        'textDocument/codeAction': function('<SID>fixEdits'),
- \    },
- \  }
- \}
+" let g:lsc_server_commands = {
+"  \ 'c': {
+"  \    'command': 'clangd'
+"  \  },
+"  \  'vim': {
+"  \    'command': 'vim-language-server --stdio'
+"  \  },
+"  \  'javascript': {
+"  \    'command': 'javascript-typescript-stdio'
+"  \  },
+"  \  'java': {
+"  \    'command': '/home/tait/jdk/jdk-16.0.1/bin/java -Declipse.application=org.eclipse.jdt.ls.core.id1
+"  \                     -Dosgi.bundles.defaultStartLevel=4
+"  \                     -Declipse.product=org.eclipse.jdt.ls.core.product
+"  \                     -Dlog.protocol=true -Dlog.level=INFO -Xmx1G
+"  \                     -jar /home/tait/lsp/jdt-language-server/plugins/org.eclipse.equinox.launcher_1.6.100.v20201223-0822.jar
+"  \                     -configuration /home/tait/lsp/jdt-language-server/config_linux
+"  \                     -javaagent:/home/tait/lsp/jdt-language-server/lombok.jar
+"  \                     -data /home/tait/lsp/jdt-language-server/workspace',
+"  \    'message_hooks': {
+"  \        'initialize': {
+"  \            'initializationOptions': {
+"  \                 'bundles': [ '/home/tait/.m2/repository/com/microsoft/java/com.microsoft.java.debug.plugin/0.32.0/com.microsoft.java.debug.plugin-0.32.0.jar' ]
+"  \             }
+"  \        }
+"  \    },
+"  \    'response_hooks': {
+"  \        'textDocument/codeAction': function('<SID>fixEdits'),
+"  \    },
+"  \  }
+"  \}
 
-let g:lsc_auto_map = v:true
-nn <silent> gD :LSClientAllDiagnostics<CR>
+" let g:lsc_auto_map = v:true
+" nn <silent> gD :LSClientAllDiagnostics<CR>
 
 " re-trigger with c-x c-u
-let g:lsc_enable_autocomplete  = v:true
-let g:lsc_enable_diagnostics   = v:true
-let g:lsc_reference_highlights = v:true
-let g:lsc_trace_level          = 'verbose'
-let g:lsc_autocomplete_length = 3  "start complete after typing second charcter
-hi lscReference cterm=underline ctermfg=NONE ctermbg=0
+" let g:lsc_enable_autocomplete  = v:true
+" let g:lsc_enable_diagnostics   = v:true
+" let g:lsc_reference_highlights = v:true
+" let g:lsc_trace_level          = 'verbose'
+" let g:lsc_autocomplete_length = 3  "start complete after typing second charcter
+" hi lscReference cterm=underline ctermfg=NONE ctermbg=0
 " }}}
 
 " easymotion {{{
@@ -1010,8 +1033,8 @@ nnoremap <silent> <leader> :WhichKey ','<CR>
 
 " Personalize highlighting {{{
 hi SignColumn ctermfg=12 ctermbg=NONE
-hi Search ctermbg=8 ctermfg=72 cterm=italic,underline,bold
-hi IncSearch cterm=underline ctermbg=136 ctermfg=0
+hi Search ctermbg=0 ctermfg=136 cterm=underline,bold
+hi IncSearch cterm=underline,bold ctermbg=33 ctermfg=0
 
 "make popup menu looks nicer
 hi Pmenu cterm=NONE ctermfg=12 ctermbg=8
@@ -1034,7 +1057,7 @@ hi htmlH3 cterm=NONE cterm=NONE ctermfg=136
 
 
 " spell error, warning, etc
-hi Error cterm=italic,underline ctermfg=166 ctermbg=0
+hi Error cterm=italic ctermfg=166 ctermbg=0
 hi SpellBad cterm=italic,underline ctermfg=136
 hi SpellCap cterm=none ctermfg=64
 
